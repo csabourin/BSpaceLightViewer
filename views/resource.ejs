@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        /* The sidebar menu */
+        .sidebar {
+            height: 100%;
+            /* Full-height: remove this if you want "auto" height */
+            width: 0;
+            /* Set the width of the sidebar */
+            position: fixed;
+            /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 1;
+            /* Stay on top */
+            top: 0;
+            /* Stay at the top */
+            left: 0;
+            background-color: #ffffff;
+            /* Black */
+            overflow-x: hidden;
+            /* Disable horizontal scroll */
+            padding-top: 60px;
+            /* Place content 60px from the top */
+            transition: 0.5s;
+            /* 0.5 second transition effect to slide in the sidebar */
+        }
+
+        /* The sidebar links */
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        /* When you mouse over the navigation links, change their color */
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        /* Position and style the close button (top right corner) */
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        /* The button used to open the sidebar */
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #3f2a56;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color: #444;
+        }
+
+        /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+        #main {
+            transition: margin-left .5s;
+            /* If you want a transition effect */
+            padding: 20px;
+        }
+        iframe {
+        display: block;
+            margin: auto;
+        width: 860px;
+        height: 90vh;  /* vh stands for viewport height. 90vh will be 90% of the height of the viewport */
+        border: none;
+        box-shadow: 0 0 10px #ccc;
+    }
+    .nav-buttons {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+    .nav-buttons a {
+        padding: 10px 20px;
+        background-color: #3f2a56;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    </style>
+    <title><%= currentPage %></title>
+</head>
+
+<body>
+    <a href="/"><img src="crate.svg" alt=""/>Back</a>
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <h2>Table of Contents</h2>
+        <% manifest.forEach(function(module) { %>
+            <h3>
+                <%= module.moduleTitle %>
+            </h3>
+            <% module.items.forEach(function(item) { %>
+                <a href="/resource/<%= encodeURIComponent(item.title) %>" onclick="markVisited('<%= item.title %>')"><%= item.title %></a>
+                <% }); %>
+                    <% }); %>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">☰ Open Table of Contents</button>  
+        <h2><%= resource.title %></h2>
+        <div class="nav-buttons">
+            <% if (prevResource) { %>
+                <a href="/resource/<%= encodeURIComponent(prevResource.title) %>">Previous</a>
+            <% } else { %>
+                <button disabled>Previous</button>
+            <% } %>
+            <% if (nextResource) { %>
+                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
+            <% } else { %>
+                <button disabled>Next</button>
+            <% } %>
+        </div>
+        <iframe src="<%= resource.href %>"></iframe>
+        <div class="nav-buttons">
+            <% if (prevResource) { %>
+                <a href="/resource/<%= encodeURIComponent(prevResource.title) %>">Previous</a>
+            <% } %>
+            <% if (nextResource) { %>
+                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+
+<script>
+    window.onload = function() {
+        var currentPageTitle = '<%= currentPage %>'; // get the current page title from the server-side data
+        localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
+
+        // Get all links in the sidebar
+        var links = document.getElementById('mySidebar').getElementsByTagName('a');
+
+        for(var i = 0; i < links.length; i++) {
+            var title = links[i].textContent;
+            if(localStorage.getItem(title) === 'visited') {
+                // Add a checkmark after the link
+                links[i].innerHTML += ' ✓';
+            }
+        }
+    }
+</script>
+
+</body>
+
+</html>

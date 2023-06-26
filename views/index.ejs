@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+    </style>
+    <title>Package List</title>
+</head>
+<body>
+    <h1>File list</h1>
+    <ul>
+    <% for(let i=0; i<packageFiles.length; i++) { %>
+     <li>
+        <a href="/load/<%= packageFiles[i] %>">
+            <img src="crate.svg" alt=""/>
+            <%= packageFiles[i] %>
+        </a>
+    </li>
+    <% } %>
+</ul>
+</body>
+</html>
