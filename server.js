@@ -10,7 +10,7 @@ const path = require("path");
 const os = require("os");
 const multer = require("multer");
 const app = express();
-let tempDir = null;
+let tempDir = os.tmpdir();
 app.use(
   session({
     secret: "bspaceLightViewer",
@@ -49,13 +49,25 @@ function getPackages() {
 const readPackage = (packagePath, session) => {
   return new Promise((resolve, reject) => {
     imsPackagePath = path.join("./packages/", packagePath);
+const basePath=path.basename(packagePath, ".zip")
+    const extractionPath = path.join(tempDir, basePath);
+
+    // Ensure the extraction directory exists
+    fs.ensureDirSync(extractionPath);
 
     const zip = new AdmZip(imsPackagePath);
-    zip.extractAllTo(session.tempDir, /*overwrite*/ true);
 
+    // Ensure extractionPath is defined
+    if (!extractionPath) {
+      console.error("extractionPath is not defined");
+      reject(new Error("extractionPath is not defined"));
+      return;
+    }
+
+    zip.extractAllTo(extractionPath, /*overwrite*/ true);
     import("strip-bom").then((stripBom) => {
       fs.readFile(
-        path.join(session.tempDir, "imsmanifest.xml"),
+        path.join(extractionPath, "imsmanifest.xml"),
         "utf8",
         function (err, data) {
           if (err) {
@@ -76,9 +88,7 @@ const readPackage = (packagePath, session) => {
             const resources = result.manifest.resources[0].resource;
 
             // Check if session.manifests is defined. If not, initialize it
-            if (!session.manifests) {
-              session.manifests = {};
-            }
+            session.manifests = session.manifests || {};
 
             // Store the manifest in session.manifests with the package filename as the key
             session.manifests[packagePath] = manifestItems.map((item) => {
@@ -95,7 +105,7 @@ const readPackage = (packagePath, session) => {
                       ) {
                         return null;
                       }
-                      const href = itemResource ? `/${itemResource.$.href}` : null;
+                      const href = itemResource ? `${itemResource.$.href}`  : null;
                       return {
                         title: i.title[0],
                         href,
@@ -107,10 +117,10 @@ const readPackage = (packagePath, session) => {
               return {
                 moduleTitle,
                 items,
-                filename: packagePath,
+                filename: extractionPath,
               };
             });
-            resolve();
+            resolve(session.manifests[packagePath]);
           });
         }
       );
@@ -130,19 +140,13 @@ app.get("/", async (req, res) => {
 
 app.post("/upload", upload.single("zipFile"), (req, res) => {});
 app.get("/load/:filename", async (req, res) => {
-  if (!req.session.uuid) {
-    req.session.uuid = uuidv4();
-  }
-  req.session.tempDir = path.join(os.tmpdir(), req.session.uuid);
-  app.use("/resource/", express.static(req.session.tempDir));
-  try {
-    const filename = req.params.filename;
+    try {
+      const filename = req.params.filename;
     // Sanitize filename before use
     // ...
 
     // Read the package and load resources
-    await readPackage(filename, req.session);
-    const manifest = req.session.manifests[filename];
+    const manifest = await readPackage(filename, req.session);
 
     // Ensure the manifest is loaded and the first module has items
     if (
@@ -168,14 +172,16 @@ app.get("/load/:filename", async (req, res) => {
 });
 app.use("/shared", express.static("shared"));
 app.get("/resource/:id", (req, res) => {
-  const id = req.params.id;
-  let resource = null;
-  let filename = null;
-  for (let key in req.session.manifests) {
-    let manifest = req.session.manifests[key];
+    const id = req.params.id;
+  console.log(req.params);
+    let resource = null;
+    let filename = null;
+    for (let key in req.session.manifests) {
+      let manifest = req.session.manifests[key];
     for (let module of manifest) {
       resource = module.items.find((i) => i.title === id);
       if (resource) {
+        console.log(resource);
         filename = key; // Get the filename from the key in the session manifest
         break;
       }
@@ -186,11 +192,12 @@ app.get("/resource/:id", (req, res) => {
   }
 
   if (!resource) {
-    res.status(404).send("Resource not found: ");
+    res.status(404).send("Resource not found");
     return;
   }
   
   const manifest = req.session.manifests[filename];
+  console.log(filename);
 
   if (!manifest) {
     res.status(500).send("Manifest not found in session");
@@ -202,11 +209,8 @@ app.get("/resource/:id", (req, res) => {
   const module = manifest[moduleIndex];
 
   if (!module) {
-    res.status(404).send("Resource not found");
+    res.status(404).send("Module not found");
     return;
-  }
-  if (!req.session.uuid) {
-    return res.status(403).send("Access denied");
   }
   const resourceIndex = module.items.findIndex((i) => i.title === id);
   resource = module.items[resourceIndex];
@@ -223,7 +227,10 @@ app.get("/resource/:id", (req, res) => {
   }
 
   // Use express.static as middleware inside this route handler
-  express.static(path.join(os.tmpdir(), req.session.uuid))(req, res, () => {
+  let basePath=path.join(os.tmpdir(), path.basename(filename, ".zip"));
+  console.log(`Basepath: `,basePath)
+  app.use("/page", express.static(basePath));
+  express.static(basePath)(req, res, () => {
     res.render("resource", {
       resource,
       prevResource,
