@@ -1,22 +1,69 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <style>
 
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        body {
+            background-color: #F0F0F0;
+            /* a light, airy background color */
+            justify-content: center;
+            /* centering the container on the page */
+            font-family: sans-serif;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2em;
+            /* create space between tiles */
+        }
+
+        .tile {
+            display: flex;
+            width: 20em;
+            height: 20em;
+            background-color: #FFF;
+            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+            /* box-shadow to delimit the tiles */
+            border-radius: 5px;
+            /* modern-looking rounded corners */
+        }
+
+        .tile a {
+            text-align: center;
+            padding: 5em;
+        }
+
+        h1 {
+            padding: 1em;
+        }
     </style>
     <title>Package List</title>
 </head>
+
 <body>
     <h1>File list</h1>
-    <ul>
-    <% for(let i=0; i<packageFiles.length; i++) { %>
-     <li>
-        <a href="/load/<%= packageFiles[i] %>">
-            <img src="crate.svg" alt=""/>
-            <%= packageFiles[i] %>
-        </a>
-    </li>
-    <% } %>
-</ul>
+    <div class="container">
+
+
+        <% for(let i=0; i<packageFiles.length; i++) { %>
+            <div class="tile">
+                <a href="/load/<%= packageFiles[i] %>">
+                    <%= packageFiles[i] %>
+                </a>
+            </div>
+            <% } %>
+
+    </div>
 </body>
+
 </html>

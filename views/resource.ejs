@@ -70,32 +70,38 @@
             /* If you want a transition effect */
             padding: 20px;
         }
+
         iframe {
-        display: block;
+            display: block;
             margin: auto;
-        width: 860px;
-        height: 90vh;  /* vh stands for viewport height. 90vh will be 90% of the height of the viewport */
-        border: none;
-        box-shadow: 0 0 10px #ccc;
-    }
-    .nav-buttons {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 20px;
-    }
-    .nav-buttons a {
-        padding: 10px 20px;
-        background-color: #3f2a56;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-    }
+            width: 860px;
+            height: 90vh;
+            /* vh stands for viewport height. 90vh will be 90% of the height of the viewport */
+            border: none;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons a {
+            padding: 10px 20px;
+            background-color: #3f2a56;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
     </style>
-    <title><%= currentPage %></title>
+    <title>
+        <%= currentPage %>
+    </title>
 </head>
 
 <body>
-    <a href="/"><img src="crate.svg" alt=""/>Back</a>
+    <a href="/"><img src="crate.svg" alt="" />Back</a>
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <h2>Table of Contents</h2>
@@ -104,41 +110,47 @@
                 <%= module.moduleTitle %>
             </h3>
             <% module.items.forEach(function(item) { %>
-                <a href="/resource/<%= encodeURIComponent(item.title) %>" onclick="markVisited('<%= item.title %>')"><%= item.title %></a>
+                <a href="/resource/<%= encodeURIComponent(item.title) %>">
+                    <%= item.title %>
+                </a>
                 <% }); %>
                     <% }); %>
     </div>
 
     <div id="main">
-        <button class="openbtn" onclick="openNav()">☰ Open Table of Contents</button>  
-        <h2><%= resource.title %></h2>
+        <button class="openbtn" onclick="openNav()">☰ Open Table of Contents</button>
+        <h2>
+            <%= resource.title %>
+        </h2>
         <div class="nav-buttons">
             <% if (prevResource) { %>
                 <a href="/resource/<%= encodeURIComponent(prevResource.title) %>">Previous</a>
-            <% } else { %>
-                <button disabled>Previous</button>
-            <% } %>
-            <% if (nextResource) { %>
-                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
-            <% } else { %>
-                <button disabled>Next</button>
-            <% } %>
+                <% } else { %>
+                    <button disabled>Previous</button>
+                    <% } %>
+                        <% if (nextResource) { %>
+                            <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
+                            <% } else { %>
+                                <button disabled>Next</button>
+                                <% } %>
         </div>
-        <iframe src="<%= resource.href %>"></iframe>
+        <iframe src="/resource/<%= req.session.uuid %>/<%= resource.href %>"></iframe>
         <div class="nav-buttons">
             <% if (prevResource) { %>
                 <a href="/resource/<%= encodeURIComponent(prevResource.title) %>">Previous</a>
-            <% } %>
-            <% if (nextResource) { %>
-                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
-            <% } %>
+                <% } else { %>
+                    <button disabled>Previous</button>
+                    <% } %>
+                        <% if (nextResource) { %>
+                            <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
+                            <% } %>
         </div>
     </div>
 
     <script>
         function openNav() {
-            document.getElementById("mySidebar").style.width = "250px";
-            document.getElementById("main").style.marginLeft = "250px";
+            document.getElementById("mySidebar").style.width = "450px";
+            document.getElementById("main").style.marginLeft = "450px";
         }
 
         function closeNav() {
@@ -147,23 +159,23 @@
         }
     </script>
 
-<script>
-    window.onload = function() {
-        var currentPageTitle = '<%= currentPage %>'; // get the current page title from the server-side data
-        localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
+    <script>
+        window.onload = function () {
+            var currentPageTitle = '<%= currentPage %>'; // get the current page title from the server-side data
+            localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
 
-        // Get all links in the sidebar
-        var links = document.getElementById('mySidebar').getElementsByTagName('a');
+            // Get all links in the sidebar
+            var links = document.getElementById('mySidebar').getElementsByTagName('a');
 
-        for(var i = 0; i < links.length; i++) {
-            var title = links[i].textContent;
-            if(localStorage.getItem(title) === 'visited') {
-                // Add a checkmark after the link
-                links[i].innerHTML += ' ✓';
+            for (var i = 0; i < links.length; i++) {
+                var title = links[i].textContent;
+                if (localStorage.getItem(title) === 'visited') {
+                    // Add a checkmark after the link
+                    links[i].innerHTML += ' ✓';
+                }
             }
         }
-    }
-</script>
+    </script>
 
 </body>
 
