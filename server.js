@@ -137,8 +137,15 @@ app.get("/", async (req, res) => {
     res.status(500).send("Error reading packages");
   }
 });
-
-app.post("/upload", upload.single("zipFile"), (req, res) => {});
+app.get("/adminconsole",async(req,res)=>{
+  res.render("upload");
+})
+app.post("/upload", upload.single("zipFile"), (req, res) => {
+    console.log(req.file);
+  
+  // After successful upload, you can redirect the user to the main page or send a response
+  res.redirect('/');
+});
 app.get("/load/:filename", async (req, res) => {
     try {
       const filename = req.params.filename;
@@ -173,7 +180,6 @@ app.get("/load/:filename", async (req, res) => {
 app.use("/shared", express.static("shared"));
 app.get("/resource/:id", (req, res) => {
     const id = req.params.id;
-  console.log(req.params);
     let resource = null;
     let filename = null;
     for (let key in req.session.manifests) {
@@ -181,7 +187,6 @@ app.get("/resource/:id", (req, res) => {
     for (let module of manifest) {
       resource = module.items.find((i) => i.title === id);
       if (resource) {
-        console.log(resource);
         filename = key; // Get the filename from the key in the session manifest
         break;
       }
@@ -197,7 +202,6 @@ app.get("/resource/:id", (req, res) => {
   }
   
   const manifest = req.session.manifests[filename];
-  console.log(filename);
 
   if (!manifest) {
     res.status(500).send("Manifest not found in session");
@@ -228,7 +232,6 @@ app.get("/resource/:id", (req, res) => {
 
   // Use express.static as middleware inside this route handler
   let basePath=path.join(os.tmpdir(), path.basename(filename, ".zip"));
-  console.log(`Basepath: `,basePath)
   app.use("/page", express.static(basePath));
   express.static(basePath)(req, res, () => {
     res.render("resource", {
