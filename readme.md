@@ -1,56 +1,70 @@
-﻿
-# Open Viewer
+# Open Content Viewer
 
-This is an application for viewing Brightspace packages. It is a web-based solution written in Node.js and uses Express.js as a web server.
+Open Content Viewer is a Node.js Express application for uploading, viewing, and managing Brightspace content packages in zip format.
 
-## Features
+## Author
 
-- Upload and extract zip files containing IMS packages.
-- Display the content of the IMS package in a web page.
-- Navigate between resources in the IMS package.
+Christian Sabourin
 
-## Prerequisites
+## Installation
 
-Before you begin, ensure you have met the following requirements:
-
-- You have installed Node.js and npm. You can download and install them from [here](https://nodejs.org/en/download/).
-
-## Installing the Application
-
-To install the application, follow these steps:
-
-1. Clone the repository:
-
-https://github.com/csabourin/BSpaceLightViewer.git
-
-2. Install the dependencies:
-
-```
-cd BSpaceLightViewer
-npm install
-```
+1. Clone the repository
+2. Navigate to the project directory and run `npm install`
 
 ## Running the Application
 
-To run the application, navigate to the application directory and run the following command:
+In the root directory of the project, use the following command to start the application:
 
-```
+```bash
 node server.js
 ```
 
-Now open your web browser and navigate to `http://localhost:3000/` to see the application running.
+or if you're using nodemon:
+
+```bash
+nodemon server.js
+```
+
+By default, the application runs on port 3000. You can access it at http://localhost:3000.
 
 ## Usage
 
-1. On the main page, click on the upload button to upload an IMS package (zip file).
-2. After the package is uploaded, the contents will be displayed on the page.
-3. You can navigate between resources using the 'Previous' and 'Next' buttons.
+- Open Content Viewer provides a simple web interface for viewing Brightspace package content.
+- Navigate to `/` to see a list of uploaded packages.
+- Navigate to `/adminconsole` to upload new packages and rename existing ones.
 
-## Contributing
+## Features
 
-If you want to contribute to this project, please feel free to fork the repository and submit a pull request.
+- File upload: Accepts .zip files up to 60MB in size.
+- Uploaded packages are stored in the `./packages` directory.
+- Packages are unzipped and their contents are read and displayed.
+- Rate limiting is implemented to restrict each IP to 1000 requests every 15 minutes.
+- File management: Provides an option to rename the files.
+- Rate limiting: To prevent abuse, the number of requests is limited.
+- Content viewing: Unzips the packages and provides an interface to view their content.
+
+## Environment Variables
+
+You can set the following environment variables:
+
+- `SECRET`: The secret used by express-session for signing the session ID cookie.
+- `PORT`: The port on which the application runs.
+
+## Dependencies
+
+- [Express](https://expressjs.com/) - Web framework for Node.js.
+- [express-session](https://www.npmjs.com/package/express-session) - Simple session middleware for Express.
+- [fs-extra](https://www.npmjs.com/package/fs-extra) - Module that extends the Node.js file system module with extra methods.
+- [uuid](https://www.npmjs.com/package/uuid) - For the creation of RFC4122 UUIDs.
+- [xml2js](https://www.npmjs.com/package/xml2js) - For parsing XML to JavaScript objects.
+- [ejs](https://www.npmjs.com/package/ejs) - Templating engine.
+- [Adm-Zip](https://www.npmjs.com/package/adm-zip) - ZIP archive utility.
+- [multer](https://www.npmjs.com/package/multer) - Middleware for handling `multipart/form-data`, which is primarily used for uploading files.
+- [mime-types](https://www.npmjs.com/package/mime-types) - Provides the ability to derive a MIME type from a filename or from a file's content.
+- [body-parser](https://www.npmjs.com/package/body-parser) - Body parsing middleware.
+- [sanitize-filename](https://www.npmjs.com/package/sanitize-filename) - Sanitize string for use as a filename.
+- [express-rate-limit](https://www.npmjs.com/package/express-rate-limit) - Middleware for rate limiting requests.
 
 ## License
 
-This project uses the following license: Creative Commons with attribution.
-
+Open Content Viewer is licensed under the Creative Commons Attribution (CC-BY) license.

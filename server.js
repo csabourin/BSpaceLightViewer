@@ -9,14 +9,15 @@ const AdmZip = require("adm-zip");
 const path = require("path");
 const os = require("os");
 const multer = require("multer"); // used for uploading files
-const mime = require('mime-types'); 
+const mime = require("mime-types");
 const bodyParser = require("body-parser");
 const sanitize = require("sanitize-filename");
+const rateLimit = require("express-rate-limit");
 const app = express();
 let tempDir = os.tmpdir();
 app.use(
   session({
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || "TakeTheCheeseToSickBay",
     resave: false,
     saveUninitialized: false,
   })
@@ -34,17 +35,27 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 60, // limit uploaded file size to 60MB
+  },
   fileFilter: function (req, file, cb) {
-    if (path.extname(file.originalname) !== '.zip') {
-      req.fileValidationError = '<p>Only .zip files are allowed</p> <a href="/">Back</a>'; // Assign custom error message
+    if (path.extname(file.originalname) !== ".zip") {
+      req.fileValidationError =
+        '<p>Only .zip files are allowed</p> <a href="/">Back</a>'; // Assign custom error message
       return cb(null, false); // Pass false as acceptance status
     }
     cb(null, true);
   },
 });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // limit each IP to 1000 requests per windowMs
+  message: "Too many requests from this IP, please try again after 15 minutes",
+});
 app.set("view engine", "ejs");
 app.use(bodyParser.json()); // used for renaming files
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(limiter);
 let manifest = null;
 let imsPackagePath = null;
 
@@ -162,19 +173,28 @@ app.post("/rename", async (req, res) => {
   const oldName = path.join(__dirname, "packages", sanitize(req.body.old));
   const newName = path.join(__dirname, "packages", sanitize(req.body.new));
 
-  fs.rename(oldName, newName, function (err) {
-    if (err) {
-      console.log(err);
-      res.status(500).send();
+  // Check if new file already exists
+  fs.access(newName, fs.constants.F_OK, (err) => {
+    if (!err) {
+      // If the file exists, send an error response
+      res.status(400).send("A file with the same name already exists");
     } else {
-      console.log("Successfully renamed - AKA moved!");
-      res.status(200).send();
+      // If the file does not exist, proceed with renaming
+      fs.rename(oldName, newName, function (err) {
+        if (err) {
+          console.log(err);
+          res.status(500).send();
+        } else {
+          console.log("Successfully renamed - AKA moved!");
+          res.status(200).send();
+        }
+      });
     }
   });
 });
 
 app.post("/upload", upload.single("zipFile"), (req, res) => {
-   if (req.fileValidationError) {
+  if (req.fileValidationError) {
     return res.status(400).send(req.fileValidationError);
   }
   console.log(req.file);
@@ -246,7 +266,6 @@ app.get("/resource/:id", (req, res) => {
     m.items.find((i) => i.title === id)
   );
   const module = manifest[moduleIndex];
-
   if (!module) {
     res.status(404).send("Module not found");
     return;
@@ -265,7 +284,6 @@ app.get("/resource/:id", (req, res) => {
     let lastOfPrevious = manifest[moduleIndex - 1].items.length;
     prevResource = manifest[moduleIndex - 1].items[lastOfPrevious - 1];
   }
-
   // Use express.static as middleware inside this route handler
   let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
   req.session.currentBasePath = basePath;
@@ -282,24 +300,18 @@ app.get("/resource/:id", (req, res) => {
 });
 app.get("/page/*", (req, res) => {
   const filePath = path.join(req.session.currentBasePath, req.params[0]); // Get the base path from the session
-
   const stream = fs.createReadStream(filePath);
   const mimeType = mime.lookup(filePath); // determines the MIME type based on the file extension
-
   if (!mimeType) {
     res.status(500).send("Could not determine file type");
     return;
   }
-
   res.setHeader("Content-Type", mimeType);
-  
-  stream.on('error', function(error) {
+  stream.on("error", function (error) {
     res.status(500).send("Error reading file");
   });
-
   stream.pipe(res);
 });
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
