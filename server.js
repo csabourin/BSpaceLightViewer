@@ -9,6 +9,7 @@ const AdmZip = require("adm-zip");
 const path = require("path");
 const os = require("os");
 const multer = require("multer"); // used for uploading files
+const mime = require('mime-types'); 
 const bodyParser = require("body-parser");
 const sanitize = require("sanitize-filename");
 const app = express();
@@ -257,7 +258,7 @@ app.get("/resource/:id", (req, res) => {
 
   // Use express.static as middleware inside this route handler
   let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
-  app.use("/page", express.static(basePath));
+  req.session.currentBasePath = basePath;
   express.static(basePath)(req, res, () => {
     res.render("resource", {
       resource,
@@ -269,6 +270,26 @@ app.get("/resource/:id", (req, res) => {
     });
   });
 });
+app.get("/page/*", (req, res) => {
+  const filePath = path.join(req.session.currentBasePath, req.params[0]); // Get the base path from the session
+
+  const stream = fs.createReadStream(filePath);
+  const mimeType = mime.lookup(filePath); // determines the MIME type based on the file extension
+
+  if (!mimeType) {
+    res.status(500).send("Could not determine file type");
+    return;
+  }
+
+  res.setHeader("Content-Type", mimeType);
+  
+  stream.on('error', function(error) {
+    res.status(500).send("Error reading file");
+  });
+
+  stream.pipe(res);
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`);
