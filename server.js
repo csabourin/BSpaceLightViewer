@@ -32,7 +32,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (path.extname(file.originalname) !== '.zip') {
+      req.fileValidationError = '<p>Only .zip files are allowed</p> <a href="/">Back</a>'; // Assign custom error message
+      return cb(null, false); // Pass false as acceptance status
+    }
+    cb(null, true);
+  },
+});
 app.set("view engine", "ejs");
 app.use(bodyParser.json()); // used for renaming files
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -165,9 +174,10 @@ app.post("/rename", async (req, res) => {
 });
 
 app.post("/upload", upload.single("zipFile"), (req, res) => {
+   if (req.fileValidationError) {
+    return res.status(400).send(req.fileValidationError);
+  }
   console.log(req.file);
-
-  // After successful upload, send a response
   res.redirect("/");
 });
 app.get("/load/:filename", async (req, res) => {
@@ -292,5 +302,5 @@ app.get("/page/*", (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`App listening on port ${port}!`);
+  console.log(`App listening on port ${port}`);
 });
