@@ -2,12 +2,56 @@
 <html>
 <head>
     <title>File upload</title>
+  <style>
+    body{
+      font-family:sans-serif;
+    }
+    .renamer{
+      margin-top:2em;
+    }
+    .fileName{
+      margin:1em;
+      padding:.5em;
+      width:32em;
+    }
+  </style>
 </head>
 <body>
+  <a href="/">Back</a>
     <h1>File upload</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="zipFile" accept=".zip">
         <input type="submit" value="Upload">
     </form>
+  <div class="renamer">
+    
+  
+    <% for(let i=0; i<packageFiles.length; i++) { %>
+     <div>
+        <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].replace(/\.[^/.]+$/, "") %>"> <button onclick="renameFile('<%= packageFiles[i]%>','file_<%= i %>')">Rename</button>
+    </div>
+    <% } %>
+      </div>
+  <script>
+function renameFile(source,targetId){
+    let target = document.getElementById(targetId).value + '.zip';
+    // send a post request to the server with the old and new filenames
+    fetch('/rename', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ old: source, new: target })
+    }).then((response) => {
+        if(response.ok) {
+            alert('File renamed successfully');
+           location.reload();
+        } else {
+            alert('Error renaming file');
+        }
+    });
+}
+
+  </script>
 </body>
 </html>

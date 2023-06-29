@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const session = require("express-session");
 const fs = require("fs-extra");
 const { v4: uuidv4 } = require("uuid");
@@ -8,12 +8,14 @@ const ejs = require("ejs");
 const AdmZip = require("adm-zip");
 const path = require("path");
 const os = require("os");
-const multer = require("multer");
+const multer = require("multer"); // used for uploading files
+const bodyParser = require("body-parser");
+const sanitize = require("sanitize-filename");
 const app = express();
 let tempDir = os.tmpdir();
 app.use(
   session({
-    secret: "bspaceLightViewer",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
   })
@@ -31,7 +33,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 app.set("view engine", "ejs");
-
+app.use(bodyParser.json()); // used for renaming files
+app.use(bodyParser.urlencoded({ extended: true }));
 let manifest = null;
 let imsPackagePath = null;
 
@@ -49,7 +52,7 @@ function getPackages() {
 const readPackage = (packagePath, session) => {
   return new Promise((resolve, reject) => {
     imsPackagePath = path.join("./packages/", packagePath);
-const basePath=path.basename(packagePath, ".zip")
+    const basePath = path.basename(packagePath, ".zip");
     const extractionPath = path.join(tempDir, basePath);
 
     // Ensure the extraction directory exists
@@ -105,7 +108,9 @@ const basePath=path.basename(packagePath, ".zip")
                       ) {
                         return null;
                       }
-                      const href = itemResource ? `${itemResource.$.href}`  : null;
+                      const href = itemResource
+                        ? `${itemResource.$.href}`
+                        : null;
                       return {
                         title: i.title[0],
                         href,
@@ -129,6 +134,7 @@ const basePath=path.basename(packagePath, ".zip")
 };
 
 app.get("/", async (req, res) => {
+  // index page, lists the files
   try {
     const packageFiles = await getPackages();
     res.render("index", { packageFiles });
@@ -137,20 +143,37 @@ app.get("/", async (req, res) => {
     res.status(500).send("Error reading packages");
   }
 });
-app.get("/adminconsole",async(req,res)=>{
-  res.render("upload");
-})
+app.get("/adminconsole", async (req, res) => {
+  const packageFiles = await getPackages();
+  res.render("upload", { packageFiles });
+});
+
+app.post("/rename", async (req, res) => {
+  const oldName = path.join(__dirname, "packages", sanitize(req.body.old));
+  const newName = path.join(__dirname, "packages", sanitize(req.body.new));
+
+  fs.rename(oldName, newName, function (err) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+    } else {
+      console.log("Successfully renamed - AKA moved!");
+      res.status(200).send();
+    }
+  });
+});
+
 app.post("/upload", upload.single("zipFile"), (req, res) => {
-    console.log(req.file);
-  
-  // After successful upload, you can redirect the user to the main page or send a response
-  res.redirect('/');
+  console.log(req.file);
+
+  // After successful upload, send a response
+  res.redirect("/");
 });
 app.get("/load/:filename", async (req, res) => {
-    try {
-      const filename = req.params.filename;
+  try {
+    const rawFilename = req.params.filename;
     // Sanitize filename before use
-    // ...
+    const filename = sanitize(rawFilename);
 
     // Read the package and load resources
     const manifest = await readPackage(filename, req.session);
@@ -179,11 +202,11 @@ app.get("/load/:filename", async (req, res) => {
 });
 app.use("/shared", express.static("shared"));
 app.get("/resource/:id", (req, res) => {
-    const id = req.params.id;
-    let resource = null;
-    let filename = null;
-    for (let key in req.session.manifests) {
-      let manifest = req.session.manifests[key];
+  const id = req.params.id;
+  let resource = null;
+  let filename = null;
+  for (let key in req.session.manifests) {
+    let manifest = req.session.manifests[key];
     for (let module of manifest) {
       resource = module.items.find((i) => i.title === id);
       if (resource) {
@@ -197,10 +220,11 @@ app.get("/resource/:id", (req, res) => {
   }
 
   if (!resource) {
-    res.status(404).send("Resource not found");
+    // res.status(404).send("Resource not found");
+    res.redirect("/");
     return;
   }
-  
+
   const manifest = req.session.manifests[filename];
 
   if (!manifest) {
@@ -227,11 +251,12 @@ app.get("/resource/:id", (req, res) => {
     nextResource = manifest[moduleIndex + 1].items[0];
   }
   if (!prevResource && manifest[moduleIndex - 1]) {
-    prevResource = manifest[moduleIndex - 1].items[0];
+    let lastOfPrevious = manifest[moduleIndex - 1].items.length;
+    prevResource = manifest[moduleIndex - 1].items[lastOfPrevious - 1];
   }
 
   // Use express.static as middleware inside this route handler
-  let basePath=path.join(os.tmpdir(), path.basename(filename, ".zip"));
+  let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
   app.use("/page", express.static(basePath));
   express.static(basePath)(req, res, () => {
     res.render("resource", {

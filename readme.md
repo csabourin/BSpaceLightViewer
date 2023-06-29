@@ -1,7 +1,7 @@
 ﻿
-# IMS Package Viewer
+# Open Viewer
 
-This is an application for viewing IMS packages. It is a web-based solution written in Node.js and uses Express.js as a web server.
+This is an application for viewing Brightspace packages. It is a web-based solution written in Node.js and uses Express.js as a web server.
 
 ## Features
 
@@ -35,7 +35,7 @@ npm install
 To run the application, navigate to the application directory and run the following command:
 
 ```
-node beLight.js
+node server.js
 ```
 
 Now open your web browser and navigate to `http://localhost:3000/` to see the application running.
@@ -52,5 +52,5 @@ If you want to contribute to this project, please feel free to fork the reposito
 
 ## License
 
-This project uses the following license: Creative Commons wit attribution.
+This project uses the following license: Creative Commons with attribution.
 
