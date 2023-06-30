@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= module.moduleTitle %></title>
+</head>
+<body>
+  <h1><%= module.moduleTitle %></h1>
+  
+  <% if (module.description) { %>
+  <div class="description">
+    <%- module.description %>
+  </div>
+  <% } %>
+</body>
+</html>

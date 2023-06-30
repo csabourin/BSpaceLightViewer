@@ -450,7 +450,7 @@
 <body>
     <div class="topbar">
         <div id="header-left">
-            <a href="/">Back</a>
+            <a href="/"><%= manifestLanguage=="en-ca"?"Back":"Retour" %></a>
             <button class="openbtn" onclick="openNav()">☰</button>
         </div>
         <div class="topic-name hidden-small">
@@ -459,12 +459,12 @@
         <div id="header-right">
             <div class="nav-buttons">
                 <% if (prevResource) { %>
-                    <a href="/resource/<%= encodeURIComponent(prevResource.title) %>">Previous</a>
+                    <a href="/resource/<%= encodeURIComponent(prevResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a>
                     <% } else { %>
-                        <button disabled>Previous</button>
+                        <button disabled><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></button>
                         <% } %>
                             <% if (nextResource) { %>
-                                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
+                                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a>
                                 <% } else { %>
                                     <button disabled>Next</button>
                                     <% } %>
@@ -474,7 +474,7 @@
 
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <h2>Table of Contents</h2>
+        <h2><%= manifestLanguage=="en-ca"?"Table of Contents":"Table des matières" %></h2>
         <% manifest.forEach(function(module) { %>
             <h3>
                 <%= module.moduleTitle %>
@@ -493,14 +493,14 @@
         <iframe src="/page/<%= resource.href %>"></iframe>
         <div class="nav-buttons">
             <% if (prevResource) { %>
-                <a href="/resource/<%= encodeURIComponent(prevResource.title) %>">Previous</a>
+                <a href="/resource/<%= encodeURIComponent(prevResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a>
                 <% } else { %>
-                    <button disabled>Previous</button>
+                    <button disabled><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></button>
                     <% } %>
                         <% if (nextResource) { %>
-                            <a href="/resource/<%= encodeURIComponent(nextResource.title) %>">Next</a>
+                            <a href="/resource/<%= encodeURIComponent(nextResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a>
                             <% } else { %>
-                                <button disabled>Next</button>
+                                <button disabled><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></button>
                                 <% } %>
         </div>
     </div>

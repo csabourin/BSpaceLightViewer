@@ -6,18 +6,20 @@ const xml2js = require("xml2js");
 const parser = new xml2js.Parser();
 const ejs = require("ejs");
 const AdmZip = require("adm-zip");
+const StreamZip = require('node-stream-zip');
 const path = require("path");
 const os = require("os");
 const multer = require("multer"); // used for uploading files
 const mime = require("mime-types");
 const bodyParser = require("body-parser");
+const entities = require("entities");
 const sanitize = require("sanitize-filename");
 const rateLimit = require("express-rate-limit");
 const app = express();
 let tempDir = os.tmpdir();
 app.use(
   session({
-    secret: process.env.SECRET || "TakeTheCheeseToSickBay",
+    secret: process.env.SECRET || "GetTheCheeseToSickBay",
     resave: false,
     saveUninitialized: false,
   })
@@ -65,14 +67,62 @@ function getPackages() {
       if (err) {
         reject(err);
       } else {
-        resolve(files);
+        const promises = files.map(file => new Promise((resolve, reject) => {
+          const zip = new StreamZip({
+            file: `./packages/${file}`,
+            storeEntries: true
+          });
+      
+          zip.on('ready', () => {
+            // Check if the manifest exists within the zip
+            if (zip.entry('imsmanifest.xml')) {
+              // If it exists, extract it
+              zip.stream('imsmanifest.xml', (err, stm) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  // Convert stream to string
+                  const chunks = [];
+                  stm.on('data', chunk => chunks.push(chunk));
+                  stm.on('end', () => {
+                    const xmlString = Buffer.concat(chunks).toString();
+
+                    // Parse the XML string
+                    xml2js.parseString(xmlString, (err, result) => {
+                      if (err) {
+                        reject(err);
+                      } else {
+                        // Get the title and xml:lang value
+                        const titleData = result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
+                        const title = titleData._;
+                        const lang = titleData["$"]["xml:lang"];
+
+                        resolve({
+                          file,
+                          title,
+                          lang
+                        });
+                      }
+                    });
+                  });
+                }
+              });
+            } else {
+              reject(new Error('imsmanifest.xml not found within zip'));
+            }
+          });
+        }));
+        
+        Promise.all(promises)
+          .then(data => resolve(data))
+          .catch(err => reject(err));
       }
     });
   });
 }
 const readPackage = (packagePath, session) => {
   return new Promise((resolve, reject) => {
-    imsPackagePath = path.join("./packages/", packagePath);
+    const imsPackagePath = path.join("./packages/", packagePath);
     const basePath = path.basename(packagePath, ".zip");
     const extractionPath = path.join(tempDir, basePath);
 
@@ -115,37 +165,10 @@ const readPackage = (packagePath, session) => {
             session.manifests = session.manifests || {};
 
             // Store the manifest in session.manifests with the package filename as the key
-            session.manifests[packagePath] = manifestItems.map((item) => {
-              const moduleTitle = item.title[0];
-              const items = item.item
-                ? item.item
-                    .map((i) => {
-                      const itemResource = resources.find(
-                        (r) => r.$.identifier === i.$.identifierref
-                      );
-                      if (
-                        itemResource &&
-                        itemResource.$["d2l_2p0:material_type"] !== "content"
-                      ) {
-                        return null;
-                      }
-                      const href = itemResource
-                        ? `${itemResource.$.href}`
-                        : null;
-                      return {
-                        title: i.title[0],
-                        href,
-                      };
-                    })
-                    .filter((i) => i !== null)
-                : []; // filter out null values
+            session.manifests[packagePath] = manifestItems.map((item) =>
+              processItems(item, resources)
+            );
 
-              return {
-                moduleTitle,
-                items,
-                filename: extractionPath,
-              };
-            });
             resolve(session.manifests[packagePath]);
           });
         }
@@ -153,6 +176,89 @@ const readPackage = (packagePath, session) => {
     });
   });
 };
+
+function processItems(item, resources) {
+  let description = item.$.description || null;
+  let moduleTitle = item.title[0];
+
+  // Ensure description is HTML decoded
+  if (description) {
+    description = entities.decode(description);
+  }
+
+  const items = [];
+
+  if (item.item) {
+    item.item.forEach((i) => {
+      const itemResource = resources.find(
+        (r) => r.$.identifier === i.$.identifierref
+      );
+
+      if (
+        itemResource &&
+        itemResource.$["d2l_2p0:material_type"] === "contentmodule"
+      ) {
+        const title = i.title[0];
+        const description = i.$.description
+          ? entities.decode(i.$.description)
+          : null;
+
+        items.push({
+          type: "contentmodule",
+          title: title,
+          description: description,
+        });
+      } else if (
+        itemResource &&
+        itemResource.$["d2l_2p0:material_type"] === "content"
+      ) {
+        items.push({
+          type: "content",
+          title: i.title[0],
+          href: `${itemResource.$.href}`,
+        });
+      }
+    });
+  }
+
+  return {
+    moduleTitle,
+    title: item.title[0],
+    description,
+    items: items,
+  };
+}
+
+function checkForImsmanifest(req, res, next) {
+  // Check for imsmanifest.xml in the zip
+  const zip = new StreamZip({ file: req.file.path, storeEntries: true });
+
+  zip.on('ready', () => {
+    try {
+      if (!zip.entry('imsmanifest.xml')) {
+        req.fileValidationError =
+          '<p>Zip files must contain an imsmanifest.xml file.</p> <a href="/">Back</a>';
+
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+          } else {
+            console.log('Deleted invalid file:', req.file.path);
+          }
+        });
+
+        return res.status(400).send(req.fileValidationError);
+      }
+    } catch (err) {
+      console.error('Error checking for imsmanifest.xml:', err);
+    } finally {
+      zip.close();
+      if (!req.fileValidationError) {
+        next();
+      }
+    }
+  });
+}
 
 app.get("/", async (req, res) => {
   // index page, lists the files
@@ -193,14 +299,12 @@ app.post("/rename", async (req, res) => {
   });
 });
 
-app.post("/upload", upload.single("zipFile"), (req, res) => {
-  if (req.fileValidationError) {
-    return res.status(400).send(req.fileValidationError);
-  }
+app.post("/upload", upload.single("zipFile"), checkForImsmanifest, (req, res) => {
   console.log(req.file);
   res.redirect("/");
 });
 app.get("/load/:filename", async (req, res) => {
+  const manifestLanguage = req.query.lang;
   try {
     const rawFilename = req.params.filename;
     // Sanitize filename before use
@@ -225,7 +329,7 @@ app.get("/load/:filename", async (req, res) => {
     const firstResourceId = manifest[0].items[0].title;
 
     // Redirect to the resource page
-    res.redirect(`/resource/${encodeURIComponent(firstResourceId)}`);
+    res.redirect(`/resource/${encodeURIComponent(firstResourceId)}?lang=${manifestLanguage}`);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error processing the package");
@@ -233,6 +337,7 @@ app.get("/load/:filename", async (req, res) => {
 });
 app.use("/shared", express.static("shared"));
 app.get("/resource/:id", (req, res) => {
+  const manifestLanguage = req.query.lang;
   const id = req.params.id;
   let resource = null;
   let filename = null;
@@ -293,25 +398,53 @@ app.get("/resource/:id", (req, res) => {
       prevResource,
       nextResource,
       manifest, // pass the manifest to the view
+      description: module.description,
       currentPage: id,
       req,
+      manifestLanguage,
     });
   });
 });
 app.get("/page/*", (req, res) => {
-  const filePath = path.join(req.session.currentBasePath, req.params[0]); // Get the base path from the session
-  const stream = fs.createReadStream(filePath);
-  const mimeType = mime.lookup(filePath); // determines the MIME type based on the file extension
-  if (!mimeType) {
-    res.status(500).send("Could not determine file type");
-    return;
+  const requestedPath = req.params[0]; // Get the requested path
+  const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
+
+  // Check if the requested resource corresponds to a content module resource
+  let contentModuleResource = null;
+  for (let key in req.session.manifests) {
+    let manifest = req.session.manifests[key];
+    for (let module of manifest) {
+      contentModuleResource = module.items.find(
+        (i) => i.title === requestedPath && i.type === "contentmodule"
+      );
+      if (contentModuleResource) {
+        break;
+      }
+    }
+    if (contentModuleResource) {
+      break;
+    }
   }
-  res.setHeader("Content-Type", mimeType);
-  stream.on("error", function (error) {
-    res.status(500).send("Error reading file");
-  });
-  stream.pipe(res);
+
+  if (contentModuleResource) {
+    // If the requested resource is a content module resource, render the EJS template
+    res.render("content-module", { module: contentModuleResource });
+  } else {
+    // If the requested resource is not a content module resource, serve the file
+    const stream = fs.createReadStream(filePath);
+    const mimeType = mime.lookup(filePath); // determines the MIME type based on the file extension
+    if (!mimeType) {
+      res.status(500).send("Could not determine file type");
+      return;
+    }
+    res.setHeader("Content-Type", mimeType);
+    stream.on("error", function (error) {
+      res.status(500).send("Error reading file");
+    });
+    stream.pipe(res);
+  }
 });
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

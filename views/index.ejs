@@ -26,7 +26,7 @@ body {
   align-items:center;
   background-color: #FFF;
   box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);  /* box-shadow to delimit the tiles */
-  border-radius: 5px;  /* modern-looking rounded corners */
+  border-radius: 5px;
 }
       .tile a{
         text-align:center;
@@ -53,12 +53,12 @@ body {
   <div class="container">
     
 
-    <% for(let i=0; i<packageFiles.length; i++) { %>
-     <div class="tile">
-        <a href="/load/<%= packageFiles[i] %>">
-            <%= packageFiles[i].replace(/\.[^/.]+$/, "") %>
-        </a>
-    </div>
+       <% for(let i=0; i<packageFiles.length; i++) { %>
+        <div class="tile">
+            <a href="/load/<%= encodeURIComponent(packageFiles[i].file) %>?lang=<%= packageFiles[i].lang %>">
+                <%= packageFiles[i].title %> <!-- displays the title -->
+            </a>
+        </div>
     <% } %>
       <div class="adminConsole"><a href="/adminconsole">&#120645;</a></div>
        </div>
