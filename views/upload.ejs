@@ -28,7 +28,7 @@
   
     <% for(let i=0; i<packageFiles.length; i++) { %>
      <div>
-        <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].replace(/\.[^/.]+$/, "") %>"> <button onclick="renameFile('<%= packageFiles[i]%>','file_<%= i %>')">Rename</button>
+        <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>"> <button onclick="renameFile('<%= packageFiles[i].file%>','file_<%= i %>')">Rename</button>
     </div>
     <% } %>
       </div>
