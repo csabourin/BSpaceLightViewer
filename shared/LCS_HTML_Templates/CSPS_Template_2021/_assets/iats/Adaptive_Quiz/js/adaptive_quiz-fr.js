@@ -65,9 +65,9 @@ function loadAdaptiveQuiz(quizDataUrl, parentElementId, dataOverride = null) {
             // default lang terms
             nextButton: 'Continuer',
             previousButton: 'Previous',
-            restartButton: "RedÃ©marrer l'activitÃ©",
-            checkAnswerButton: 'VÃ©rifier ma rÃ©ponse',
-            showFeedbackButton: 'Afficher mes rÃ©ponses',
+            restartButton: "Redémarrer l'activité",
+            checkAnswerButton: 'Vérifier ma réponse',
+            showFeedbackButton: 'Afficher mes réponses',
             hintButton: '<span class="icon hint" aria-label="Toggle Hint"></span>',
             nextPageButton: 'Page suivante',
             strikeZoneText: 'You have #{numRemainingToDowngrade} remaining before going to the lower level.',

@@ -1,0 +1,229 @@
+{
+	"ActivityName": "_ACTIVITY_NAME_",
+	"HeadingLevel": 1,
+	"Randomize": true,
+	"ShowScenes": "1",
+	"visible": true,
+	"SCORMEnabled": true,
+	"visibleStyle": {
+		"colour": "#F902AB",
+		"opacity": "25%",
+		"stroke": false,
+		"strokeColour": "#FF0000",
+		"strokeWidth": "2"
+	},
+	"highlight": false,
+	"highlightStyle": {
+		"colour": "#FFFFFF",
+		"opacity": "50%",
+		"stroke": true,
+		"strokeColour": "#00FFFF",
+		"strokeWidth": "5"
+	},
+	"PreActivityText": "_PRE_ACTIVITY_TEXT_OR_HTML_",
+	"PreActivityMedia": [{
+			"type": "image",
+			"src": "http://via.placeholder.com/200x200",
+			"description": "_ALT_TEXT_FOR_IMG_",
+			"mediaLink": "https://en.wikipedia.org/wiki/Placeholder",
+			"width": "200",
+			"height": "200"
+		},
+		{
+			"type": "link",
+			"src": "https://en.wikipedia.org/wiki/Placeholder",
+			"description": "_DESCRIPTION_FOR_LINK_"
+		}
+	],
+	"PostActivityText": "_POST_ACTIVITY_TEXT_OR_HTML_",
+	"PostActivityMedia": [{
+		"type": "YouTubeVideo",
+		"src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+		"altLink": "https://en.wikipedia.org/wiki/Placeholder",
+		"width": "none",
+		"height": "none"
+	}],
+	"Scenes": [{
+			"SceneName": "_SCENE_1_NAME_",
+			"Instructions": "_SCENE_1_INSTRUCTIONS_",
+			"Background": {
+				"src": "img/bg-beach.jpg",
+				"alt": "_ALT_TEXT_FOR_BACKGROUND_IMAGE_SCENE_1_",
+				"imgWidth": "1024",
+				"imgHeight": "576"
+			},
+			"HotSpots": [{
+					"id": "one",
+					"shapeType": "circle",
+					"desc": "_ALT_TEXT_DESCRIBING_WHAT_SHAPE_ONE_IS_HIGHLIGHTING_",
+					"xPos": "500",
+					"yPos": "200",
+					"radius": "100"
+				},
+				{
+					"id": "two",
+					"shapeType": "rectangle",
+					"desc": "_ALT_TEXT_DESCRIBING_WHAT_SHAPE_TWO_IS_HIGHLIGHTING_",
+					"xPos": "100",
+					"yPos": "0",
+					"shapeWidth": "100",
+					"shapeHeight": "200"
+				},
+				{
+					"id": "three",
+					"shapeType": "custom",
+					"desc": "_ALT_TEXT_DESCRIBING_WHAT_SHAPE_THREE_IS_HIGHLIGHTING_",
+					"coords": "304,438,275,513,370,457,423,512,414,419,483,376,396,359,380,288,323,373,255,379"
+				}
+			],
+			"HotSpotContent": [{
+					"key": "one",
+					"activityType": "presentation",
+					"popUpName": "_POPUP_ONE_HEADING_",
+					"hotSpotMedia": [{
+							"type": "text",
+							"content": "_TEXT_CONTENT_FOR_POPUP_ONE_"
+						},
+						{
+							"type": "image",
+							"src": "http://via.placeholder.com/200x200",
+							"description": "_ALT_TEXT_FOR_IMAGE_",
+							"mediaLink": "https://en.wikipedia.org/wiki/Placeholder"
+						},
+						{
+							"type": "link",
+							"src": "https://en.wikipedia.org/wiki/Placeholder",
+							"description": "_DESCRIPTION_FOR_LINK_"
+						}
+					]
+				},
+				{
+					"key": "two",
+					"activityType": "presentation",
+					"popUpName": "_POPUP_TWO_HEADING_",
+					"hotSpotMedia": [{
+							"type": "audio",
+							"id": "audioOne",
+							"mp3": "audio/sample1/boohiss.mp3",
+							"ogg": "audio/sample1/boohiss.ogg",
+							"wav": "audio/sample1/boohiss.wav",
+							"altLink": "https://en.wikipedia.org/wiki/Placeholder"
+						},
+						{
+							"type": "image",
+							"src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+							"description": "_ALT_TEXT_FOR_IMG_",
+							"mediaLink": "https://en.wikipedia.org/wiki/Placeholder"
+						},
+						{
+							"type": "YouTubeVideo",
+							"src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+							"altLink": "https://en.wikipedia.org/wiki/Placeholder"
+						}
+					]
+				},
+				{
+					"key": "three",
+					"activityType": "assessment",
+					"popUpName": "_POPUP_THREE_HEADING_",
+					"feedback": true,
+					"questionText": "_QUESTION_TEXT_ANSWER_IS_3_",
+					"answers": [{
+							"answerText": "_ANSWER_1_",
+							"correct": false,
+							"feedback": "_FEEDBACK_TEXT_1_"
+						},
+						{
+							"answerText": "_ANSWER_2_",
+							"correct": false,
+							"feedback": "_FEEDBACK_TEXT_2_"
+						},
+						{
+							"answerText": "_ANSWER_3_",
+							"correct": true,
+							"feedback": "_FEEDBACK_TEXT_3_"
+						},
+						{
+							"answerText": "_ANSWER_4_",
+							"correct": false,
+							"feedback": "_FEEDBACK_TEXT_4_"
+						}
+					]
+				}
+			]
+		},
+		{
+			"SceneName": "_SCENE_2_NAME_",
+			"Instructions": "_SCENE_2_INSTRUCTIONS_",
+			"Background": {
+				"src": "img/bg-office.jpg",
+				"alt": "_ALT_TEXT_FOR_BACKGROUND_IMAGE_SCENE_2_",
+				"imgWidth": "992",
+				"imgHeight": "558"
+			},
+			"HotSpots": [{
+					"id": "one",
+					"shapeType": "custom",
+					"desc": "_ALT_TEXT_DESCRIBING_WHAT_SHAPE_ONE_IS_HIGHLIGHTING_",
+					"coords": "0,251,62,245,154,244,265,244,347,243,391,237,392,323,375,350,350,358,321,362,315,336,317,311,312,306,268,306,266,254,196,254,156,261,2,259,0,260"
+				},
+				{
+					"id": "two",
+					"shapeType": "custom",
+					"desc": "_ALT_TEXT_DESCRIBING_WHAT_SHAPE_TWO_IS_HIGHLIGHTING_",
+					"coords": "672,261,754,261,755,282,753,291,753,301,752,309,673,309"
+				}
+			],
+			"HotSpotContent": [{
+					"key": "one",
+					"activityType": "presentation",
+					"popUpName": "_POPUP_ONE_HEADING_",
+					"hotSpotMedia": [{
+							"type": "text",
+							"content": "_TEXT_CONTENT_FOR_POPUP_ONE_"
+						},
+						{
+							"type": "image",
+							"src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+							"description": "_ALT_TEXT_FOR_IMG_",
+							"mediaLink": "https://en.wikipedia.org/wiki/Placeholder"
+						},
+						{
+							"type": "YouTubeVideo",
+							"src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+							"altLink": "https://en.wikipedia.org/wiki/Placeholder"
+						}
+					]
+				},
+				{
+					"key": "two",
+					"activityType": "assessment",
+					"popUpName": "_POPUP_TWO_HEADING_",
+					"feedback": true,
+					"questionText": "_QUESTION_TEXT_ANSWER_IS_1_",
+					"answers": [{
+							"answerText": "_ANSWER_1_",
+							"correct": true,
+							"feedback": "_FEEDBACK_TEXT_1_"
+						},
+						{
+							"answerText": "_ANSWER_2_",
+							"correct": false,
+							"feedback": "_FEEDBACK_TEXT_2_"
+						},
+						{
+							"answerText": "_ANSWER_3_",
+							"correct": false,
+							"feedback": "_FEEDBACK_TEXT_3_"
+						},
+						{
+							"answerText": "_ANSWER_4_",
+							"correct": false,
+							"feedback": "_FEEDBACK_TEXT_4_"
+						}
+					]
+				}
+			]
+		}
+	]
+}

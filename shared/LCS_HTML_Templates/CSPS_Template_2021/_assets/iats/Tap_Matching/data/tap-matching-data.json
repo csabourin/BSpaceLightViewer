@@ -1,0 +1,211 @@
+{
+	"ActivityName": "Matching WHMIS Pictograms",
+	"ActivityType": "manual",
+	"HeadingLevel": 1,
+	"FeedbackType": "continuous",
+	"Randomize": true,
+	"Instructions": "<p>In the following activity, you will be able to confirm your understanding of the WHMIS pictograms.  This is an important activity, as it will prepare you for the final quiz you need to pass in order to earn your WHMIS certification.  Most importantly, understanding what each pictogram denotes is a key step in identifying potential hazards in the workplace.</p><p>Match the pictogram with its description.</p>",
+	"PreActivityText": "none",
+	"PreActivityMedia": "none",
+	"IncludePostPage": false,
+	"PostActivityText": "none",
+	"PostActivityMedia": "none",
+	"Questions": [
+        {
+            "text": "none",
+            "answerGroupKeys": ["1","2","3","4","5","6","7","8","9"],
+            "showGroups": "all"
+        }
+    ],
+	"Groups": [{
+			"key": "1",
+			"color": "default",
+			"feedback": "Correct, you have the right answer! Other feedback goes here."
+		},
+		{
+			"key": "2",
+			"color": "default",
+			"feedback": "Correct, you have the right answer! You can have unique feedback for each match."
+		},
+		{
+			"key": "3",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		},
+		{
+			"key": "4",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		},
+		{
+			"key": "5",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		},
+		{
+			"key": "6",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		},
+		{
+			"key": "7",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		},
+		{
+			"key": "8",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		},
+		{
+			"key": "9",
+			"color": "default",
+			"feedback": "Correct, you have the right answer!"
+		}
+	],
+	"Options": [{
+			"text": "",
+			"group": "1",
+			"image": "img/matching_flame_over_circle.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Flame Over Circle denotes oxidizing gases, liquids, solids.",
+			"group": "1",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "2",
+			"image": "img/matching_flame.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Flame denotes that the product is flammable.",
+			"group": "2",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "3",
+			"image": "img/matching_gas.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Gas Cylinder denotes gas under pressure.",
+			"group": "3",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "4",
+			"image": "img/matching_explosive.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Exploding Bomb denotes products that are explosive.",
+			"group": "4",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "5",
+			"image": "img/matching_skull.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Skull and Crossbones denotes acute toxicity.",
+			"group": "5",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "6",
+			"image": "img/matching_corrosive.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Corrosion denotes skin, eye and metal corrosion.",
+			"group": "6",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "7",
+			"image": "img/matching_!.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Exclamation Mark denotes irritation, sensitization and organ toxicity as a result of unsafe exposure to this product.",
+			"group": "7",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "8",
+			"image": "img/matching_hazard.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Health Hazard symbol denotes potential carcinogenicity, mutagenicity, or a reproductive hazard.",
+			"group": "8",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		},
+		{
+			"text": "",
+			"group": "9",
+			"image": "img/matching_bio.png",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 1
+		},
+		{
+			"text": "Biohazardous Infectious Materials symbol denotes the materials contained create a probable infection in humans and animals upon unsafe exposure.",
+			"group": "9",
+			"image": "none",
+			"type": "text",
+			"color": "default",
+			"feedbackOrder": 2
+		}
+	]
+}

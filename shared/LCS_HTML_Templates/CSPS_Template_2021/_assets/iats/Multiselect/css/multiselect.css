@@ -1,0 +1,472 @@
+/*========= Breakpoints ==========*/
+/*** Small - SM ***/
+/*** Medium - MD ***/
+/*** Large - LG ***/
+/*** Extra large - XLG ***/
+/*========= Color Variables ==========*/
+/* Buttons */
+/*========= Original Color Variables ==========*/
+/*========= Fonts ==========*/
+/* Font family for course */
+/* font sizing converted to rem - worked off of https://snook.ca/archives/html_and_css/font-size-with-rem */
+#GS_container {
+  line-height: 1.25 !important;
+  width: 100%;
+  margin-left: auto;
+  margin-top: 0.625rem;
+  margin-right: auto;
+  border-top: none;
+  border-bottom: 5px transparent !important;
+  /* #GS_header styling removed to align to Course appearance
+#GS_header h1,
+#GS_header h2 {
+   margin: 5px 0;
+   color: $white;
+   font-weight: 300;
+   font-size: 40px;
+   line-height: 60px;
+   letter-spacing: -0.5px;
+}
+
+#GS_header {
+   padding: 5px $f10;
+   background: #006FBF;
+}
+*/
+  /*
+.GS_button > .GS_buttonLabel {
+   margin-top: -3px;
+}
+*/
+  /*.GS_button:active,
+.GS_resultButton:active {
+    background-color: #BCE2D3;
+    transition: background-color 0.15s linear;
+    -moz-transition: background-color 0.15s linear;
+    -webkit-transition: background-color 0.15s linear;
+    -ms-transition: background-color 0.15s linear;
+    border: 1px solid #BCE2D3;
+    color: #333333;
+    cursor: pointer;
+}*/
+  /*.GS_Media.feedbackMedia > .GS_MediaAltLink {
+    width: 20%;
+}*/
+  /*.GS_tCheckBox {
+   text-align: center;
+    vertical-align: middle;  
+}*/
+  /*.GS_tInput.wrong {
+    background-position: 0px 50px;
+}
+
+.GS_tInput.correct {
+    background-position: 50px 50px;
+}*/
+  /*#GS_iToggle:active {
+    background-color: #CEE39D;
+    color: #073643;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear;
+}*/
+  /* Table header style
+ * 
+ * Added 2018-05-30 
+*/
+  /* JSON Generated Media style
+ * 
+ * Added 2018-05-31
+*/ }
+  #GS_container .bg-table {
+    background: #edeef1; }
+  @media (max-width: 500px) {
+    #GS_container .GS_MediaEmbeddedVideo {
+      height: 200px; } }
+  #GS_container #GS_tHeading > p {
+    margin: 0 0 5px 0.625rem;
+    text-align: left; }
+  #GS_container #GS_tHeading {
+    padding: 0;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAABkCAIAAABSARqqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkM0QjUzNDYwRTFBMTFFNjg3ODQ5NzBBMUYxODk5RDIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkM0QjUzNDUwRTFBMTFFNjg3ODQ5NzBBMUYxODk5RDIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFQTE0N0Y2RjA0OUMxMUU2QkZDQkEwQUREOTFCQjUwNyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFQTE0N0Y3MDA0OUMxMUU2QkZDQkEwQUREOTFCQjUwNyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmZUJK8AAAN8SURBVHja7JvtVsMgDIa7Lfd/wTtnq9XoawyQhhZo6wk/Np21y0M+gfT2fD6nnuP1ej0ej95fcbvdiN+W3+/3+3Sp8X6/+QeWn5YJ448YCWOe5zMDLOItQvLss7QktbFcNH8NfDgYyfi6+WfwREsL4n8hebVEUlaH7+jKlr0zzy8LU3K5Tz/JzgpLz3MgkcbwKDcwAOQUkFKrlI/1iJvyKyAHuAEE8Ngk8ZstGaxuuQxT1TbWSTfwKCG1SaqaXXY15imF71rDq7IiY9A2pyw5ksfwGFUCNFEv7QyacCQg2ca9wQ1GkMhJxUyrjLTfDYaSKKvjuWcq6EGls+Zj7609FgKFoEZKb3K8TpR/SytiDXAtLMOdhPfkgKHWZRRFkJh9g01ueUVAP4ufpNnAziepI7XyH9oPoORwTjObHI8mSGR7s5KstDbIXuxxMFXaeTLSFhKIJZ0yuzbYX1Maa6Q21oWcwABZH2hb4as1kv3VRRJcLa1I5mNV82Mh0GO5Yiz7LBIWhedgtaqTSaDWPTYjrToSYdXhr+qk3MNW+cqRkJF+SaC43rtSXa3ue5douubAcuhbP9PFByLB3fjzxVTk33e6JMkl3SZIgiRIgiRIgiRIgiRIgiRIgiRIgmQkySEbGl1I1Pbx5XWCTVp5bNRvUEPpoQq1U572UaTMJyKBBqbktAjiQj/YRz/Rien09+DX2GVWrSHpZvuRJJ5uuIxr/j3+VR8OJSmdeNX6Ve2plZdk9YQtPfhtFanTU6sN96fsrUtu0LWLpnRW2sC6WnXD7UGS7c0yyaahj3pb0X4kFb5LJ9p0FID/4FsmH6Ozj4a5geHxTlSFpDoyiTPUSc5NpfRGw4JMshwbPru1ZQPM4SPte1stjqAlQiw/8+MbMlKlhQW39VE2lh+IlLUoxC6jsCBP4FOBvOvJsHoCwR9RyRP4ZN065oAbXV7+iLpSd8kosadu9WtSFRaY0Ir+rrTLSf4zty1KpKoev5IQqRVxCi8ZmzE1ZFQy2Z+VI+1sj1fr5NLEZ2NAdS1cuwA0zEC26aVVfVXit3TStRRHm57MBhseajMaSJvtSEhHSh/tWj4prZNbBcPGzzpMyUM28EAAwKnaBnSaOgz5bOcCs63J+xQkh7SHxV59fSX7H0jGGFtYV5AESZAESZAESZAESZAESZAESZAEyXXGhwADAF1fAtY3nb4XAAAAAElFTkSuQmCC"); }
+  #GS_container #GS_progress {
+    min-height: 1em;
+    font-size: 1em; }
+  #GS_container #GS_instructions {
+    text-align: left;
+    padding: 0;
+    margin: 0.625rem 0; }
+  #GS_container .GS_instruct_common {
+    font-size: 0.875rem; }
+    @media screen and (min-width: 768px) {
+      #GS_container .GS_instruct_common {
+        font-size: 1rem; } }
+  #GS_container #GS_content {
+    min-height: 200px;
+    height: 100%;
+    background: #ffffff;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-shadow: none; }
+  #GS_container #GS_appContainer {
+    border: none;
+    /*background-color: #EEEEEE;*/
+    display: block;
+    height: 100%;
+    overflow: hidden; }
+  #GS_container #GS_tableContainer {
+    overflow: auto; }
+  #GS_container #GS_buttonSet,
+  #GS_container #GS_instructionButtonSet {
+    font-size: 0;
+    text-align: right;
+    margin: 0 auto; }
+  #GS_container #GS_buttonSet {
+    margin-bottom: 0.625rem; }
+  #GS_container .GS_buttonLabel {
+    display: block;
+    font-size: 1.125rem; }
+  #GS_container .GS_button,
+  #GS_container .GS_button,
+  #GS_container .GS_resultButton,
+  #GS_container .GS_resultButton {
+    background-color: #4e5b73;
+    /*
+   transition: background-color 0.15s linear;
+   -moz-transition: background-color 0.15s linear;
+   -webkit-transition: background-color 0.15s linear;
+   -ms-transition: background-color 0.15s linear;
+   */
+    color: #ffffff;
+    border: 1px solid #4e5b73;
+    cursor: pointer; }
+    #GS_container .GS_button:hover,
+    #GS_container .GS_button:hover,
+    #GS_container .GS_resultButton:hover,
+    #GS_container .GS_resultButton:hover {
+      background-color: #261933;
+      border-color: #261933;
+      color: #ffffff; }
+    #GS_container .GS_button:focus,
+    #GS_container .GS_button:focus,
+    #GS_container .GS_resultButton:focus,
+    #GS_container .GS_resultButton:focus {
+      background-color: #4e5b73;
+      border-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(0, 111, 191, 0.5); }
+  #GS_container #GS_startButton:disabled,
+  #GS_container #GS_submitButton:disabled,
+  #GS_container #GS_nextButton:disabled,
+  #GS_container #GS_restartButton:disabled,
+  #GS_container #GS_finishButton:disabled,
+  #GS_container .GS_resultButton:disabled {
+    background: rgba(63, 42, 86, 0.7) !important;
+    border: 1px solid rgba(63, 42, 86, 0.7) !important;
+    cursor: default; }
+  #GS_container #GS_startButton:disabled > .GS_buttonLabel,
+  #GS_container #GS_submitButton:disabled > .GS_buttonLabel,
+  #GS_container #GS_nextButton:disabled > .GS_buttonLabel,
+  #GS_container #GS_restartButton:disabled > .GS_buttonLabel,
+  #GS_container #GS_finishButton:disabled > .GS_buttonLabel,
+  #GS_container .GS_resultButton:disabled > .GS_buttonLabel {
+    color: #ffffff !important; }
+  #GS_container .GS_button,
+  #GS_container .GS_resultButton {
+    background-color: #4e5b73;
+    /*
+   transition: background-color 0.15s linear;
+   -moz-transition: background-color 0.15s linear;
+   -webkit-transition: background-color 0.15s linear;
+   -ms-transition: background-color 0.15s linear;
+   */
+    color: #ffffff;
+    border: 1px solid #4e5b73;
+    cursor: pointer;
+    white-space: normal;
+    border-radius: 6px; }
+  #GS_container .GS_button {
+    display: inline-block;
+    min-width: 150px;
+    margin-top: 0.625rem; }
+  #GS_container #GS_nextButton,
+  #GS_container #GS_backButton {
+    margin-left: 0.625rem; }
+  #GS_container #GS_instructionsToggle {
+    background: #ffffff;
+    border: 1px solid #d4d4d4;
+    padding: 0.625rem;
+    margin-top: 2%;
+    text-align: center; }
+  #GS_container .GS_resultButton {
+    display: block;
+    min-height: 30px;
+    width: 90%;
+    min-width: 100px;
+    margin: 5px auto; }
+  #GS_container .GS_resultButton > .GS_buttonLabel {
+    font-size: 0.875rem !important; }
+    @media screen and (min-width: 768px) {
+      #GS_container .GS_resultButton > .GS_buttonLabel {
+        font-size: 1rem !important; } }
+  #GS_container #GS_submitButton,
+  #GS_container #GS_finishButton {
+    margin-top: 0px;
+    margin-left: 2%; }
+  #GS_container .GS_audioButton {
+    border-radius: 7px;
+    height: 40px;
+    display: inline-block;
+    white-space: normal;
+    border: 0px solid #c9cdd4;
+    margin-right: 2%;
+    margin-top: 2%;
+    cursor: pointer;
+    width: 40px;
+    background: url("../img/icon-sound-32.png");
+    background-size: contain; }
+  #GS_container .GS_audioButton:hover {
+    background: url("../img/icon-soundHover-32.png");
+    background-size: contain; }
+  #GS_container #GS_progress {
+    width: 50%;
+    float: left; }
+  #GS_container .GS_Media.pageMedia {
+    width: 100%;
+    padding-bottom: 20px;
+    display: inline-block;
+    /*   float: left;*/ }
+  #GS_container .GS_Media.feedbackMedia {
+    padding-left: 20px;
+    padding-bottom: 0.625rem;
+    display: block; }
+  #GS_container .GS_MediaLink {
+    width: 100%;
+    display: block;
+    text-align: center; }
+  #GS_container .GS_MediaLink,
+  #GS_container .GS_MediaAltLink {
+    padding-top: 5px;
+    padding-bottom: 5px; }
+  #GS_container .GS_Media.pageMedia > .GS_MediaLink,
+  #GS_container .GS_Media.pageMedia > .GS_MediaAltLink {
+    display: inline-block; }
+  #GS_container .GS_MediaImageLink,
+  #GS_container .GS_MediaImage {
+    max-width: 100%;
+    height: auto; }
+  #GS_container .GS_Media.pageMedia > img {
+    max-width: 100%;
+    height: auto; }
+  #GS_container .GS_MediaEmbeddedVideo {
+    max-width: 100%;
+    display: block; }
+  #GS_container .GS_Media > p {
+    margin: 5px 0; }
+  #GS_container th,
+  #GS_container td {
+    font-weight: normal !important; }
+  #GS_container #GS_table,
+  #GS_container .GS_resultTable {
+    background-color: #ffffff;
+    border: 1px solid #c9cdd4;
+    border-spacing: 0;
+    width: 100%;
+    vertical-align: bottom; }
+  #GS_container #GS_tHeading {
+    width: 30%;
+    text-align: center; }
+  #GS_container .GS_tAnswer {
+    padding: 0 5px;
+    vertical-align: top; }
+  #GS_container .GS_tAnswer > img {
+    width: auto;
+    max-width: 125px;
+    height: auto;
+    display: block;
+    padding-top: 5px;
+    margin: 0px auto; }
+  #GS_container .GS_tAnswer > p {
+    display: block;
+    text-align: center;
+    margin: 5px 0 5px 0; }
+  #GS_container #GS_tResults {
+    width: 15%; }
+  #GS_container .GS_feedback,
+  #GS_container .GS_qRes {
+    margin: 5px 0 5px 0;
+    text-align: center; }
+  #GS_container .GS_corrAnsImg {
+    display: block;
+    margin: 0px auto 15px auto; }
+  #GS_container .GS_tQuestion > p {
+    text-align: left;
+    margin: 5px 0.625rem; }
+  #GS_container .GS_tInput {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border: 2px solid #c9cdd4;
+    vertical-align: middle;
+    margin: 0.625rem auto;
+    background-color: #ffffff;
+    transition: background-color 0.15s linear;
+    -moz-transition: background-color 0.15s linear;
+    -webkit-transition: background-color 0.15s linear;
+    -ms-transition: background-color 0.15s linear; }
+  #GS_container .GS_tInput:hover,
+  #GS_container .GS_tInput:focus {
+    background-color: #edeef1;
+    transition: background-color 0.15s linear;
+    -moz-transition: background-color 0.15s linear;
+    -webkit-transition: background-color 0.15s linear;
+    -ms-transition: background-color 0.15s linear; }
+  #GS_container .GS_tInput.disabled,
+  #GS_container .GS_tInput.disabled,
+  #GS_container .GS_tInput.disabled:hover,
+  #GS_container .GS_tInput.disabled:focus {
+    background-color: #edeef1; }
+  #GS_container .GS_tInput.check {
+    background-position: 50px 0px; }
+  #GS_container .GS_tInput.selected {
+    background-image: url("../img/sprite-checkmark-35.png");
+    background-position: 0px 0px; }
+  #GS_container .GS_tInput.selected.disabled {
+    background-image: url("../img/sprite-checkmark-35.png");
+    background-position: 35px 0px; }
+  #GS_container #GS_tHeading,
+  #GS_container .GS_tAnswer,
+  #GS_container .GS_tQuestion,
+  #GS_container .GS_tCheckBox,
+  #GS_container .GS_resultUser,
+  #GS_container .GS_userAnswer {
+    border-right: 1px solid #c9cdd4;
+    border-bottom: 1px solid #c9cdd4;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    /* Tablet and up Sizing - from $screen-md*/ }
+    @media screen and (min-width: 768px) {
+      #GS_container #GS_tHeading,
+      #GS_container .GS_tAnswer,
+      #GS_container .GS_tQuestion,
+      #GS_container .GS_tCheckBox,
+      #GS_container .GS_resultUser,
+      #GS_container .GS_userAnswer {
+        font-size: 1.1875rem;
+        line-height: 1.75rem; } }
+  #GS_container #GS_tResults,
+  #GS_container .GS_tQuestionResults,
+  #GS_container .GS_resultCorrect,
+  #GS_container .GS_correctAnswer {
+    border-bottom: 1px solid #c9cdd4; }
+  #GS_container .GS_tQuestionResults,
+  #GS_container .GS_tCheckBox,
+  #GS_container .GS_tQuestion {
+    vertical-align: top; }
+  #GS_container #GS_tQuestionResults {
+    margin-top: 5px; }
+  #GS_container th > p,
+  #GS_container thead,
+  #GS_container tbody {
+    vertical-align: bottom; }
+  #GS_container td.last {
+    border-bottom: none; }
+  #GS_container th.last {
+    border-bottom: none; }
+  #GS_container .GS_responseText {
+    font-size: 20px;
+    margin: 5px 0; }
+  #GS_container .GS_responseText > .GS_responseGraphic {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 0.625rem;
+    margin-top: -3px; }
+  #GS_container .GS_resultHead {
+    text-align: center; }
+  #GS_container .GS_report {
+    margin: 0.625rem 0 25px; }
+  #GS_container .GS_resultUser,
+  #GS_container .GS_resultCorrect {
+    padding: 0.625rem;
+    width: 50%;
+    vertical-align: top;
+    text-align: center; }
+  #GS_container .GS_reportText {
+    padding-left: 0.625rem;
+    vertical-align: middle;
+    display: inline; }
+  #GS_container .GS_reportIcon {
+    height: 15px;
+    display: inline-block;
+    padding-left: 2px;
+    vertical-align: middle; }
+  #GS_container .GS_resultUser,
+  #GS_container .GS_userAnswer,
+  #GS_container .GS_resultCorrect,
+  #GS_container .GS_correctAnswer {
+    padding-top: 5px;
+    padding-bottom: 5px; }
+  #GS_container .GS_userAnswer,
+  #GS_container .GS_correctAnswer {
+    padding-left: 0.625rem; }
+  #GS_container .GS_resultUser,
+  #GS_container .GS_userAnswer {
+    border-right: 1px solid #c9cdd4;
+    border-bottom: 1px solid #c9cdd4; }
+  #GS_container #GS_preActivityText,
+  #GS_container #GS_postActivityText {
+    margin: 0.625rem 0; }
+  #GS_container .GS_option {
+    margin: 5px 0;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: 0.4px; }
+  #GS_container .GS_feedbackHead {
+    margin: 0;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    letter-spacing: 0.5px; }
+  #GS_container iframe {
+    height: 100%;
+    max-height: 300px; }
+  #GS_container .pageMedia > iframe {
+    margin: 0 auto; }
+  #GS_container .GS_questionHead {
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 45px;
+    letter-spacing: -0.3px;
+    margin: 0 0 5px 0; }
+  #GS_container #GS_iToggle {
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: #f2f3f5;
+    margin-bottom: 0.625rem;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #GS_container #GS_iToggle:hover {
+    background-color: #e6eaf0;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #GS_container .GS_feedbackCont {
+    padding: 0.625rem;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAABkCAIAAABSARqqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkM0QjUzNDYwRTFBMTFFNjg3ODQ5NzBBMUYxODk5RDIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkM0QjUzNDUwRTFBMTFFNjg3ODQ5NzBBMUYxODk5RDIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFQTE0N0Y2RjA0OUMxMUU2QkZDQkEwQUREOTFCQjUwNyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFQTE0N0Y3MDA0OUMxMUU2QkZDQkEwQUREOTFCQjUwNyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmZUJK8AAAN8SURBVHja7JvtVsMgDIa7Lfd/wTtnq9XoawyQhhZo6wk/Np21y0M+gfT2fD6nnuP1ej0ej95fcbvdiN+W3+/3+3Sp8X6/+QeWn5YJ448YCWOe5zMDLOItQvLss7QktbFcNH8NfDgYyfi6+WfwREsL4n8hebVEUlaH7+jKlr0zzy8LU3K5Tz/JzgpLz3MgkcbwKDcwAOQUkFKrlI/1iJvyKyAHuAEE8Ngk8ZstGaxuuQxT1TbWSTfwKCG1SaqaXXY15imF71rDq7IiY9A2pyw5ksfwGFUCNFEv7QyacCQg2ca9wQ1GkMhJxUyrjLTfDYaSKKvjuWcq6EGls+Zj7609FgKFoEZKb3K8TpR/SytiDXAtLMOdhPfkgKHWZRRFkJh9g01ueUVAP4ufpNnAziepI7XyH9oPoORwTjObHI8mSGR7s5KstDbIXuxxMFXaeTLSFhKIJZ0yuzbYX1Maa6Q21oWcwABZH2hb4as1kv3VRRJcLa1I5mNV82Mh0GO5Yiz7LBIWhedgtaqTSaDWPTYjrToSYdXhr+qk3MNW+cqRkJF+SaC43rtSXa3ue5douubAcuhbP9PFByLB3fjzxVTk33e6JMkl3SZIgiRIgiRIgiRIgiRIgiRIgiRIgmQkySEbGl1I1Pbx5XWCTVp5bNRvUEPpoQq1U572UaTMJyKBBqbktAjiQj/YRz/Rien09+DX2GVWrSHpZvuRJJ5uuIxr/j3+VR8OJSmdeNX6Ve2plZdk9YQtPfhtFanTU6sN96fsrUtu0LWLpnRW2sC6WnXD7UGS7c0yyaahj3pb0X4kFb5LJ9p0FID/4FsmH6Ozj4a5geHxTlSFpDoyiTPUSc5NpfRGw4JMshwbPru1ZQPM4SPte1stjqAlQiw/8+MbMlKlhQW39VE2lh+IlLUoxC6jsCBP4FOBvOvJsHoCwR9RyRP4ZN065oAbXV7+iLpSd8kosadu9WtSFRaY0Ir+rrTLSf4zty1KpKoev5IQqRVxCi8ZmzE1ZFQy2Z+VI+1sj1fr5NLEZ2NAdS1cuwA0zEC26aVVfVXit3TStRRHm57MBhseajMaSJvtSEhHSh/tWj4prZNbBcPGzzpMyUM28EAAwKnaBnSaOgz5bOcCs63J+xQkh7SHxV59fSX7H0jGGFtYV5AESZAESZAESZAESZAESZAESZAEyXXGhwADAF1fAtY3nb4XAAAAAElFTkSuQmCC"); }
+  #GS_container .sr-only {
+    display: none !important;
+    width: 0px;
+    height: 0px; }
+  #GS_container #GS_tHeading > p,
+  #GS_container .GS_tAnswer > p,
+  #GS_container .GS_tQuestion > p {
+    font-weight: bold; }
+  #GS_container .GS_Media.pageMedia {
+    text-align: center; }

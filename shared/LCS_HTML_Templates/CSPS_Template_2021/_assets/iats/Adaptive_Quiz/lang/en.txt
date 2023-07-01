@@ -1,0 +1,10 @@
+{
+	"nextButton": "Next",
+	"previousButton": "Previous",
+	"restartButton": "Restart Quiz",
+	"checkAnswerButton": "Check Answer",
+  "showFeedbackButton": "Review My Answers",
+	"hintButton": "<span class=\"icon hint\" aria-label=\"Toggle Hint\"></span>",
+	"strikeZoneText": "You have #{numRemainingToDowngrade} remaining before going to the lower level.",
+	"progressBarText": "You have #{numRemainingToUpgrade} remaining before progressing to the next level."
+}
