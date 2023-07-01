@@ -1,0 +1,131 @@
+{
+    "General": {
+        "QuizName": "_ACTIVITY_NAME_",
+        "HeadingLevel": 2,
+        "instructions": "none",
+        "feedBackType": "continuous",
+        "forceCorrect": false,
+        "repeatOnComplete": true,
+        "allowNone": false,
+        "allowPrevious": true,
+        "showHints": true,
+        "allowPartial": true,
+        "randomize": true,
+        "subtractWrong": true,
+        "preQuizText": "_PRE_QUIZ_TEXT_OR_HTML_",
+        "preQuizMedia": "none",
+        "postQuizText": "none",
+        "postQuizMedia": [
+            {
+                "type": "YouTubeVideo",
+                "src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+                "width": "none",
+                "height": "none"
+            }
+        ]
+    },
+    "Questions": [
+        {
+            "questionType": "All That Apply",
+            "maxScoreValue": 2,
+            "questionText": "_QUESTION_1_TEXT_",
+            "hintText": "_HINT_TEXT_FOR_QUESTION_1_",
+            "hintMedia": "none",
+            "answers": [
+                {
+                    "answerText": "_ANSWER_TEXT_1_",
+                    "feedBack": "_FEEDBACK_FOR_WHEN_USER_SELECTS_ANSWER_1_",
+                    "scoreValue": 1
+                },
+                {
+                    "answerText": "_ANSWER_TEXT_2_",
+                    "feedBack": "_FEEDBACK_FOR_WHEN_USER_SELECTS_ANSWER_2_",
+                    "scoreValue": 1
+                },
+                {
+                    "answerText": "_ANSWER_TEXT_3_",
+                    "feedBack": "_FEEDBACK_FOR_WHEN_USER_SELECTS_ANSWER_3_"
+                }
+            ]
+        },
+        {
+            "questionType": "Multiple Choice",
+            "maxScoreValue": 1,
+            "questionText": "_QUESTION_2_TEXT_",
+            "hintText": "none",
+            "hintMedia": "none",
+            "answers": [
+                {
+                    "answerText": "_ANSWER_TEXT_1_",
+                    "feedBack": "_FEEDBACK_FOR_WHEN_USER_SELECTS_ANSWER_1_",
+                    "scoreValue": 1
+                },
+                {
+                    "answerText": "_ANSWER_TEXT_2_",
+                    "feedBack": "_FEEDBACK_FOR_WHEN_USER_SELECTS_ANSWER_2_"
+                },
+                {
+                    "answerText": "_ANSWER_TEXT_3_",
+                    "feedBack": "_FEEDBACK_FOR_WHEN_USER_SELECTS_ANSWER_3_"
+                }
+            ]
+        },
+        {
+            "questionType": "Fill In The Blank",
+            "maxScoreValue": 4,
+            "questionText": "_QUESTION_3_TEXT_USE_BLANK1_OR_BLANK2_TO_MAKE_BLANKS_TO_FILL_",
+            "hintText": "_HINT_FOR_QUESTION_3_.",
+            "hintMedia": [
+                {
+                    "type": "image",
+                    "src": "_IMG_SRC_RELATIVE_OR_ABSOLUTE_PATH_",
+                    "description": "_ALT_TEXT_FOR_IMAGE_",
+                    "mediaLink": "https://en.wikipedia.org/wiki/Placeholder"
+                }
+            ],
+            "answers": [
+                {
+                    "answerText": "_BLANK1_ANSWER_",
+                    "feedBack": "none",
+                    "scoreValue": 1
+                },
+                {
+                    "answerText": "_BLANK2_ANSWER_",
+                    "scoreValue": 1,
+                    "feedBack": "none",
+                    "altAnswers": [
+                        {
+                            "answerText": "_AN_ALTERNATE_BLANK2_ANSWER_",
+                            "feedBack": "none",
+                            "scoreValue": 1
+                        },
+                        {
+                            "answerText": "_ANOTHER_ALTERNATE_BLANK2_ANSWER_",
+                            "feedBack": "none",
+                            "scoreValue": 1
+                        },
+                        {
+                            "answerText": "_A_THIRD_ALTERNATE_BLANK2_ANSWER_",
+                            "feedBack": "none",
+                            "scoreValue": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "questionType": "Math",
+            "maxScoreValue": 1,
+            "questionText": "_QUESTION_TEXT_100_PLUS_1_EQUALS_BLANK1_",
+            "hintText": "none",
+            "hintMedia": "none",
+            "answers": [
+                {
+                    "answerText": "_BLANK1_ANSWER_",
+                    "feedBack": "none",
+                    "scoreValue": 1
+                }
+            ]
+        }
+    ]
+}

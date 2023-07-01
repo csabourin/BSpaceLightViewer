@@ -6,7 +6,7 @@ const xml2js = require("xml2js");
 const parser = new xml2js.Parser();
 const ejs = require("ejs");
 const AdmZip = require("adm-zip");
-const StreamZip = require('node-stream-zip');
+const StreamZip = require("node-stream-zip");
 const path = require("path");
 const os = require("os");
 const multer = require("multer"); // used for uploading files
@@ -67,55 +67,61 @@ function getPackages() {
       if (err) {
         reject(err);
       } else {
-        const promises = files.map(file => new Promise((resolve, reject) => {
-          const zip = new StreamZip({
-            file: `./packages/${file}`,
-            storeEntries: true
-          });
-      
-          zip.on('ready', () => {
-            // Check if the manifest exists within the zip
-            if (zip.entry('imsmanifest.xml')) {
-              // If it exists, extract it
-              zip.stream('imsmanifest.xml', (err, stm) => {
-                if (err) {
-                  reject(err);
-                } else {
-                  // Convert stream to string
-                  const chunks = [];
-                  stm.on('data', chunk => chunks.push(chunk));
-                  stm.on('end', () => {
-                    const xmlString = Buffer.concat(chunks).toString();
+        const promises = files.map(
+          (file) =>
+            new Promise((resolve, reject) => {
+              const zip = new StreamZip({
+                file: `./packages/${file}`,
+                storeEntries: true,
+              });
 
-                    // Parse the XML string
-                    xml2js.parseString(xmlString, (err, result) => {
-                      if (err) {
-                        reject(err);
-                      } else {
-                        // Get the title and xml:lang value
-                        const titleData = result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
-                        const title = titleData._;
-                        const lang = titleData["$"]["xml:lang"];
+              zip.on("ready", () => {
+                // Check if the manifest exists within the zip
+                if (zip.entry("imsmanifest.xml")) {
+                  // If it exists, extract it
+                  zip.stream("imsmanifest.xml", (err, stm) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      // Convert stream to string
+                      const chunks = [];
+                      stm.on("data", (chunk) => chunks.push(chunk));
+                      stm.on("end", () => {
+                        const xmlString = Buffer.concat(chunks).toString();
 
-                        resolve({
-                          file,
-                          title,
-                          lang
+                        // Parse the XML string
+                        xml2js.parseString(xmlString, (err, result) => {
+                          if (err) {
+                            reject(err);
+                          } else {
+                            // Get the title and xml:lang value
+                            const titleData =
+                              result.manifest.metadata[0]["imsmd:lom"][0][
+                                "imsmd:general"
+                              ][0]["imsmd:title"][0]["imsmd:langstring"][0];
+                            const title = titleData._;
+                            const lang = titleData["$"]["xml:lang"];
+
+                            resolve({
+                              file,
+                              title,
+                              lang,
+                            });
+                          }
                         });
-                      }
-                    });
+                      });
+                    }
                   });
+                } else {
+                  reject(new Error("imsmanifest.xml not found within zip"));
                 }
               });
-            } else {
-              reject(new Error('imsmanifest.xml not found within zip'));
-            }
-          });
-        }));
-        
+            })
+        );
+
         Promise.all(promises)
-          .then(data => resolve(data))
-          .catch(err => reject(err));
+          .then((data) => resolve(data))
+          .catch((err) => reject(err));
       }
     });
   });
@@ -189,36 +195,7 @@ function processItems(item, resources) {
   const items = [];
 
   if (item.item) {
-    item.item.forEach((i) => {
-      const itemResource = resources.find(
-        (r) => r.$.identifier === i.$.identifierref
-      );
-
-      if (
-        itemResource &&
-        itemResource.$["d2l_2p0:material_type"] === "contentmodule"
-      ) {
-        const title = i.title[0];
-        const description = i.$.description
-          ? entities.decode(i.$.description)
-          : null;
-
-        items.push({
-          type: "contentmodule",
-          title: title,
-          description: description,
-        });
-      } else if (
-        itemResource &&
-        itemResource.$["d2l_2p0:material_type"] === "content"
-      ) {
-        items.push({
-          type: "content",
-          title: i.title[0],
-          href: `${itemResource.$.href}`,
-        });
-      }
-    });
+    items.push(...processSubItems(item.item, resources));
   }
 
   return {
@@ -229,28 +206,73 @@ function processItems(item, resources) {
   };
 }
 
+function processSubItems(subItems, resources) {
+  const items = [];
+  
+  subItems.forEach((i) => {
+    const itemResource = resources.find(
+      (r) => r.$.identifier === i.$.identifierref
+    );
+
+    if (
+      itemResource &&
+      itemResource.$["d2l_2p0:material_type"] === "contentmodule"
+    ) {
+      const title = i.title[0];
+      const description = i.$.description
+        ? entities.decode(i.$.description)
+        : null;
+
+      const newItem = {
+        type: "contentmodule",
+        title: title,
+        description: description,
+        items: []
+      };
+      
+      if (i.item) {
+        newItem.items.push(...processSubItems(i.item, resources));
+      }
+
+      items.push(newItem);
+    } else if (
+      itemResource &&
+      itemResource.$["d2l_2p0:material_type"] === "content"
+    ) {
+      items.push({
+        type: "content",
+        title: i.title[0],
+        href: `${itemResource.$.href}`,
+      });
+    }
+  });
+
+  return items;
+}
+
+
 function checkForImsmanifest(req, res, next) {
   // Check for imsmanifest.xml in the zip
   const zip = new StreamZip({ file: req.file.path, storeEntries: true });
 
-  zip.on('ready', () => {
+  zip.on("ready", () => {
     try {
-      if (!zip.entry('imsmanifest.xml')) {
+      if (!zip.entry("imsmanifest.xml")) {
         req.fileValidationError =
           '<p>Zip files must contain an imsmanifest.xml file.</p> <a href="/">Back</a>';
 
         fs.unlink(req.file.path, (err) => {
           if (err) {
-            console.error('Error deleting file:', err);
+            console.error("Error deleting file:", err);
           } else {
-            console.log('Deleted invalid file:', req.file.path);
+            console.log("Deleted invalid file:", req.file.path);
           }
         });
 
         return res.status(400).send(req.fileValidationError);
       }
     } catch (err) {
-      console.error('Error checking for imsmanifest.xml:', err);
+      console.error("Error checking for imsmanifest.xml:", err);
     } finally {
       zip.close();
       if (!req.fileValidationError) {
@@ -259,6 +281,26 @@ function checkForImsmanifest(req, res, next) {
     }
   });
 }
+
+function flattenItems(items) {
+  let flat = [];
+
+  function _flattenItems(items) {
+    items.forEach((item) => {
+      if (item.type !== "contentmodule") {
+        flat.push(item);
+      }
+      if (item.items) {
+        _flattenItems(item.items);
+      }
+    });
+  }
+
+  _flattenItems(items);
+
+  return flat;
+}
+
 
 app.get("/", async (req, res) => {
   // index page, lists the files
@@ -299,10 +341,15 @@ app.post("/rename", async (req, res) => {
   });
 });
 
-app.post("/upload", upload.single("zipFile"), checkForImsmanifest, (req, res) => {
-  console.log(req.file);
-  res.redirect("/");
-});
+app.post(
+  "/upload",
+  upload.single("zipFile"),
+  checkForImsmanifest,
+  (req, res) => {
+    console.log(req.file);
+    res.redirect("/");
+  }
+);
 app.get("/load/:filename", async (req, res) => {
   const manifestLanguage = req.query.lang;
   try {
@@ -329,7 +376,11 @@ app.get("/load/:filename", async (req, res) => {
     const firstResourceId = manifest[0].items[0].title;
 
     // Redirect to the resource page
-    res.redirect(`/resource/${encodeURIComponent(firstResourceId)}?lang=${manifestLanguage}`);
+    res.redirect(
+      `/resource/${encodeURIComponent(
+        firstResourceId
+      )}?lang=${manifestLanguage}`
+    );
   } catch (error) {
     console.error(error);
     res.status(500).send("Error processing the package");
@@ -341,22 +392,56 @@ app.get("/resource/:id", (req, res) => {
   const id = req.params.id;
   let resource = null;
   let filename = null;
-  for (let key in req.session.manifests) {
+  let module = null;
+  let allItems = [];
+  
+    for (let key in req.session.manifests) {
     let manifest = req.session.manifests[key];
-    for (let module of manifest) {
-      resource = module.items.find((i) => i.title === id);
-      if (resource) {
-        filename = key; // Get the filename from the key in the session manifest
-        break;
+    manifest.forEach((module) => {
+      allItems = allItems.concat(flattenItems(module.items));
+    });
+    if (allItems.find((item) => item.title === id)) {
+      filename = key;
+      break;
+    }
+  }
+
+  function searchItems(items, title) {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].title === title) {
+        return { item: items[i], index: i };
+      } else if (items[i].type === "contentmodule") {
+        let found = searchItems(items[i].items, title);
+        if (found) {
+          return found;
+        }
       }
     }
-    if (resource) {
+    return null;
+  }
+
+  function searchModules(modules, title) {
+    for (let m of modules) {
+      let found = searchItems(m.items, title);
+      if (found) {
+        module = m;
+        return found;
+      }
+    }
+    return null;
+  }
+
+  for (let key in req.session.manifests) {
+    let manifest = req.session.manifests[key];
+    let found = searchModules(manifest, id);
+    if (found) {
+      resource = found.item;
+      filename = key;
       break;
     }
   }
 
   if (!resource) {
-    // res.status(404).send("Resource not found");
     res.redirect("/");
     return;
   }
@@ -367,29 +452,21 @@ app.get("/resource/:id", (req, res) => {
     res.status(500).send("Manifest not found in session");
     return;
   }
-  const moduleIndex = manifest.findIndex((m) =>
-    m.items.find((i) => i.title === id)
-  );
-  const module = manifest[moduleIndex];
+
   if (!module) {
     res.status(404).send("Module not found");
     return;
   }
-  const resourceIndex = module.items.findIndex((i) => i.title === id);
-  resource = module.items[resourceIndex];
-  let prevResource = module.items[resourceIndex - 1];
-  let nextResource = module.items[resourceIndex + 1];
 
-  // If the nextResource does not exist in the current module,
-  // fetch the first item from the next module as the nextResource
-  if (!nextResource && manifest[moduleIndex + 1]) {
-    nextResource = manifest[moduleIndex + 1].items[0];
+ const resourceIndex = allItems.findIndex((item) => item.title === id);
+  if (!resource) {
+    res.status(404).send("Resource not found");
+    return;
   }
-  if (!prevResource && manifest[moduleIndex - 1]) {
-    let lastOfPrevious = manifest[moduleIndex - 1].items.length;
-    prevResource = manifest[moduleIndex - 1].items[lastOfPrevious - 1];
-  }
-  // Use express.static as middleware inside this route handler
+
+  const prevResource = allItems[resourceIndex - 1];
+  const nextResource = allItems[resourceIndex + 1];
+
   let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
   req.session.currentBasePath = basePath;
   express.static(basePath)(req, res, () => {
@@ -405,6 +482,7 @@ app.get("/resource/:id", (req, res) => {
     });
   });
 });
+
 app.get("/page/*", (req, res) => {
   const requestedPath = req.params[0]; // Get the requested path
   const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session

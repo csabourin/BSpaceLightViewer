@@ -1,0 +1,118 @@
+{
+	"ActivityName": "_ACTIVITY_NAME_",
+	"QuestionDisplay": "all",
+	"ProvideContinuous": false,
+	"ProvideQuestionReport": true,
+	"ProvideEndReport": true,
+	"ShowQuestionFeedback": true,
+	"VisualFeedback": true,
+	"AllowPrevious": false,
+	"Randomize": true,
+	"Instructions": "_ACTIVITY_INSTRUCTIONS_TEXT_",
+	"PreActivityText": "_PRE_ACTIVITY_TEXT_OR_HTML_",
+	"PreActivityMedia": [
+		{
+			"type": "image",
+			"src": "img/preImg.jpg",
+			"description": "_IMG_ALT_TEXT_",
+			"width": "798",
+			"height": "140"
+     	 }
+    ],
+	"PostActivityText": "_POST_ACTIVITY_TEXT_OR_HTML_",
+	"PostActivityMedia": [
+		{
+			"type": "YouTubeVideo",
+			"src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+			"altLink": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+			"width": "420",
+			"height": "420"
+       }
+	],
+	"TableHeading": "_TABLE_HEADING_",
+	"Answers": [
+		{
+			"text": "_TEXT_FOR_ROW_ITEM_"
+		},
+		{
+			"text": "_TEXT_FOR_ROW_ITEM_"
+		},
+		{
+			"text": "_TEXT_FOR_ROW_ITEM_"
+		}
+	],
+	"Questions": [
+		{
+			"text": "_Q1_TEXT_OR_HTML_",
+			"questionFeedback": "_Q1_FEEDBACK_",
+			"answers": [
+				{
+					"check": false,
+					"feedback": []
+				},
+				{
+					"check": false,
+					"feedback": []
+				},
+				{
+					"check": true,
+					"feedback": []
+				}
+			]
+		},
+		{
+			"text": "_Q2_TEXT_OR_HTML_",
+			"questionFeedback": "_Q2_FEEDBACK_",
+			"answers": [
+				{
+					"check": true,
+					"feedback": []
+				},
+				{
+					"check": true,
+					"feedback": []
+				},
+				{
+					"check": false,
+					"feedback": []
+				}
+			]
+		},
+		{
+			"text": "_Q3_TEXT_OR_HTML_",
+			"questionFeedback": "_Q3_FEEDBACK_",
+			"answers": [
+				{
+					"check": false,
+					"feedback": []
+            },
+				{
+					"check": true,
+					"feedback": []
+            },
+				{
+					"check": true,
+					"feedback": []
+            }
+         ]
+      },
+		{
+			"text": "_Q4_TEXT_OR_HTML_",
+			"questionFeedback": "_Q4_FEEDBACK_",
+			"answers": [
+				{
+					"check": false,
+					"feedback": []
+            },
+				{
+					"check": false,
+					"feedback": []
+            },
+				{
+					"check": true,
+					"feedback": []
+            }
+         ]
+      }
+	]
+}

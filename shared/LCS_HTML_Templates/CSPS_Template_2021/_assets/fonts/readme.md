@@ -1,0 +1,1 @@
+Save font source files, use the sample font-face in _fonts.scss.

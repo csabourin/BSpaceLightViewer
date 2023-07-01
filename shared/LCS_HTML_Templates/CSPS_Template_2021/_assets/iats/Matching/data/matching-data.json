@@ -1,0 +1,62 @@
+{
+   "ActivityName": "_ACTIVITY_NAME_",
+   "ActivityType": "sort",
+   "HeadingLevel": 2,
+   "FeedbackType": "report",
+   "HighlightEffect": true,
+   "QuestionColumns": "1",
+   "Randomize": true,
+   "HorizontalAlignment": true,
+   "Instructions": "_ACTIVITY_INSTRUCTIONS_TEXT_OR_HTML_",
+   "PreActivityText": "_PREACTIVITY_TEXT_OR_HTML_",
+   "PreActivityMedia": "none",
+   "IncludePostPage": true,
+   "PostActivityText": "_POSTACTIVITY_TEXT_OR_HTML_",
+   "PostActivityMedia": [{
+      "type": "YouTubeVideo",
+      "src": "https://www.youtube.com/watch?v=aqz-KE-bpKQ",
+      "width": 680,
+      "height": 420,
+      "altLink": "none"
+   }],
+   "AnswerNodes": [{
+      "key": "KEY1",
+      "title": "_DROPZONE_1_HEADING_",
+      "color": "default",
+      "src": "none"
+   }, {
+      "key": "KEY2",
+      "title": "_DROPZONE_2_HEADING_",
+      "color": "default",
+      "src": "none"
+   }],
+   "QuestionNodes": [{
+      "question": "_DRAGGABLE_ITEM_1_",
+      "answer": "KEY1",
+      "type": "text",
+      "color": "default",
+      "correct": "_FEEDBACK_WHEN_PLACED_IN_CORRECT_DROPZONE_ITEM_1_",
+      "wrong": "_FEEDBACK_WHEN_PLACED_IN_INCORRECT_DROPZONE_ITEM_1_"
+   }, {
+      "question": "_DRAGGABLE_ITEM_2_",
+      "answer": "KEY1",
+      "type": "text",
+      "color": "default",
+      "correct": "_FEEDBACK_WHEN_PLACED_IN_CORRECT_DROPZONE_ITEM_2_",
+      "wrong": "_FEEDBACK_WHEN_PLACED_IN_INCORRECT_DROPZONE_ITEM_2_"
+   }, {
+      "question": "_DRAGGABLE_ITEM_3_",
+      "answer": "KEY2",
+      "type": "text",
+      "color": "default",
+      "correct": "_FEEDBACK_WHEN_PLACED_IN_CORRECT_DROPZONE_ITEM_3_",
+      "wrong": "_FEEDBACK_WHEN_PLACED_IN_INCORRECT_DROPZONE_ITEM_3_"
+   }, {
+      "question": "_DRAGGABLE_ITEM_4_",
+      "answer": "KEY2",
+      "type": "text",
+      "color": "default",
+      "correct": "_FEEDBACK_WHEN_PLACED_IN_CORRECT_DROPZONE_ITEM_4_",
+      "wrong": "_FEEDBACK_WHEN_PLACED_IN_INCORRECT_DROPZONE_ITEM_4_"
+   }]
+}

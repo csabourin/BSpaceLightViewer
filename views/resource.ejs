@@ -472,20 +472,31 @@
         </div>
     </div>
 
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <h2><%= manifestLanguage=="en-ca"?"Table of Contents":"Table des matières" %></h2>
-        <% manifest.forEach(function(module) { %>
-            <h3>
-                <%= module.moduleTitle %>
-            </h3>
-            <% module.items.forEach(function(item) { %>
-                <a href="/resource/<%= encodeURIComponent(item.title) %>">
-                    <%= item.title %>
-                </a>
-                <% }); %>
-                    <% }); %>
-    </div>
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <h2><%= manifestLanguage=="en-ca"?"Table of Contents":"Table des matières" %></h2>
+    <% manifest.forEach(function(module) { %>
+        <h3>
+            <%= module.moduleTitle %>
+        </h3>
+        <% function renderItems(items) { %>
+            <% items.forEach(function(item) { %>
+                <% if (item.type === "contentmodule") { %>
+                    <h4><%= item.title %></h4>
+                    <% if (item.items) { %>
+                        <% renderItems(item.items); %>
+                    <% } %>
+                <% } else { %>
+                    <a href="/resource/<%= encodeURIComponent(item.title) %>">
+                        <%= item.title %>
+                    </a>
+                <% } %>
+            <% }); %>
+        <% } %>
+        <% renderItems(module.items); %>
+    <% }); %>
+</div>
+
 
     <div id="main">
 
@@ -505,20 +516,23 @@
         </div>
     </div>
 
-    <script>
-        function openNav() {
-            document.getElementById("mySidebar").style.width = "450px";
-            document.getElementById("main").style.marginLeft = "450px";
-        }
+<script>
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "450px";
+        document.getElementById("main").style.marginLeft = "450px";
+        localStorage.setItem('sidebarStatus', 'open'); // save the sidebar status
+    }
 
-        function closeNav() {
-            document.getElementById("mySidebar").style.width = "0";
-            document.getElementById("main").style.marginLeft = "0";
-        }
-    </script>
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        localStorage.setItem('sidebarStatus', 'closed'); // save the sidebar status
+    }
+</script>
 
     <script>
         window.onload = function () {
+          console.log("loaded");
             var currentPageTitle = '<%= currentPage %>'; // get the current page title from the server-side data
             localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
 
@@ -526,12 +540,17 @@
             var links = document.getElementById('mySidebar').getElementsByTagName('a');
 
             for (var i = 0; i < links.length; i++) {
-                var title = links[i].textContent;
+                var title = links[i].textContent.trim();
                 if (localStorage.getItem(title) === 'visited') {
                     // Add a checkmark after the link
                     links[i].innerHTML += ' ✓';
                 }
             }
+                  // Check the saved sidebar status and open the sidebar if it was previously open
+        // var sidebarStatus = localStorage.getItem('sidebarStatus');
+        // if (sidebarStatus === 'open') {
+        //     openNav();
+        // }
         }
     </script>
 

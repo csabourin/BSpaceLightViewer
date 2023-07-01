@@ -1,0 +1,543 @@
+/*========= Breakpoints ==========*/
+/*** Small - SM ***/
+/*** Medium - MD ***/
+/*** Large - LG ***/
+/*** Extra large - XLG ***/
+/*========= Color Variables ==========*/
+/* Buttons */
+/*========= Original Color Variables ==========*/
+/*========= Fonts ==========*/
+/* Font family for course */
+/* font sizing converted to rem - worked off of https://snook.ca/archives/html_and_css/font-size-with-rem */
+#MAT_container {
+  margin: 5px 0;
+  border-bottom: 5px transparent !important;
+  line-height: 1.25 !important;
+  /*.MAT_expand:active {
+    background-color: #CEE39D;
+    color: #073643;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear;
+}*/
+  /* #MAT_header styling removed to align to Course appearance
+#MAT_header > h1,
+#MAT_header > h2,
+#MAT_header > h3,
+#MAT_header > h4,
+#MAT_header > h5,
+#MAT_header > h6 {
+   margin: 5px 0;
+   color: $white;
+   font-weight: 300;
+   font-size: 40px;
+   line-height: 60px;
+   letter-spacing: -0.5px;
+}
+
+#MAT_header {
+   padding: 5px 10px;
+   background: #006FBF;
+}
+*/
+  /*
+   .MAT_buttonLabel {
+      margin-top: -5px;
+      font-size: $f16;
+      @media screen and (min-width: $screen-md) {
+         font-size: $f19;
+      }
+      margin: 0;
+      padding: 0;
+   }
+*/
+  /*
+   #MAT_checkButton:hover,
+   #MAT_postQuizButton:hover,
+   #MAT_continueButton:hover,
+   #MAT_resetButton:hover,
+   #MAT_restartButton:hover,
+   #MAT_resetWrongButton:hover,
+   #MAT_checkButton:focus,
+   #MAT_postQuizButton:focus,
+   #MAT_continueButton:focus,
+   #MAT_resetButton:focus,
+   #MAT_restartButton:focus,
+   #MAT_resetWrongButton:focus {
+      background-color: #1c5295;
+      transition: background-color 0.15s linear;
+      -moz-transition: background-color 0.15s linear;
+      -webkit-transition: background-color 0.15s linear;
+      -ms-transition: background-color 0.15s linear;
+      color: $white;
+      border: 1px solid #1c5295;
+      cursor: pointer;
+   }*/
+  /*#MAT_checkButton:active,
+#MAT_postQuizButton:active,
+#MAT_continueButton:active,
+#MAT_resetButton:active,
+#MAT_restartButton:active,
+#MAT_resetWrongButton:active {
+    background-color: #BCE2D3;
+    transition: background-color 0.15s linear;
+    -moz-transition: background-color 0.15s linear;
+    -webkit-transition: background-color 0.15s linear;
+    -ms-transition: background-color 0.15s linear;
+    border: 1px solid #BCE2D3;
+    color: #333333;
+    cursor: pointer;
+}*/
+  /*
+   .MAT_button:active {
+      padding: 0;
+   }*/
+  /*
+p#MAT_preQuizText {
+   margin: 10px 0;
+}
+*/
+  /*#MAT_iToggle:active {
+    background-color: #CEE39D;
+    color: #073643;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear;
+}*/
+  /*
+   .dzTitle .h2 {
+      color: $white;
+   }
+*/
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/$black+0,000000+100&0+0,0.65+100 */ }
+  #MAT_container .draggableTextNode.absolute {
+    position: absolute;
+    width: 25%;
+    z-index: 100; }
+  #MAT_container .draggableTextNode {
+    margin: 5px;
+    margin-top: 0;
+    padding: 3px 5px;
+    text-align: left;
+    background-color: #ffffff;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear;
+    border: thin solid #c9cdd4;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    overflow: hidden;
+    font-size: 1rem; }
+    @media screen and (min-width: 768px) {
+      #MAT_container .draggableTextNode {
+        font-size: 1.1875rem; } }
+  #MAT_container .dropzone > .draggableTextNode {
+    padding-left: 1.875rem; }
+  #MAT_container .dropzone > .draggableTextNode.fullExpand {
+    padding-left: 5px; }
+  #MAT_container .draggableTextNode.collapsed {
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+  #MAT_container .MAT_expand {
+    background-color: #f2f3f5;
+    font-family: serif;
+    padding: 5px 4px 3px 6px;
+    margin: 0px 5px -5px -30px;
+    overflow: hidden;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #MAT_container .MAT_expand.expanded {
+    padding: 5px 4px 3px 6px; }
+  #MAT_container .MAT_expand:hover {
+    background-color: #e6eaf0;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #MAT_container .draggableTextNode.hover {
+    background: #EDEDED;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #MAT_container span.MAT_expand::after {
+    padding-right: 10px; }
+  #MAT_container .draggableTextNode a {
+    width: 100%; }
+  #MAT_container li .draggableImage {
+    max-width: 200px; }
+  #MAT_container li {
+    list-style: none;
+    padding-left: 0; }
+  #MAT_container .draggableImage {
+    max-width: 100%; }
+  #MAT_container .dropzone {
+    padding: 10px 5px;
+    padding-bottom: 5px;
+    min-height: 2.5rem;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MzlFRDdGRjlFQUFGMTFFNDg4MjBGN0M3OURFRTYyRDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzlFRDdGRkFFQUFGMTFFNDg4MjBGN0M3OURFRTYyRDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozOUVEN0ZGN0VBQUYxMUU0ODgyMEY3Qzc5REVFNjJENiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozOUVEN0ZGOEVBQUYxMUU0ODgyMEY3Qzc5REVFNjJENiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkbAnjsAAABvSURBVHjaYmQgAzx58qQASPXjkC6UkZGZQKqZTAyDBIw6ZNQhow4ZdcioQ4atQ1igFRipwB6fHNBMkg1kBGr6Pxo1ow4ZdQgp2RfUxiQz+wbgkNsAxAdJzr6jjedRh4w6ZNQhow4ZdchIcQhAgAEAPrMWqCrAT+8AAAAASUVORK5CYII=") no-repeat center white;
+    background-size: 1.25rem;
+    z-index: -1;
+    border-bottom-left-radius: 0.9375rem;
+    border-bottom-right-radius: 0.9375rem; }
+  #MAT_container .dzTitle {
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1875rem;
+    line-height: 1.875rem;
+    letter-spacing: 0.5px; }
+  #MAT_container .dzTitle {
+    padding: 0;
+    border: #c9cdd4 1px solid;
+    background: #edeef1; }
+  #MAT_container .dzTitle > h1,
+  #MAT_container .dzTitle > h2,
+  #MAT_container .dzTitle > h3,
+  #MAT_container .dzTitle > h4,
+  #MAT_container .dzTitle > h5,
+  #MAT_container .dzTitle > h6 {
+    font-size: 1em;
+    margin: 0px;
+    color: #333333;
+    padding: 3px; }
+  #MAT_container .MI_qColum {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10px;
+    padding-bottom: 10px; }
+  #MAT_container .MI_aSlot {
+    display: block;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%; }
+  @media (max-width: 500px) {
+    #MAT_container .MAT_MediaEmbeddedVideo {
+      height: 200px; } }
+  #MAT_container #MAT_content {
+    min-height: 200px;
+    background: #ffffff;
+    overflow-y: auto;
+    text-shadow: none; }
+  #MAT_container .MAT_AccessOnly {
+    font-size: 0px;
+    width: 0px;
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+    opacity: 0; }
+  #MAT_container .MAT_description {
+    min-height: 200px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    background-color: #ffffff;
+    padding: 15px;
+    overflow-y: auto;
+    font-size: 1rem;
+    font-weight: normal;
+    text-shadow: none; }
+    @media screen and (min-width: 768px) {
+      #MAT_container .MAT_description {
+        font-size: 1.1875rem; } }
+  #MAT_container #MAT_appContainer {
+    border: none;
+    /*background-color: #EEEEEE;*/
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto; }
+  #MAT_container #MAT_buttonSet {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding-top: 10px;
+    padding-bottom: 10px; }
+    @media screen and (max-width: 532px) {
+      #MAT_container #MAT_buttonSet {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; }
+        #MAT_container #MAT_buttonSet #MAT_postQuizButton,
+        #MAT_container #MAT_buttonSet #MAT_resetButton,
+        #MAT_container #MAT_buttonSet #MAT_container #MAT_resetWrongButton,
+        #MAT_container #MAT_buttonSet #MAT_restartButton,
+        #MAT_container #MAT_buttonSet #MAT_continueButton,
+        #MAT_container #MAT_buttonSet #MAT_checkButton {
+          margin-right: 0px;
+          width: 90%; }
+        #MAT_container #MAT_buttonSet #MAT_checkButton,
+        #MAT_container #MAT_buttonSet #MAT_postQuizButton,
+        #MAT_container #MAT_buttonSet #MAT_continueButton {
+          margin-bottom: 10px; } }
+  #MAT_container #MAT_progress {
+    display: block;
+    font-size: 1em;
+    color: #000000; }
+  #MAT_container #MAT_qColContainer {
+    width: 100%;
+    display: inline-block; }
+  #MAT_container #MAT_ansSlotContainer {
+    width: 100%;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto; }
+  @media screen and (max-width: 532px) {
+    #MAT_container #MAT_qColContainer,
+    #MAT_container #MAT_ansSlotContainer,
+    #MAT_container .MI_aSlot {
+      width: 100% !important; } }
+  #MAT_container .MAT_button {
+    font-size: 1.125rem;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 0.5rem 1.5rem 0.75rem;
+    line-height: 1.25;
+    -webkit-appearance: none; }
+  #MAT_container #MAT_checkButton,
+  #MAT_container #MAT_postQuizButton,
+  #MAT_container #MAT_continueButton,
+  #MAT_container #MAT_resetButton,
+  #MAT_container #MAT_restartButton,
+  #MAT_container #MAT_resetWrongButton {
+    background-color: #4e5b73;
+    /*
+   transition: background-color 0.15s linear;
+   -moz-transition: background-color 0.15s linear;
+   -webkit-transition: background-color 0.15s linear;
+   -ms-transition: background-color 0.15s linear;
+*/
+    color: #ffffff;
+    border-radius: 6px;
+    display: inline-block;
+    white-space: normal;
+    border: 1px solid #4e5b73;
+    min-width: 100px;
+    margin-right: 0.625rem;
+    cursor: pointer; }
+    #MAT_container #MAT_checkButton:hover,
+    #MAT_container #MAT_postQuizButton:hover,
+    #MAT_container #MAT_continueButton:hover,
+    #MAT_container #MAT_resetButton:hover,
+    #MAT_container #MAT_restartButton:hover,
+    #MAT_container #MAT_resetWrongButton:hover {
+      background-color: #261933;
+      border-color: #261933;
+      color: #ffffff; }
+    #MAT_container #MAT_checkButton:focus,
+    #MAT_container #MAT_postQuizButton:focus,
+    #MAT_container #MAT_continueButton:focus,
+    #MAT_container #MAT_resetButton:focus,
+    #MAT_container #MAT_restartButton:focus,
+    #MAT_container #MAT_resetWrongButton:focus {
+      background-color: #4e5b73;
+      border-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(0, 111, 191, 0.5); }
+  #MAT_container #MAT_checkButton:disabled,
+  #MAT_container #MAT_postQuizButton:disabled,
+  #MAT_container #MAT_continueButton:disabled,
+  #MAT_container #MAT_resetButton:disabled,
+  #MAT_container #MAT_restartButton:disabled,
+  #MAT_container #MAT_resetWrongButton:disabled {
+    background: rgba(63, 42, 86, 0.7) !important;
+    border: 1px solid rgba(63, 42, 86, 0.7) !important;
+    color: #ffffff !important;
+    cursor: default; }
+  #MAT_container #MAT_instructions {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #d4d4d4;
+    float: left; }
+  #MAT_container #MAT_instructionButton {
+    float: left;
+    margin-left: 2%;
+    width: 40px;
+    border: none;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MEYxNzI3QzhFQUIwMTFFNDg4MjBGN0M3OURFRTYyRDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MEYxNzI3QzlFQUIwMTFFNDg4MjBGN0M3OURFRTYyRDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowRjE3MjdDNkVBQjAxMUU0ODgyMEY3Qzc5REVFNjJENiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowRjE3MjdDN0VBQjAxMUU0ODgyMEY3Qzc5REVFNjJENiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiJD4HIAAAK5SURBVHjaxFdNa1QxFM1LnyJYR8SV4sJCF4paPzaVLoQuRFGEgUeFLmfl18KNVCuCWLUj9QeMXT1ciYuHooviqgvBj42UqSOKhS4FQdC2gmhBT967g2kmySQZBy+cDC+T5Nzc3CQnEXO1NNuKsgwMAwNAH9BL/64Ai0AdmAUes0ryxWXYyIFYkI0DCbDO0d1fQAZU4Ug9zIE024RyCjjj5KjefgPTwBgcWXZ3IM325GFkrJ/9G1vIl6+SNNo7kGaHUT4DSpYB3wEvgc9ADIj82A0MAtzQZwk4BidemR0oZv7CQj4DXDGua5ptz8PN2AVyTOfEkByJSFnzN5awX0PH2447ZpCc3WJYjkPNnJDDNWUhn3YmF1ZJXqMcMfzbT1xSBIqtNmdIym/ATgz6VZqhaHceOE2hFrO9gzarSiSeoDxl2B0HxFI212ncstXuryEvbCJfkr82RL+3lHYPDQ5ExDnK6YRLLAGdUWa1EeUlTbuTmrqPlnETwc3peLWdcO+Vb7FcGzTtejR16y3jCs5yTGe7zSbh6U/pe4eh3VNN3a42Yw/HNCObjTrkvbiA7mrDbLcBTrdaJ5YCx5GoP5RcOZHX260vlq7UELsO4gnNQXQU5QOH/r1xB+SPWsiL8+EycNNwFLdYTGIiJApXFfIemvWIxxgrnJSMr33A7NXtecOTXNgiJxkVcr/LsxeRvBgwTp3TFvK1VTWZApdxNqKj+JOH3ms68F0520ue5EI3buOkXjPPziLkmyWUAmafCe6mHqjSFelqR0hsyHjrKVarqiKqoTzrOMBBeD+nJKL43u/Y/x76n1MV0VhLdnfHFoiLrXWg0GhlEo7dsiWS58udynKRA/NK3XNgbxvyNrL8PzxMuEHVNnLpzFjNc3fosr1GMrwR+jjdRxdPyON0EsTznb2Ou/w8/yPAAEhHuwZp0DboAAAAAElFTkSuQmCC") center no-repeat; }
+  #MAT_container #MAT_instructionButton:hover {
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDE0IDc5LjE1Njc5NywgMjAxNC8wOC8yMC0wOTo1MzowMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MEYxNzI3Q0NFQUIwMTFFNDg4MjBGN0M3OURFRTYyRDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MzE5MEQ4RkNFQUIwMTFFNDg4MjBGN0M3OURFRTYyRDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowRjE3MjdDQUVBQjAxMUU0ODgyMEY3Qzc5REVFNjJENiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowRjE3MjdDQkVBQjAxMUU0ODgyMEY3Qzc5REVFNjJENiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pm+bRtQAAAKzSURBVHjaxFfPS5RBGN5v/JIg3RBPRYcED0UmrRfDg+BBikJYWAz8C5I6dAnTCCQrN/QPkD2JJ+mwFHUQTx6Cyosba4qR4DEIhHINpIx6Xng/mqaZ+WZmW3rhYfjmm5nn/TUz70QZR8nlcu1o8sAA0A10AC38ex/YAarACvCsUqnsuqwbORAT2QRQAI446vsdKANFKFINUgDErWhmgOsuihrkJ1ACxqBIzVkBkJ8jNwKdmX8j2xQ+KLGRqgDIL6JZBrKWBTeB18AnIAYoP84CvYAwzNkDLkGJN0YF2PJXFvIlYNwUV8w/Se4GbrJiOiX6ZE9ESszXLG6/h4mPHHdMLyvbZghHT5ITsrtmLOQlV3ISjF1FM2z43clcvz3AW+2tISm/AKex6GfJQhp3A7jGriZrH2PMoeKJ52iGDLvjAoUyidOEZastyOQsUxQS6buP24fKuCcGBSLmHBF8whUsHl1SrDqG5rZm3FVN3wfLugXiFny82k64LeWbwnVUM65J09dsWZc48zGf7TaZhqbfpO9ThnEvNH1nUtYeiNkim4w4JD5dQLM6N6fM6xZ8q9Uj88BlJOqBkitXqD9lbkcsXakhMgniKc1BNIhm0WF+S1wH+VOVnM+HO8ADw1H8l8RcTIR44a5C3sRWD3ussS+4kvGV97Be3Z73PclJdgSXUSH3u2w9efJWwDpVwVvIVw7VZAoM40rER/FHj3ovUeCrcrZnPcmpbjwhuHote04mlx+XkA2wvkzcST1Q5CvSVfq52JDxzrNYLSaWUAFRRSioeh11XKCmXtGY/8NDgVJS1skV0Zia3Q2SbebK/KEA12h5LhwbJXtcntfqLcspB9aVvpdAVwq5vSz/Hw8TYahqaWAPMOe5O3TZPsdl+Ebo4/Q8Xzwhj9NpEK/X9Tpu9PP8lwADADsD4L/R25sfAAAAAElFTkSuQmCC") center no-repeat; }
+  #MAT_container .draggableImage,
+  #MAT_container .wrong {
+    pointer-events: none; }
+  #MAT_container .MAT_Media {
+    width: 100%;
+    padding-bottom: 20px;
+    display: inline-block; }
+  #MAT_container .MAT_MediaLink,
+  #MAT_container .MAT_MediaAltLink {
+    width: 100%;
+    display: inline-block;
+    text-align: center; }
+  #MAT_container .MAT_MediaEmbeddedVideo {
+    max-width: 100%; }
+  #MAT_container .MAT_MediaImage,
+  #MAT_container .MAT_MediaImage > img {
+    max-width: 100%;
+    height: auto; }
+  #MAT_container .MAT_miniReport {
+    padding-left: 0;
+    padding-bottom: 10px;
+    margin: 10px; }
+  #MAT_container .MAT_qCol {
+    float: left;
+    width: 100%; }
+  #MAT_container .connect_box {
+    margin-left: 5px;
+    margin-right: 5px;
+    border: #c9cdd4 1px solid;
+    border-top: none; }
+  #MAT_container .correct,
+  #MAT_container .wrong {
+    vertical-align: top;
+    margin-top: 3px;
+    margin-right: 5px;
+    width: 15px; }
+  #MAT_container li > .correct,
+  #MAT_container li > .wrong {
+    margin-left: 5px; }
+  #MAT_container #MAT_activityText {
+    margin: 5px 0;
+    text-align: left; }
+  @media screen and (min-width: 532px) {
+    #MAT_container .MAT_answers_lg {
+      padding-top: 70px; } }
+  #MAT_container #MAT_iToggle {
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: #f2f3f5;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #MAT_container #MAT_iToggle:hover {
+    background-color: #e6eaf0;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #MAT_container .dzHover {
+    background-color: #EDEDED;
+    transition: background-color 0.2s linear;
+    -moz-transition: background-color 0.2s linear;
+    -webkit-transition: background-color 0.2s linear;
+    -ms-transition: background-color 0.2s linear; }
+  #MAT_container .MAT_resultsHeader {
+    font-weight: 300;
+    font-size: 1.875rem;
+    line-height: 45px;
+    letter-spacing: -0.3px;
+    margin: 10px; }
+  #MAT_container .MAT_scoreHeader {
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.875rem;
+    letter-spacing: 0.5px;
+    margin: 10px; }
+  #MAT_container .MAT_dropzoneHeader {
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.875rem;
+    letter-spacing: 0.5px;
+    margin: 5px 0; }
+  #MAT_container .MAT_miniReportContent {
+    margin: 5px auto; }
+  #MAT_container .MAT_miniReportContent > li {
+    padding: 0 5px;
+    font-size: 1rem; }
+    @media screen and (min-width: 768px) {
+      #MAT_container .MAT_miniReportContent > li {
+        font-size: 1.1875rem; } }
+  #MAT_container .MAT_feedback {
+    padding: 5px 5px;
+    margin-top: 5px;
+    margin-bottom: 12px;
+    font-size: 1rem; }
+    @media screen and (min-width: 768px) {
+      #MAT_container .MAT_feedback {
+        font-size: 1.1875rem; } }
+  #MAT_container .callout {
+    -webkit-box-shadow: 0 6px 28px 0 rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 6px 28px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 28px 0 rgba(0, 0, 0, 0.1);
+    border: 2px solid #073643; }
+  #MAT_container .sr-only {
+    display: none !important;
+    width: 0px;
+    height: 0px; }
+  #MAT_container .draggableTextNode.centerAlign {
+    text-align: center; }
+  #MAT_container .dropzone > .draggableTextNode.centerAlign {
+    padding-left: 5px; }
+  #MAT_container .leftAlign {
+    text-align: left; }
+  #MAT_container .MAT_scrollZone {
+    height: 50px;
+    display: block;
+    text-align: center;
+    padding-top: 10px;
+    font-weight: bold;
+    color: #ffffff;
+    position: absolute;
+    width: 100%;
+    z-index: 120;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; }
+  #MAT_container .MAT_scrollZone .active {
+    color: #FF0000; }
+  #MAT_container .MAT_scrollZone p {
+    margin: 0px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black; }
+  #MAT_container #MAT_upperScrollZone {
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%); }
+  #MAT_container #MAT_lowerScrollZone {
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%); }
+  #MAT_container .MAT_instructionText {
+    font-size: 0.875rem; }
+    @media screen and (min-width: 768px) {
+      #MAT_container .MAT_instructionText {
+        font-size: 1rem; } }
+
+#screenAlert {
+  position: absolute;
+  left: -99999px; }
+
+.AccMessage {
+  background-color: #f9f9f9;
+  border: thick solid #073643;
+  padding: 10px;
+  color: #073643;
+  position: fixed;
+  text-align: center;
+  bottom: 0;
+  left: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  height: auto;
+  width: 20%;
+  visibility: hidden;
+  min-width: 30%;
+  opacity: 0; }
+  @media screen and (min-width: 768px) {
+    .AccMessage {
+      font-size: 1.1875rem; } }

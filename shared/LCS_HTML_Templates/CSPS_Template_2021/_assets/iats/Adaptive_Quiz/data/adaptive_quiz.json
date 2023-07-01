@@ -1,0 +1,223 @@
+{
+	"quizHeading": "_ACTIVITY_NAME_TEXT_OR_HTML_",
+	"feedbackType": "continuous",
+	"showFeedbackReport": true,
+	"showPoolName": true,
+	"showProgressBar": true,
+	"showStrikes": true,
+	"preQuizHtml": "_PRE_QUIZ_TEXT_OR_HTML_",
+	"colouredFeedback": true,
+	"endConditions": {
+		"preface": false,
+		"numQuestionsCorrectToEnd": {
+			"enabled": false,
+			"limit": 5,
+			"preQuizText": "You correctly answer any 5 questions."
+		},
+		"numQuestionsIncorrectToEnd": {
+			"enabled": false,
+			"limit": 3,
+			"preQuizText": "You incorrectly answer any 3 questions."
+		},
+		"noRemainingQuestionsAtCurrentPool": {
+			"enabled": false,
+			"preQuizText": "There are no questions remaining to answer."
+		}
+	},
+	"questionPools": [{
+			"poolId": 1,
+			"poolName": "_QUESTION_POOL_1_NAME_TEXT_OR_HTML_",
+			"repeatWrong": true,
+			"repeatCorrect": false,
+			"numWrongBeforeDowngrade": 2,
+			"numRightBeforeUpgrade": 2,
+			"upgradePoolId": 2,
+			"downgradePoolId": false,
+			"feedbackOnUpgradeHtml": false,
+			"feedbackOnDowngradeHtml": false,
+			"randomizeQuestionOrder": false,
+			"questions": [{
+					"questionType": "multiple choice",
+					"questionHtml": "_QUESTION_1_TEXT_OR_HTML_",
+					"hintHtml": false,
+					"randomizeOptions": false,
+					"options": [{
+							"optionText": "_OPTION_1_",
+							"feedback": "_FEEDBACK_IF_OPTION_1_SELECTED_",
+							"score": 1
+						},
+						{
+							"optionText": "_OPTION_2_",
+							"feedback": "_FEEDBACK_IF_OPTION_2_SELECTED_"
+						}
+					]
+				},
+				{
+					"questionType": "mc",
+					"questionHtml": "_QUESTION_2_TEXT_OR_HTML_",
+					"hintHtml": "_HINT_TEXT_OR_HTML_",
+					"randomizeOptions": true,
+					"options": [{
+							"optionText": "_OPTION_1_TEXT_",
+							"feedback": "_FEEDBACK_IF_OPTION_1_SELECTED_",
+							"score": 1
+						},
+						{
+							"optionText": "_OPTION_2_TEXT_",
+							"feedback": "_FEEDBACK_IF_OPTION_2_SELECTED_"
+						},
+						{
+							"optionText": "_OPTION_3_TEXT_",
+							"feedback": "_FEEDBACK_IF_OPTION_3_SELECTED_"
+						},
+						{
+							"optionText": "_OPTION_4_TEXT_",
+							"feedback": "_FEEDBACK_IF_OPTION_4_SELECTED_"
+						}
+					]
+				}
+			]
+		},
+		{
+			"poolName": "_QUESTION_POOL_2_NAME_TEXT_OR_HTML_",
+			"poolId": 2,
+			"poolLevel": 2,
+			"upgradePoolId": 3,
+			"downgradePoolId": 1,
+			"repeatWrong": true,
+			"repeatCorrect": false,
+			"numWrongBeforeDowngrade": 3,
+			"numRightBeforeUpgrade": 1,
+			"feedbackOnUpgradeHtml": false,
+			"feedbackOnDowngradeHtml": false,
+			"randomizeQuestionOrder": false,
+			"questions": [{
+				"questionType": "multi-select",
+				"questionHtml": "_QUESTION_3_TEXT_OR_HTML_",
+				"hintHtml": false,
+				"randomizeOptions": true,
+				"feedbackForPerfect": "_QUESTION_3_FEEDBACK_TEXT_OR_HTML_FOR_PERFECT_RESPONSE_",
+				"feedbackForImperfect": "_QUESTION_3_FEEDBACK_TEXT_OR_HTML_FOR_NON-PERFECT_RESPONSE_",
+				"options": [{
+						"optionText": "_OPTION_1_"
+					},
+					{
+						"optionText": "_OPTION_2_",
+						"score": 1
+					},
+					{
+						"optionText": "_OPTION_3_",
+						"score": 1
+					},
+					{
+						"optionText": "_OPTION_4_"
+					},
+					{
+						"optionText": "_OPTION_5_",
+						"score": 1
+					},
+					{
+						"optionText": "_OPTION_6_",
+						"score": 1
+					}
+				]
+			}]
+		},
+		{
+			"poolId": 3,
+			"poolName": "_QUESTION_POOL_3_NAME_TEXT_OR_HTML_",
+			"poolLevel": 3,
+			"repeatWrong": true,
+			"repeatCorrect": false,
+			"numWrongBeforeDowngrade": 2,
+			"numRightBeforeUpgrade": 2,
+			"upgradePoolId": 4,
+			"downgradePoolId": 2,
+			"feedbackOnUpgradeHtml": false,
+			"feedbackOnDowngradeHtml": false,
+			"randomizeQuestionOrder": true,
+			"questions": [{
+					"questionType": "ord",
+					"questionHtml": "_QUESTION_4_TEXT_OR_HTML_",
+					"hintHtml": "_HINT_TEXT_OR_HTML_",
+					"randomizeOptions": true,
+					"feedbackForPerfect": "_QUESTION_4_FEEDBACK_TEXT_OR_HTML_FOR_PERFECT_RESPONSE_",
+					"feedbackForImperfect": "_QUESTION_4_FEEDBACK_TEXT_OR_HTML_FOR_NON-PERFECT_RESPONSE_",
+					"options": [{
+							"optionText": "_OPTION_1_",
+							"matchingText": 4
+						},
+						{
+							"optionText": "_OPTION_2_",
+							"matchingText": 3
+						},
+						{
+							"optionText": "_OPTION_3_",
+							"matchingText": 1
+						},
+						{
+							"optionText": "_OPTION_4_",
+							"matchingText": 2
+						}
+					]
+				},
+				{
+					"questionType": "match",
+					"questionHtml": "_QUESTION_5_HTML_OR_TEXT_",
+					"hintHtml": "_HINT_TEXT_OR_HTML_",
+					"randomizeOptions": true,
+					"feedbackForPerfect": "_QUESTION_5_FEEDBACK_TEXT_OR_HTML_FOR_PERFECT_RESPONSE_",
+					"feedbackForImperfect": "_QUESTION_5_FEEDBACK_TEXT_OR_HTML_FOR_NON-PERFECT_RESPONSE_",
+					"options": [{
+							"optionText": "_OPTION_1_",
+							"matchingText": "_MATCH_1_"
+						},
+						{
+							"optionText": "_OPTION_2_",
+							"matchingText": "_MATCH_2_"
+						},
+						{
+							"optionText": "_OPTION_3_",
+							"matchingText": "_MATCH_3_"
+						},
+						{
+							"optionText": "_OPTION_4_",
+							"matchingText": "_MATCH_2_"
+						}
+					]
+				}
+			]
+		},
+		{
+			"poolId": 4,
+			"poolName": "_QUESTION_POOL_4_NAME_TEXT_OR_HTML_",
+			"poolLevel": 4,
+			"repeatWrong": true,
+			"repeatCorrect": false,
+			"numWrongBeforeDowngrade": 1,
+			"numRightBeforeUpgrade": 1,
+			"upgradePoolId": false,
+			"downgradePoolId": 3,
+			"feedbackOnUpgradeHtml": "_FEEDBACK_TEXT_OR_HTML_TO_SHOW_WHEN_UPGRADING_TO_NEXT_POOL_",
+			"feedbackOnDowngradeHtml": false,
+			"randomizeQuestionOrder": false,
+			"questions": [{
+					"questionType": "fitb",
+					"questionHtml": "_QUESTION_6_HTML_OR_TEXT_WITH_A_#{blank}_IN_IT",
+					"hintHtml": "_HINT_TEXT_OR_HTML_",
+					"caseSensitive": false,
+					"feedbackForPerfect": "_QUESTION_6_FEEDBACK_TEXT_OR_HTML_FOR_PERFECT_RESPONSE_",
+					"feedbackForImperfect": "_QUESTION_3_FEEDBACK_TEXT_OR_HTML_FOR_NON-PERFECT_RESPONSE_",
+					"blanks": [
+						{
+						  "replaceString": "#{blank}",
+						  "size": 10,
+						  "maxLength": 20,
+						  "answers": ["_BLANK_", "_EMPTY_SPACE_"]
+						}
+					 ]
+				}
+			]
+		}
+	]
+}
