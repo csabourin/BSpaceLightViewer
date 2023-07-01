@@ -387,6 +387,7 @@ app.get("/load/:filename", async (req, res) => {
   }
 });
 app.use("/shared", express.static("shared"));
+app.use("/public", express.static("public"));
 app.get("/resource/:id", (req, res) => {
   const manifestLanguage = req.query.lang;
   const id = req.params.id;
