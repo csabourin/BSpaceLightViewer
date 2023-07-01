@@ -396,16 +396,32 @@ app.get("/resource/:id", (req, res) => {
   let module = null;
   let allItems = [];
   
-    for (let key in req.session.manifests) {
-    let manifest = req.session.manifests[key];
-    manifest.forEach((module) => {
-      allItems = allItems.concat(flattenItems(module.items));
-    });
-    if (allItems.find((item) => item.title === id)) {
-      filename = key;
-      break;
-    }
+for (let key in req.session.manifests) {
+  let manifest = req.session.manifests[key];
+  let localAllItems = [];  // Items for the current manifest only
+  
+  manifest.forEach((module) => {
+    localAllItems = localAllItems.concat(flattenItems(module.items));
+  });
+
+  let found = searchModules(manifest, id);
+  if (found) {
+    resource = found.item;
+    filename = key;
+    
+    // If we found the resource, calculate prevResource and nextResource based on the current manifest only
+    const resourceIndex = localAllItems.findIndex((item) => item.title === id);
+    const prevResource = resourceIndex > 0 ? localAllItems[resourceIndex - 1] : false;
+    const nextResource = localAllItems[resourceIndex + 1];
+
+    // Set in session or elsewhere for use in rendering
+    req.session.prevResource = prevResource;
+    req.session.nextResource = nextResource;
+
+    break;
   }
+}
+
 
   function searchItems(items, title) {
     for (let i = 0; i < items.length; i++) {
@@ -465,16 +481,14 @@ app.get("/resource/:id", (req, res) => {
     return;
   }
 
-  const prevResource = allItems[resourceIndex - 1];
-  const nextResource = allItems[resourceIndex + 1];
 
   let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
   req.session.currentBasePath = basePath;
   express.static(basePath)(req, res, () => {
     res.render("resource", {
       resource,
-      prevResource,
-      nextResource,
+      prevResource: req.session.prevResource,
+      nextResource: req.session.nextResource,
       manifest, // pass the manifest to the view
       description: module.description,
       currentPage: id,
