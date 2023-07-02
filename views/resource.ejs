@@ -1,175 +1,20 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="<%= manifestLanguage %>">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="https://cdn.glitch.global/b8dc9c88-f259-4777-96b2-3c632dbdf057/favicon-mobile.ico?v=1688299447287">
   <link rel="stylesheet" href="/public/d2l.css" />
-    <style>
-        
-        .topbar {
-            display: flex;
-            align-items: center;
-            height: var(--topbar-height);
-            color: var(--d2l-color-ferrite);
-            font-size: var(--d2l-body-standard-text_-_font-size);
-            font-weight: var(--d2l-body-standard-text_-_font-weight);
-            line-height: var(--d2l-body-standard-text_-_line-height);
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, .1);
-        }
-
-        body {
-            font-family: sans-serif;
-            padding: 0;
-        }
-
-        /* The sidebar menu */
-        .sidebar {
-            height: 100%;
-            /* Full-height: remove this if you want "auto" height */
-            width: 0;
-            /* Set the width of the sidebar */
-            position: fixed;
-            /* Fixed Sidebar (stay in place on scroll) */
-            z-index: 1;
-            /* Stay on top */
-            top: 0;
-            /* Stay at the top */
-            left: 0;
-            background-color: #ffffff;
-            /* White */
-            overflow-x: hidden;
-            /* Disable horizontal scroll */
-          padding:0;
-          margin:0;
-            /* Place content 60px from the top */
-/*             transition: 0.5s; */
-            /* 0.5 second transition effect to slide in the sidebar */
-        }
-
-        /* The sidebar links */
-        .sidebar a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-      .sidebar a:last-of-type{
-            padding-bottom: 60px;
-      }
-
-        /* When you mouse over the navigation links, change their color */
-        .sidebar a:hover {
-            color: #0f0f0f;
-        }
-      .sidebar h2,.sidebar h3,.sidebar h4{
-        padding: 1em;
-      }
-
-        /* Position and style the close button (top right corner) */
-        .sidebar .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-        /* The button used to open the sidebar */
-        .openbtn {
-            font-size: 2rem;
-            cursor: pointer;
-            background-color: transparent;
-            color: #000;
-            padding: 10px 15px;
-            border: none;
-        }
-
-        .openbtn:hover {
-            color: #444;
-        }
-
-        /* Style page content - push the page content to the right when you open the side navigation */
-        #main {
-            transition: margin-left .5s;
-            /* If you want a transition effect */
-            padding: 20px;
-        }
-
-        iframe {
-            display: block;
-            margin: auto;
-            width: 860px;
-            height: 90vh;
-            /* vh stands for viewport height. 90vh will be 90% of the height of the viewport */
-            border: none;
-            box-shadow: 0 0 10px #ccc;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .nav-buttons a, .nav-buttons button {
-            padding: 10px 20px;
-            background-color: #3f2a56;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-left: 1rem;
-        }
-      
-      .nav-buttons button:disabled{
-            background-color: #f1f1f1;
-        color: #000;
-      }
-
-        #header-right {
-
-            color: var(--d2l-color-ferrite);
-            font-size: var(--d2l-body-standard-text_-_font-size);
-            font-weight: var(--d2l-body-standard-text_-_font-weight);
-            line-height: var(--d2l-body-standard-text_-_line-height);
-            display: flex;
-            flex: 1;
-            justify-content: flex-end;
-            align-items: center;
-            text-align: center;
-        }
-
-        #header-left {
-            display: flex;
-            flex: 1;
-            align-items:center;
-        }
-      #header-left a{
-        font-size:1.5rem;
-      }
-
-        .topic-name {
-            font-size: var(--d2l-body-compact-text_-_font-size);
-            font-weight: var(--d2l-body-compact-text_-_font-weight);
-            line-height: var(--d2l-body-compact-text_-_line-height);
-            text-align: center;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            flex: 1;
-
-        }
-    </style>
+  <link rel="stylesheet" href="/public/resource.css" />
     <title>
         <%= courseTitle %>
     </title>
 </head>
 
 <body>
-    <div class="topbar">
+    <header role="banner" class="topbar">
         <div id="header-left">
             <a href="/"><%= manifestLanguage=="en-ca"?"Home":"Accueil" %></a>
-            <button class="openbtn" onclick="openNav()">☰</button>
+            <button class="openbtn" onclick="openNav()" aria-label="<%= manifestLanguage=='en-ca'?'Open navigation':'Ouvrir la navigation' %>">☰</button>
         </div>
         <div class="topic-name hidden-small">
             <p>
@@ -190,10 +35,10 @@
                                     <% } %>
             </div>
         </div>
-    </div>
+    </header>
 
-<div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+<nav id="mySidebar" class="sidebar" role="navigation" aria-label="<%= manifestLanguage=='en-ca'?'Site navigation':'Navigation du site' %>">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" aria-label="<%= manifestLanguage=='en-ca'?'Close navigation':'Fermer la navigation' %>" >×</a>
     <h2><%= manifestLanguage=="en-ca"?"Table of Contents":"Table des matières" %></h2>
     <% manifest.forEach(function(module) { %>
         <h3>
@@ -215,10 +60,8 @@
         <% } %>
         <% renderItems(module.items); %>
     <% }); %>
-</div>
-
-
-    <div id="main">
+</nav>
+    <main id="main" role="main">
 
 
         <iframe src="/page/<%= resource.href %>"></iframe>
@@ -234,7 +77,7 @@
                                 <button disabled><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></button>
                                 <% } %>
         </div>
-    </div>
+    </main>
 
 <script>
     function openNav() {
