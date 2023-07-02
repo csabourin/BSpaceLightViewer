@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1024 * 1024 * 60, // limit uploaded file size to 60MB
+    fileSize: 1024 * 1024 * 160, // limit uploaded file size to 60MB
   },
   fileFilter: function (req, file, cb) {
     if (path.extname(file.originalname) !== ".zip") {
@@ -50,11 +50,25 @@ const upload = multer({
   },
 });
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 5 * 60 * 1000, // 5 minutes
   max: 1000, // limit each IP to 1000 requests per windowMs
-  message: "Too many requests from this IP, please try again after 15 minutes",
+  message: "Too many requests from this IP, please try again after 5 minutes",
 });
+// array of allowed IP addresses
+let allowedIps = ['24.202.50.168','205.194.17.173'];
+
+// middleware function to check the IP
+function checkIP(req, res, next) {
+  let clientIp = req.ip;
+  
+  if (allowedIps.includes(clientIp)) {
+    next();
+  } else {
+    res.status(403).send('Access denied');
+  }
+}
 app.set("view engine", "ejs");
+app.set('trust proxy', true);
 app.use(bodyParser.json()); // used for renaming files
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
@@ -186,6 +200,7 @@ const readPackage = (packagePath, session) => {
 function processItems(item, resources) {
   let description = item.$.description || null;
   let moduleTitle = item.title[0];
+  let identifier = item.$.identifier;
 
   // Ensure description is HTML decoded
   if (description) {
@@ -199,6 +214,7 @@ function processItems(item, resources) {
   }
 
   return {
+    identifier,
     moduleTitle,
     title: item.title[0],
     description,
@@ -208,7 +224,7 @@ function processItems(item, resources) {
 
 function processSubItems(subItems, resources) {
   const items = [];
-  
+
   subItems.forEach((i) => {
     const itemResource = resources.find(
       (r) => r.$.identifier === i.$.identifierref
@@ -225,6 +241,7 @@ function processSubItems(subItems, resources) {
 
       const newItem = {
         type: "contentmodule",
+        identifier: i.$.identifier,
         title: title,
         description: description,
         items: []
@@ -241,6 +258,7 @@ function processSubItems(subItems, resources) {
     ) {
       items.push({
         type: "content",
+        identifier: i.$.identifier,
         title: i.title[0],
         href: `${itemResource.$.href}`,
       });
@@ -249,6 +267,7 @@ function processSubItems(subItems, resources) {
 
   return items;
 }
+
 
 
 function checkForImsmanifest(req, res, next) {
@@ -312,7 +331,7 @@ app.get("/", async (req, res) => {
     res.status(500).send("Error reading packages");
   }
 });
-app.get("/adminconsole", async (req, res) => {
+app.get("/adminconsole", checkIP ,async (req, res) => {
   const packageFiles = await getPackages();
   res.render("upload", { packageFiles });
 });
@@ -373,7 +392,7 @@ app.get("/load/:filename", async (req, res) => {
     }
 
     // Get the first resource id from the manifest
-    const firstResourceId = manifest[0].items[0].title;
+    const firstResourceId = manifest[0].items[0].identifier;
 
     // Redirect to the resource page
     res.redirect(
@@ -410,7 +429,7 @@ for (let key in req.session.manifests) {
     filename = key;
     
     // If we found the resource, calculate prevResource and nextResource based on the current manifest only
-    const resourceIndex = localAllItems.findIndex((item) => item.title === id);
+    const resourceIndex = localAllItems.findIndex((item) => item.identifier === id);
     const prevResource = resourceIndex > 0 ? localAllItems[resourceIndex - 1] : false;
     const nextResource = localAllItems[resourceIndex + 1];
 
@@ -423,12 +442,12 @@ for (let key in req.session.manifests) {
 }
 
 
-  function searchItems(items, title) {
+  function searchItems(items, identifier) {
     for (let i = 0; i < items.length; i++) {
-      if (items[i].title === title) {
+      if (items[i].identifier === identifier) {
         return { item: items[i], index: i };
       } else if (items[i].type === "contentmodule") {
-        let found = searchItems(items[i].items, title);
+        let found = searchItems(items[i].items, identifier);
         if (found) {
           return found;
         }
@@ -437,9 +456,9 @@ for (let key in req.session.manifests) {
     return null;
   }
 
-  function searchModules(modules, title) {
+  function searchModules(modules, identifier) {
     for (let m of modules) {
-      let found = searchItems(m.items, title);
+      let found = searchItems(m.items, identifier);
       if (found) {
         module = m;
         return found;
@@ -475,7 +494,7 @@ for (let key in req.session.manifests) {
     return;
   }
 
- const resourceIndex = allItems.findIndex((item) => item.title === id);
+ const resourceIndex = allItems.findIndex((item) => item.identifier === id);
   if (!resource) {
     res.status(404).send("Resource not found");
     return;
@@ -540,5 +559,5 @@ app.get("/page/*", (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+  console.log(`App listening on port ${port}!`);
 });
