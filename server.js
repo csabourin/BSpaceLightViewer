@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1024 * 1024 * 160, // limit uploaded file size to 60MB
+    fileSize: 1024 * 1024 * 160, // limit uploaded file size to 160MB
   },
   fileFilter: function (req, file, cb) {
     if (path.extname(file.originalname) !== ".zip") {
@@ -180,9 +180,14 @@ const readPackage = (packagePath, session) => {
             const manifestItems =
               result.manifest.organizations[0].organization[0].item;
             const resources = result.manifest.resources[0].resource;
+            const titleData =
+              result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
+            const courseTitle = titleData._;
 
             // Check if session.manifests is defined. If not, initialize it
             session.manifests = session.manifests || {};
+            session.courseTitles = session.courseTitles || {};
+            session.courseTitles[packagePath] = courseTitle;
 
             // Store the manifest in session.manifests with the package filename as the key
             session.manifests[packagePath] = manifestItems.map((item) =>
@@ -365,7 +370,6 @@ app.post(
   upload.single("zipFile"),
   checkForImsmanifest,
   (req, res) => {
-    console.log(req.file);
     res.redirect("/");
   }
 );
@@ -483,6 +487,7 @@ for (let key in req.session.manifests) {
   }
 
   const manifest = req.session.manifests[filename];
+  const courseTitle=req.session.courseTitles[filename];
 
   if (!manifest) {
     res.status(500).send("Manifest not found in session");
@@ -513,6 +518,7 @@ for (let key in req.session.manifests) {
       currentPage: id,
       req,
       manifestLanguage,
+      courseTitle
     });
   });
 });

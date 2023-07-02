@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <link rel="icon" href="https://cdn.glitch.global/b8dc9c88-f259-4777-96b2-3c632dbdf057/favicon-mobile.ico?v=1688299447287">
   <link rel="stylesheet" href="/public/d2l.css" />
     <style>
         
@@ -160,18 +161,20 @@
         }
     </style>
     <title>
-        <%= currentPage %>
+        <%= courseTitle %>
     </title>
 </head>
 
 <body>
     <div class="topbar">
         <div id="header-left">
-            <a href="/"><%= manifestLanguage=="en-ca"?"Back":"Retour" %></a>
+            <a href="/"><%= manifestLanguage=="en-ca"?"Home":"Accueil" %></a>
             <button class="openbtn" onclick="openNav()">☰</button>
         </div>
         <div class="topic-name hidden-small">
-            <%= resource.title %>
+            <p>
+              <%= courseTitle %>
+          </p> <%= resource.title %>
         </div>
         <div id="header-right">
             <div class="nav-buttons">
@@ -249,7 +252,6 @@
 
     <script>
         window.onload = function () {
-          console.log("loaded");
             var currentPageTitle = '<%= currentPage %>'; // get the current page title from the server-side data
             localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
 

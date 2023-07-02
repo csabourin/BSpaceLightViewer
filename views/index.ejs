@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+  <link rel="icon" href="https://cdn.glitch.global/b8dc9c88-f259-4777-96b2-3c632dbdf057/favicon-mobile.ico?v=1688299447287">
     <style>
 body {
   background-color: #F0F0F0;  /* a light, airy background color */
@@ -55,11 +56,57 @@ body {
       h1{padding:1em;
       background-color:#3f2a56;
       color:#fff;}
+      
+      #overlay {
+  position: fixed;
+  display: none; /* Hide the overlay initially */
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Semi-transparent black */
+  z-index: 2; /* Sit on top */
+  cursor: pointer;
+}
+
+#spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+      
+      #loadingText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 60px)); /* Adjust as necessary */
+  color: #ffffff;
+  font-size: 20px;
+  text-align: center;
+}
+
 
     </style>
     <title>Open Content Viewer</title>
 </head>
 <body>
+  <div class="fip">
+    <img src="https://cdn.glitch.global/b8dc9c88-f259-4777-96b2-3c632dbdf057/CSPS_FipEng_Black-Red-Final.svg?v=1688299227280">
+  </div>
     <h1>Open Content Viewer</h1>
   <div class="container">
     
@@ -73,5 +120,24 @@ body {
     <% } %>
       <div class="adminConsole"><a href="/adminconsole">&#120645;</a></div>
        </div>
+          <div id="overlay">
+  <div id="spinner"></div>
+  <p id="loadingText">Loading...</p> <!-- Loading text -->
+</div>
+<script>
+const links = document.querySelectorAll('.tile a');
+links.forEach(link => {
+  link.addEventListener('click', (event) => {
+    const lang = new URL(link.href).searchParams.get('lang');
+    const loadingText = document.getElementById('loadingText');
+    if (lang === 'fr-ca') {
+      loadingText.textContent = 'Chargement...';
+    } else {
+      loadingText.textContent = 'Loading...';
+    }
+    document.getElementById('overlay').style.display = 'block';
+  });
+});
+</script>
 </body>
 </html>
