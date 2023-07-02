@@ -38,7 +38,7 @@ By default, the application runs on port 3000. You can access it at http://local
 - File upload: Accepts .zip files up to 60MB in size.
 - Uploaded packages are stored in the `./packages` directory.
 - Packages are unzipped and their contents are read and displayed.
-- Rate limiting is implemented to restrict each IP to 1000 requests every 15 minutes.
+- Rate limiting is implemented to restrict each IP to 1000 requests every 5 minutes.
 - File management: Provides an option to rename the files.
 - Rate limiting: To prevent abuse, the number of requests is limited.
 - Content viewing: Unzips the packages and provides an interface to view their content.

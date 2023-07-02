@@ -109,7 +109,6 @@
         .nav-buttons {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 20px;
         }
 
         .nav-buttons a, .nav-buttons button {
@@ -177,12 +176,12 @@
         <div id="header-right">
             <div class="nav-buttons">
                 <% if (prevResource) { %>
-                    <a href="/resource/<%= encodeURIComponent(prevResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a>
+                    <a href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a>
                     <% } else { %>
                         <button disabled><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></button>
                         <% } %>
                             <% if (nextResource) { %>
-                                <a href="/resource/<%= encodeURIComponent(nextResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a>
+                                <a href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a>
                                 <% } else { %>
                                     <button disabled><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></button>
                                     <% } %>
@@ -205,7 +204,7 @@
                         <% renderItems(item.items); %>
                     <% } %>
                 <% } else { %>
-                    <a href="/resource/<%= encodeURIComponent(item.title) %>?lang=<%= manifestLanguage %>">
+                    <a href="/resource/<%= encodeURIComponent(item.identifier) %>?lang=<%= manifestLanguage %>">
                         <%= item.title %>
                     </a>
                 <% } %>
@@ -222,12 +221,12 @@
         <iframe src="/page/<%= resource.href %>"></iframe>
         <div class="nav-buttons">
             <% if (prevResource) { %>
-                <a href="/resource/<%= encodeURIComponent(prevResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a>
+                <a href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a>
                 <% } else { %>
                     <button disabled><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></button>
                     <% } %>
                         <% if (nextResource) { %>
-                            <a href="/resource/<%= encodeURIComponent(nextResource.title) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a>
+                            <a href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a>
                             <% } else { %>
                                 <button disabled><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></button>
                                 <% } %>
