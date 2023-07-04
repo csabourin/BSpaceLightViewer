@@ -411,6 +411,10 @@ app.get("/load/:filename", async (req, res) => {
 });
 app.use("/shared", express.static("shared"));
 app.use("/public", express.static("public"));
+app.use('/d2l', function(req, res) {
+    let originalUrl = req.headers.referer || '/';
+    res.render('messagePage', { currentpage: originalUrl });
+});
 app.get("/resource/:id", (req, res) => {
   const manifestLanguage = req.query.lang;
   const id = req.params.id;

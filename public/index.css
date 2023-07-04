@@ -1,3 +1,7 @@
+:root{
+  box-sizing: border-box;
+}
+
 .sr-only {
   position: absolute;
   left: -10000px;
@@ -8,7 +12,7 @@
 }
 
 body {
-  background-color: #f0f0f0; /* a light, airy background color */
+  background-color: #f0f0f0;
   font-family: sans-serif;
   min-height: 80vh;
   margin: 0;
@@ -19,7 +23,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2em; /* create space between tiles */
+  gap: 2em;
 }
 
 .fip {
@@ -29,37 +33,43 @@ body {
 
 .tile {
   display: flex;
-  width: 20em;
-  height: 20em;
+  width: 100%;
+  height: auto;
   align-items: center;
   background-color: #ffffff;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1); /* box-shadow to delimit the tiles */
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
+  padding: 2em;
 }
+
 .tile a {
   text-align: center;
   width: 100%;
   display: block;
   text-decoration: none;
   color: #555555;
-  padding: 33% 1em;
-  font-size: 28px;
+  padding: 1em;
+  font-size: 1.2em;
 }
+
 .adminConsole {
   font-size: 18px;
-  position: absolute;
+  position: fixed;
   bottom: 1em;
   right: 1em;
   color: #ffffff;
 }
+
 .adminConsole a {
   text-decoration: none;
   color: #ffffff;
   transition: all 1s;
 }
+
 .adminConsole a:hover {
   text-shadow: 0 0 3px #555555;
 }
+
 h1 {
   padding: 1em;
   background-color: #3f2a56;
@@ -68,15 +78,15 @@ h1 {
 
 #overlay {
   position: fixed;
-  display: none; /* Hide the overlay initially */
+  display: none;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 2; /* Sit on top */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
   cursor: pointer;
 }
 
@@ -84,49 +94,73 @@ h1 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   border: 16px solid #f3f3f3;
-  border-top: 16px solid #3498db; /* Blue */
+  border-top: 16px solid #3498db;
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  width: 60px;
+  height: 60px;
   animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
   0% {
-    transform: rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
 #loadingText {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
-  transform: translate(-50%, calc(-50% - 60px)); /* Adjust as necessary */
+  transform: translate(-50%, calc(-50% - 30px));
   color: #ffffff;
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
 }
 
 #search {
+  display:block;
   padding: 1em;
   width: 90%;
   border-radius: 5px;
-  margin: 2em;
-  text-align: revert;
-  /* align-self: end; */
+  margin: 1em auto;
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.5);
   border: 0px transparent;
 }
 
 #langSwitch {
-  float: right;
   padding: 1.5em;
   position: absolute;
   top: 0;
   right: 0;
+}
+
+/* Larger screens */
+@media screen and (min-width: 768px) {
+  .tile {
+    width: 20em;
+    height: 20em;
+  }
+
+  .tile a {
+    padding: 33% 1em;
+    font-size: 28px;
+  }
+
+  #spinner {
+    width: 120px;
+    height: 120px;
+  }
+
+  #loadingText {
+    transform: translate(-50%, calc(-50% - 60px));
+    font-size: 20px;
+  }
+
+  #search {
+    width: 75%;
+  }
 }
