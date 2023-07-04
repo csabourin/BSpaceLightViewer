@@ -1,73 +1,33 @@
-.topbar {
-  display: flex;
-  align-items: center;
-  height: var(--topbar-height);
-  color: var(--d2l-color-ferrite);
-  font-size: var(--d2l-body-standard-text_-_font-size);
-  font-weight: var(--d2l-body-standard-text_-_font-weight);
-  line-height: var(--d2l-body-standard-text_-_line-height);
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-}
-
 body {
   font-family: sans-serif;
   padding: 0;
-}
-
-/* The sidebar menu */
-.sidebar {
-  height: 100%;
-  /* Full-height: remove this if you want "auto" height */
-  width: 0;
-  /* Set the width of the sidebar */
-  position: fixed;
-  /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1;
-  /* Stay on top */
-  top: 0;
-  /* Stay at the top */
-  left: 0;
-  background-color: #ffffff;
-  /* White */
-  overflow-x: hidden;
-  /* Disable horizontal scroll */
-  padding: 0;
   margin: 0;
-  /* Place content 60px from the top */
-  /*             transition: 0.5s; */
-  /* 0.5 second transition effect to slide in the sidebar */
 }
 
-/* The sidebar links */
-.sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  color: #333333;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 0 20px;
 }
 
-/* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
-  color: #0f0f0f;
-}
-.sidebar h2,
-.sidebar h3,
-.sidebar h4 {
-  padding: 1em;
+#header-left,
+#header-right {
+  display: flex;
+  align-items: center;
 }
 
-/* Position and style the close button (top right corner) */
-.sidebar .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
+.topic-name {
+  text-align: center;
 }
 
-/* The button used to open the sidebar */
+.topic-name p {
+  text-align: center;
+}
+
 .openbtn {
   font-size: 2rem;
   cursor: pointer;
@@ -77,30 +37,24 @@ body {
   border: none;
 }
 
-.openbtn:hover {
-  color: #444444;
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
 }
 
-/* Style page content - push the page content to the right when you open the side navigation */
 #main {
   transition: margin-left 0.5s;
-  /* If you want a transition effect */
   padding: 20px;
-}
-
-iframe {
-  display: block;
-  margin: auto;
-  width: 860px;
-  height: 90vh;
-  /* vh stands for viewport height. 90vh will be 90% of the height of the viewport */
-  border: none;
-  box-shadow: 0 0 10px #cccccc;
 }
 
 .nav-buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .nav-buttons a,
@@ -110,46 +64,99 @@ iframe {
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  margin-left: 1rem;
-}
-
-.sidebar a:last-of-type {
-  padding-bottom: 60px;
 }
 
 .nav-buttons button:disabled {
   background-color: #f1f1f1;
-  color: #000000;
+  color: #888888;
+  border:1px solid #888888;
 }
 
-#header-right {
-  color: var(--d2l-color-ferrite);
-  font-size: var(--d2l-body-standard-text_-_font-size);
-  font-weight: var(--d2l-body-standard-text_-_font-weight);
-  line-height: var(--d2l-body-standard-text_-_line-height);
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-  align-items: center;
-  text-align: center;
+.sidebar {
+  width: 0;
+  transition: width 0.5s;
+    height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 60px;
 }
 
-#header-left {
-  display: flex;
-  flex: 1;
-  align-items: center;
-}
-#header-left a {
-  font-size: 1.5rem;
+.sidebar.open {
+  width: 450px;
 }
 
-.topic-name {
-  font-size: var(--d2l-body-compact-text_-_font-size);
-  font-weight: var(--d2l-body-compact-text_-_font-weight);
-  line-height: var(--d2l-body-compact-text_-_line-height);
-  text-align: center;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  flex: 1;
+#main.open{
+  margin-left:450px;
+}
+
+@media (max-width: 768px) {
+  .sidebar.open {
+    width: 100%;
+  }
+  #main.open{
+  margin-left:0;
+}
+}
+
+/* Common CSS for iframe */
+
+iframe {
+  display: block;
+  margin: auto;
+  height: 90vh;
+  width: 100%;
+  border: none;
+  box-shadow: 0 0 10px #cccccc;
+}
+
+/* Media Query for devices with width less than or equal to 768px */
+@media (max-width: 767px) {
+  iframe {
+    width: 100%;
+    height: calc(
+      100vh - 60px
+    ); /* Adjust as necessary, 60px accounts for the topbar */
+  }
+}
+
+/* Media Query for devices with width greater than 768px */
+@media (min-width: 768px) {
+  iframe {
+    width: 860px; /* Adjust as necessary, 250px is the width of the sidebar */
+    height: calc(
+      100vh - 60px
+    ); /* Adjust as necessary, 60px accounts for the topbar */
+  }
+}
+
+/* Media Query for devices with width less than or equal to 768px */
+@media (max-width: 768px) {
+  .hidden-small {
+    display: none;
+  }
+
+  .nav-buttons a::before,
+  .nav-buttons button::before {
+    content: "";
+  }
+
+  .nav-buttons a,
+  .nav-buttons button {
+    font-size: 0;
+  }
+
+  .nav-buttons a[data-direction="prev"]::before,.nav-buttons button[data-direction="prev"]::before {
+    content: "<";
+    font-size: 1rem;
+  }
+
+  .nav-buttons a[data-direction="next"]::before, .nav-buttons button[data-direction="next"]::before{
+    content: ">";
+    font-size: 1rem;
+  }
 }
