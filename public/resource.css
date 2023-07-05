@@ -46,6 +46,11 @@ body {
   transition: 0.3s;
 }
 
+.sidebar a.closebtn {
+    font-size: 36px;
+    text-align: end;
+}
+
 #main {
   transition: margin-left 0.5s;
   padding: 20px;
@@ -83,7 +88,7 @@ body {
   background-color: #ffffff;
   overflow-x: hidden;
   transition: 0.3s;
-  padding-top: 60px;
+  margin-left:1em;
 }
 
 .sidebar.open {

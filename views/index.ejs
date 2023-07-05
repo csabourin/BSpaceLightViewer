@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
@@ -25,13 +25,13 @@
 
        <% for(let i=0; i<packageFiles.length; i++) { %>
         <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =="en-ca"?"English anglais":"French français" %>">
-  <a href="/load/<%= encodeURIComponent(packageFiles[i].file) %>?lang=<%= packageFiles[i].lang %>">
+  <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>">
     <%= packageFiles[i].title %> <!-- displays the title -->
   </a>
 </div>
     <% } %>
       <div class="adminConsole"><a href="/adminconsole" aria-label="Admin console">&#120645;</a></div>
-       </dmain>
+       </main>
           <div id="overlay">
             <p id="loadingText">Loading...</p> <!-- Loading text -->
   <div id="spinner"></div>

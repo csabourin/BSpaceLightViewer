@@ -81,65 +81,78 @@ function getPackages() {
       if (err) {
         reject(err);
       } else {
-        const promises = files.map(
-          (file) =>
-            new Promise((resolve, reject) => {
-              const zip = new StreamZip({
-                file: `./packages/${file}`,
-                storeEntries: true,
-              });
+        if (files.length == 0) {
+            resolve({
+              title: "No file found",
+              file: null,
+              lang: "en-ca",
+            });
+        } else {
+            const promises = files.map(
+              (file) =>
+                new Promise((resolve, reject) => {
+                  const zip = new StreamZip({
+                    file: `./packages/${file}`,
+                    storeEntries: true,
+                  });
 
-              zip.on("ready", () => {
-                // Check if the manifest exists within the zip
-                if (zip.entry("imsmanifest.xml")) {
-                  // If it exists, extract it
-                  zip.stream("imsmanifest.xml", (err, stm) => {
-                    if (err) {
-                      reject(err);
-                    } else {
-                      // Convert stream to string
-                      const chunks = [];
-                      stm.on("data", (chunk) => chunks.push(chunk));
-                      stm.on("end", () => {
-                        const xmlString = Buffer.concat(chunks).toString();
+                  zip.on("ready", () => {
+                    // Check if the manifest exists within the zip
+                    if (zip.entry("imsmanifest.xml")) {
+                      // If it exists, extract it
+                      zip.stream("imsmanifest.xml", (err, stm) => {
+                        if (err) {
+                          reject(err);
+                        } else {
+                          // Convert stream to string
+                          const chunks = [];
+                          stm.on("data", (chunk) => chunks.push(chunk));
+                          stm.on("end", () => {
+                            const xmlString = Buffer.concat(chunks).toString();
 
-                        // Parse the XML string
-                        xml2js.parseString(xmlString, (err, result) => {
-                          if (err) {
-                            reject(err);
-                          } else {
-                            // Get the title and xml:lang value
-                            const titleData =
-                              result.manifest.metadata[0]["imsmd:lom"][0][
-                                "imsmd:general"
-                              ][0]["imsmd:title"][0]["imsmd:langstring"][0];
-                            const title = titleData._;
-                            const lang = titleData["$"]["xml:lang"];
+                            // Parse the XML string
+                            xml2js.parseString(xmlString, (err, result) => {
+                              if (err) {
+                                reject(err);
+                              } else {
+                                // Get the title and xml:lang value
+                                const titleData =
+                                  result.manifest.metadata[0]["imsmd:lom"][0][
+                                    "imsmd:general"
+                                  ][0]["imsmd:title"][0]["imsmd:langstring"][0];
+                                const title = titleData._;
+                                const lang = titleData["$"]["xml:lang"];
 
-                            resolve({
-                              file,
-                              title,
-                              lang,
+                                resolve({
+                                  file,
+                                  title,
+                                  lang,
+                                });
+                              }
                             });
-                          }
-                        });
+                          });
+                        }
+                      });
+                    } else {
+                      resolve({
+                        title: "No file found",
+                        file: null,
+                        lang: "en-ca",
                       });
                     }
                   });
-                } else {
-                  reject(new Error("imsmanifest.xml not found within zip"));
-                }
-              });
-            })
-        );
+                })
+            );
 
-        Promise.all(promises)
-          .then((data) => resolve(data))
-          .catch((err) => reject(err));
+            Promise.all(promises)
+              .then((data) => resolve(data))
+              .catch((err) => reject(err));
+        }
       }
     });
   });
 }
+
 const readPackage = (packagePath, session) => {
   return new Promise((resolve, reject) => {
     const imsPackagePath = path.join("./packages/", packagePath);
