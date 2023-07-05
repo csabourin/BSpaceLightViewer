@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="https://cdn.glitch.global/b8dc9c88-f259-4777-96b2-3c632dbdf057/favicon-mobile.ico?v=1688299447287">
+  <link rel="icon" href="/public/favicon-mobile.ico">
  <link rel="stylesheet" href="/public/index.css">
   <!-- language switcher -->
   <script>
@@ -14,11 +14,11 @@
 </head>
 <body>
   <div class="fip">
-    <img src="https://cdn.glitch.global/b8dc9c88-f259-4777-96b2-3c632dbdf057/CSPS_FipEng_Black-Red-Final.svg?v=1688299227280" alt="CSPS logo">
+    <img src="/public/CSPS_FipEng_Black-Red-Final.svg" alt="Canada School of Public Service">
   </div>
     <button id="langSwitch" onclick="switchLanguage()"></button>
     <h1 id="appTitle">Open Content Viewer</h1>
-  <label class="sr-only" for="search">Search by title, filename or language:</label>
+  <label id="searchlabel" class="sr-only" for="search">Search by title, filename or language:</label>
   <input type="text" id="search" placeholder="Search by title, filename or language...">
   <main class="container" role="main">
     <p id="srUpdate" class="sr-only" aria-live="polite"></p>   

@@ -61,6 +61,8 @@ const langSwitchButton = document.getElementById("langSwitch");
 if (lang === "fr") {
   // French
   langSwitchButton.textContent = "EN";
+  document.querySelector("#searchlabel").textContent =
+    "Rechercher par titre, nom de fichier ou langue...";
   document.querySelector("#search").placeholder =
     "Rechercher par titre, nom de fichier ou langue...";
   document.querySelector('#appTitle').textContent="Lecteur de contenu ouvert"

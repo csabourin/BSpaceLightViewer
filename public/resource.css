@@ -41,14 +41,23 @@ body {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 18px;
-  color: #818181;
+  color: var(--d2l-color-celestine);
   display: block;
   transition: 0.3s;
+  border-radius:6px;
+}
+.sidebar a:hover{
+  color: var(--d2l-color-celestine-minus-1);
+  background: var(--d2l-color-gypsum);
 }
 
 .sidebar a.closebtn {
     font-size: 36px;
     text-align: end;
+}
+
+.sidebar .endcourse{
+  margin:3em 0;
 }
 
 #main {
@@ -88,7 +97,10 @@ body {
   background-color: #ffffff;
   overflow-x: hidden;
   transition: 0.3s;
+}
+.sidebar .sideContainer{
   margin-left:1em;
+  padding:1em;
 }
 
 .sidebar.open {

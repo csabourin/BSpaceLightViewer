@@ -424,6 +424,13 @@ app.get("/load/:filename", async (req, res) => {
 });
 app.use("/shared", express.static("shared"));
 app.use("/public", express.static("public"));
+app.get('/content/enforced/*/*', (req, res) => {
+  // The wildcard '*' in the route path will match any string
+  // The 'req.params[0]' will return the first matched string (course code in this case)
+  // The 'req.params[1]' will return the second matched string (file-or-path in this case)
+  const redirectedPath = `/page/${req.params[1]}`;
+  res.redirect(redirectedPath);
+});
 app.use('/d2l', function(req, res) {
     let originalUrl = req.headers.referer || '/';
     res.render('messagePage', { currentpage: originalUrl });
