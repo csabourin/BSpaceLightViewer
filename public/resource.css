@@ -67,7 +67,7 @@ body {
 
 .nav-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
