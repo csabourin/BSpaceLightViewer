@@ -276,6 +276,7 @@ function processSubItems(subItems, resources) {
     ) {
       items.push({
         type: "content",
+        resourceCode : i.$['d2l_2p0:resource_code'] || null,
         identifier: i.$.identifier,
         title: i.title[0],
         href: `${itemResource.$.href}`,
@@ -354,7 +355,7 @@ app.get("/adminconsole", checkIP ,async (req, res) => {
   res.render("upload", { packageFiles });
 });
 
-app.post("/rename", async (req, res) => {
+app.post("/rename", checkIP ,async (req, res) => {
   const oldName = path.join(__dirname, "packages", sanitize(req.body.old));
   const newName = path.join(__dirname, "packages", sanitize(req.body.new));
 
@@ -379,7 +380,7 @@ app.post("/rename", async (req, res) => {
 });
 
 app.post(
-  "/upload",
+  "/upload", checkIP ,
   upload.single("zipFile"),
   checkForImsmanifest,
   (req, res) => {
@@ -431,9 +432,46 @@ app.get('/content/enforced/*/*', (req, res) => {
   const redirectedPath = `/page/${req.params[1]}`;
   res.redirect(redirectedPath);
 });
-app.use('/d2l', function(req, res) {
-    let originalUrl = req.headers.referer || '/';
+app.use('/d2l/common/dialogs/quickLink/quickLink.d2l', function(req, res) {
+  const resourceCode = req.query.rcode; 
+ let href = null;
+  
+  for (let key in req.session.manifests) {
+    let manifest = req.session.manifests[key];
+    let foundHref = getHrefByResourceCode(flattenItems(manifest), resourceCode);
+    if (foundHref) {
+      href = foundHref;
+      break;
+    }
+  }
+
+  function flattenItems(items) {
+    return items.reduce((all, item) => {
+      all.push(item);
+      if (item.type === "contentmodule") {
+        all = all.concat(flattenItems(item.items));
+      }
+      return all;
+    }, []);
+  }
+
+  function getHrefByResourceCode(array, resourceCode) {
+    for(let i = 0; i < array.length; i++) {
+        if(array[i].resourceCode === resourceCode) {
+            return array[i].href;
+        }
+    }
+    return null;
+  }
+
+  if (!href) {
+     let originalUrl = req.headers.referer || '/';
     res.render('messagePage', { currentpage: originalUrl });
+    return;
+  }
+
+  // Return the href
+  res.redirect(`/page/${href}`);
 });
 app.get("/resource/:id", (req, res) => {
   const manifestLanguage = req.query.lang;
@@ -494,6 +532,15 @@ for (let key in req.session.manifests) {
     }
     return null;
   }
+
+  function getHrefByResourceCode(array, resourceCode) {
+    for(let i = 0; i < array.length; i++) {
+        if(array[i].resourceCode === resourceCode) {
+            return array[i].href;
+        }
+    }
+    return null;
+}
 
   for (let key in req.session.manifests) {
     let manifest = req.session.manifests[key];
@@ -587,7 +634,14 @@ app.get("/page/*", (req, res) => {
   }
 });
 
+// Catch-all middleware for any invalid URL
+app.use(function(req, res) {
+     res.status(404).render('404', {title: "Page Not Found - Page introuvable"});
+});
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`App listening on port ${port}!`);
+  const options = { timeZone: 'America/New_York', hour12: false };
+  const startTime = new Date().toLocaleTimeString('en-CA', options);
+  console.log(`App listening on port ${port}`);
+   console.log('Server started at:', startTime);
 });

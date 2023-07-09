@@ -80,10 +80,32 @@ body {
   border-radius: 5px;
 }
 
+.nav-buttons a svg,.nav-buttons button svg{
+  align-items: center;
+    color: var(--d2l-color-tungsten);
+    display: inline-flex;
+    fill: var(--d2l-icon-fill-color, currentcolor);
+    height: var(--d2l-icon-height, 18px);
+    justify-content: center;
+    stroke: var(--d2l-icon-stroke-color, none);
+    vertical-align: middle;
+    width: var(--d2l-icon-width, 18px);
+    height: var(--d2l-icon-height, 30px);
+    width: var(--d2l-icon-width, 30px);
+}
+
 .nav-buttons button:disabled {
-  background-color: #f1f1f1;
-  color: #888888;
-  border:1px solid #888888;
+  background-color: transparent;
+  border:none;
+}
+
+.nav-buttons a:has(svg),.nav-buttons button:has(svg){
+  background-color:transparent;
+}
+
+.nav-buttons button:disabled svg {
+  color: var(--d2l-color-mica);
+  fill: var(--d2l-color-mica);
 }
 
 .sidebar {
@@ -144,11 +166,20 @@ iframe {
 /* Media Query for devices with width greater than 768px */
 @media (min-width: 768px) {
   iframe {
+    width: 100%; /* Adjust as necessary, 250px is the width of the sidebar */
+    height: calc(
+      100vh - 60px
+    ); /* Adjust as necessary, 60px accounts for the topbar */
+  }
+}
+@media (min-width: 900px) {
+iframe {
     width: 860px; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
       100vh - 60px
     ); /* Adjust as necessary, 60px accounts for the topbar */
   }
+  
 }
 
 /* Media Query for devices with width less than or equal to 768px */
@@ -157,7 +188,7 @@ iframe {
     display: none;
   }
 
-  .nav-buttons a::before,
+  /* .nav-buttons a::before,
   .nav-buttons button::before {
     content: "";
   }
@@ -165,9 +196,9 @@ iframe {
   .nav-buttons a,
   .nav-buttons button {
     font-size: 0;
-  }
+  } */
 
-  .nav-buttons a[data-direction="prev"]::before,.nav-buttons button[data-direction="prev"]::before {
+  /* .nav-buttons a[data-direction="prev"]::before,.nav-buttons button[data-direction="prev"]::before {
     content: "<";
     font-size: 1rem;
   }
@@ -175,5 +206,5 @@ iframe {
   .nav-buttons a[data-direction="next"]::before, .nav-buttons button[data-direction="next"]::before{
     content: ">";
     font-size: 1rem;
-  }
+  } */
 }
