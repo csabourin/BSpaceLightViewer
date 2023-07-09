@@ -11,6 +11,16 @@ links.forEach((link) => {
     document.getElementById("overlay").style.display = "block";
   });
 });
+window.addEventListener('popstate', function(event) {
+    // Hide the overlay when user navigates back
+    document.getElementById("overlay").style.display = "none";
+});
+window.addEventListener('pageshow', function(event) {
+  // If the page was loaded from the bfcache, hide the overlay
+  if (event.persisted) {
+    document.getElementById("overlay").style.display = "none";
+  }
+});
 // When the user types in the search field
 document.querySelector("#search").addEventListener("input", function () {
   // Get the current search value (lowercase for case-insensitive search)

@@ -174,10 +174,18 @@ h1 {
 
   #loadingText {
     transform: translate(-50%, calc(-50% - 60px));
-    font-size: 20px;
+    font-size: 40px;
   }
 
   #search {
     width: 75%;
+  }
+}
+@media (max-height: 500px) {
+    #loadingText {
+      top: 50%;
+  left: 50%;
+    transform: translate(-50%, -60%);
+    font-size: 20px;
   }
 }
