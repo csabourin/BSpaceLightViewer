@@ -65,11 +65,13 @@ if (lang === "fr") {
     "Rechercher par titre, nom de fichier ou langue...";
   document.querySelector("#search").placeholder =
     "Rechercher par titre, nom de fichier ou langue...";
-  document.querySelector('#appTitle').textContent="Lecteur de contenu ouvert"
+  document.querySelector('#appTitle').textContent="Lecteur de contenu ouvert";
+  document.querySelector('#sessionEnd').textContent="Votre session s'est terminée. Vous avez été redirigé à la page d'accueil."
 } else {
   // English
   langSwitchButton.textContent = "FR";
   document.querySelector("#search").placeholder =
     "Search by title, filename or language...";
   document.querySelector('#appTitle').textContent="Open Content Viewer"
+  document.querySelector('#sessionEnd').textContent="Your session has ended. You have been redirected to the homepage."
 }

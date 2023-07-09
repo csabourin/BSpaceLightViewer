@@ -82,7 +82,7 @@ function getPackages() {
                               // Get the title and xml:lang value
                               const titleData =
                                 result.manifest.metadata[0]["imsmd:lom"][0][
-                                "imsmd:general"
+                                  "imsmd:general"
                                 ][0]["imsmd:title"][0]["imsmd:langstring"][0];
                               const title = titleData._;
                               const lang = titleData["$"]["xml:lang"];
@@ -183,7 +183,7 @@ function processSubItems(subItems, resources) {
         identifier: i.$.identifier,
         title: title,
         description: description,
-        items: []
+        items: [],
       };
 
       if (i.item) {
@@ -197,7 +197,7 @@ function processSubItems(subItems, resources) {
     ) {
       items.push({
         type: "content",
-        resourceCode: i.$['d2l_2p0:resource_code'] || null,
+        resourceCode: i.$["d2l_2p0:resource_code"] || null,
         identifier: i.$.identifier,
         title: i.title[0],
         href: `${itemResource.$.href}`,
@@ -231,14 +231,14 @@ const readPackage = (packagePath, session) => {
       fs.readFile(
         path.join(extractionPath, "imsmanifest.xml"),
         "utf8",
-        function(err, data) {
+        function (err, data) {
           if (err) {
             console.error(err);
             reject(err);
             return;
           }
 
-          parser.parseString(stripBom.default(data), function(err, result) {
+          parser.parseString(stripBom.default(data), function (err, result) {
             if (err) {
               console.error(err);
               reject(err);
@@ -249,7 +249,9 @@ const readPackage = (packagePath, session) => {
               result.manifest.organizations[0].organization[0].item;
             const resources = result.manifest.resources[0].resource;
             const titleData =
-              result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
+              result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0][
+                "imsmd:title"
+              ][0]["imsmd:langstring"][0];
             const courseTitle = titleData._;
 
             // Check if session.manifests is defined. If not, initialize it
@@ -271,5 +273,9 @@ const readPackage = (packagePath, session) => {
 };
 
 module.exports = {
-  checkForImsmanifest,flattenItems,getPackages, processItems, readPackage
+  checkForImsmanifest,
+  flattenItems,
+  getPackages,
+  processItems,
+  readPackage,
 };

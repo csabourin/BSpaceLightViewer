@@ -2,9 +2,68 @@
 <html>
   <head>
       <link rel="stylesheet" href="/public/d2l.css" />
-  <link rel="stylesheet" href="/public/resource.css" />
+    <style>
+
+      body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #555;
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 30vh;
+    line-height: 1.2;
+}
+
+p {
+    text-align: center;
+    margin: 20px 0;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+a#backLink {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+a#backLink:hover {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+      
+    </style>
   </head>
 <body>
-    <p>Internal navigation link. <a href="<%= currentpage %>">Back</a></p>
+    <h1 id="message">Navigation link not found.</h1>
+  <p><a id="backLink" href="<%= currentpage %>">Back</a></p>
+  <script>
+    const lang = localStorage.getItem("language") || "en";
+    if (lang === "fr") {
+       document.querySelector("#message").textContent =
+    "Lien de navigation non-trouvé";
+      document.querySelector("#backLink").textContent =
+    "Retour";
+    }
+    
+  </script>
 </body>
 </html>

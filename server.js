@@ -60,6 +60,15 @@ function checkIP(req, res, next) {
     res.status(403).send('Access denied');
   }
 }
+// Middleware to check for active session
+function checkSession(req, res, next) {
+  if (!req.session.manifests) {
+    // Redirect to home page if there is no active session
+    req.session.sessionEnded = true;
+    return res.redirect('/');
+  }
+  next();
+}
 app.set("view engine", "ejs");
 app.set('trust proxy', true);
 app.use(bodyParser.json()); // used for renaming files
@@ -67,10 +76,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
 
 app.get("/", async (req, res) => {
+    // Check if sessionEnded flag is set
+  const sessionEnded = req.session.sessionEnded;
+  // Remove the flag from the session
+  req.session.sessionEnded = null;
   // index page, lists the files
   try {
     const packageFiles = await getPackages();
-    res.render("index", { packageFiles });
+    res.render("index", { packageFiles, sessionEnded });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error reading packages");
@@ -189,7 +202,7 @@ app.use('/d2l/common/dialogs/quickLink/quickLink.d2l', function(req, res) {
   // Return the href
   res.redirect(`/page/${href}`);
 });
-app.get("/resource/:id", (req, res) => {
+app.get("/resource/:id", checkSession, (req, res) => {
   const manifestLanguage = req.query.lang;
   const id = req.params.id;
   let resource = null;

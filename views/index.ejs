@@ -18,6 +18,11 @@
   </div>
     <button id="langSwitch" onclick="switchLanguage()"></button>
     <h1 id="appTitle">Open Content Viewer</h1>
+  <% if (sessionEnded) { %>
+  <div id="sessionEnd" class="alert alert-warning" role="alert">
+    Your session has ended. You have been redirected to the homepage.
+  </div>
+<% } %>
   <label id="searchlabel" class="sr-only" for="search">Search by title, filename or language:</label>
   <input type="text" id="search" placeholder="Search by title, filename or language...">
   <main class="container" role="main">
