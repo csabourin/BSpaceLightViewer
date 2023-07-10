@@ -78,6 +78,7 @@ body {
 }
 
 .adminConsole a {
+  cursor:default;
   text-decoration: none;
   color: #ffffff;
   transition: all 1s;

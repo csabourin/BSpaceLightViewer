@@ -67,6 +67,7 @@ window.switchLanguage = function () {
 // Language specific script
 const lang = document.documentElement.lang;
 const langSwitchButton = document.getElementById("langSwitch");
+const sessionEnd=document.querySelector('#sessionEnd');
 
 if (lang === "fr") {
   // French
@@ -76,12 +77,22 @@ if (lang === "fr") {
   document.querySelector("#search").placeholder =
     "Rechercher par titre, nom de fichier ou langue...";
   document.querySelector('#appTitle').textContent="Lecteur de contenu ouvert";
-  document.querySelector('#sessionEnd').textContent="Votre session s'est terminée. Vous avez été redirigé à la page d'accueil."
+  
+  if(sessionEnd){sessionEnd.textContent="Votre session s'est terminée. Vous avez été redirigé à la page d'accueil.";}  
+   // Change the src and alt of the image for French
+  let imgElement = document.querySelector(".fip img");
+  imgElement.src = "/public/CSPS_FIP_BlackRed_F.svg";
+  imgElement.alt = "École de la fonction publique du Canada";
+
 } else {
   // English
   langSwitchButton.textContent = "FR";
   document.querySelector("#search").placeholder =
     "Search by title, filename or language...";
-  document.querySelector('#appTitle').textContent="Open Content Viewer"
-  document.querySelector('#sessionEnd').textContent="Your session has ended. You have been redirected to the homepage."
+  document.querySelector('#appTitle').textContent="Open Content Viewer";
+   if(sessionEnd){sessionEnd.textContent="Your session has ended. You have been redirected to the homepage.";}
+    // Change the src and alt of the image for English
+  let imgElement = document.querySelector(".fip img");
+  imgElement.src = "/public/CSPS_FipEng_Black-Red-Final.svg";
+  imgElement.alt = "Canada School of Public Service";
 }
