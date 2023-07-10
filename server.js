@@ -5,11 +5,15 @@ const fs = require("fs-extra");
 const ejs = require("ejs"); // required for templates
 const path = require("path");
 const os = require("os");
-const multer = require("multer"); // used for uploading files
 const mime = require("mime-types");
 const bodyParser = require("body-parser");
 const sanitize = require("sanitize-filename");
-const { checkForImsmanifest, flattenItems, getPackages, readPackage, } = require('./utils.js');
+const {
+  checkForImsmanifest,
+  flattenItems,
+  getPackages,
+  readPackage,
+} = require("./utils.js");
 const app = express();
 app.use(
   session({
@@ -19,64 +23,29 @@ app.use(
   })
 );
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "./packages/");
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 160, // limit uploaded file size to 160MB
-  },
-  fileFilter: function(req, file, cb) {
-    if (path.extname(file.originalname) !== ".zip") {
-      req.fileValidationError =
-        '<p>Only .zip files are allowed</p> <a href="/">Back</a>'; // Assign custom error message
-      return cb(null, false); // Pass false as acceptance status
-    }
-    cb(null, true);
-  },
-});
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs
+  max: 600, // limit each IP to 600 requests per windowMs
   message: "Too many requests from this IP, please try again after 5 minutes",
 });
-// array of allowed IP addresses
-let allowedIps = ['24.202.50.168', '205.194.17.173'];
 
-// middleware function to check the IP
-function checkIP(req, res, next) {
-  let clientIp = req.ip;
-
-  if (allowedIps.includes(clientIp)) {
-    next();
-  } else {
-    res.status(403).send('Access denied');
-  }
-}
 // Middleware to check for active session
 function checkSession(req, res, next) {
   if (!req.session.manifests) {
     // Redirect to home page if there is no active session
     req.session.sessionEnded = true;
-    return res.redirect('/');
+    return res.redirect("/");
   }
   next();
 }
 app.set("view engine", "ejs");
-app.set('trust proxy', true);
+app.set("trust proxy", true);
 app.use(bodyParser.json()); // used for renaming files
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
 
 app.get("/", async (req, res) => {
-    // Check if sessionEnded flag is set
+  // Check if sessionEnded flag is set
   const sessionEnded = req.session.sessionEnded;
   // Remove the flag from the session
   req.session.sessionEnded = null;
@@ -89,43 +58,7 @@ app.get("/", async (req, res) => {
     res.status(500).send("Error reading packages");
   }
 });
-app.get("/adminconsole", checkIP, async (req, res) => {
-  const packageFiles = await getPackages();
-  res.render("upload", { packageFiles });
-});
-
-app.post("/rename", checkIP, async (req, res) => {
-  const oldName = path.join(__dirname, "packages", sanitize(req.body.old));
-  const newName = path.join(__dirname, "packages", sanitize(req.body.new));
-
-  // Check if new file already exists
-  fs.access(newName, fs.constants.F_OK, (err) => {
-    if (!err) {
-      // If the file exists, send an error response
-      res.status(400).send("A file with the same name already exists");
-    } else {
-      // If the file does not exist, proceed with renaming
-      fs.rename(oldName, newName, function(err) {
-        if (err) {
-          console.log(err);
-          res.status(500).send();
-        } else {
-          console.log("Successfully renamed - AKA moved!");
-          res.status(200).send();
-        }
-      });
-    }
-  });
-});
-
-app.post(
-  "/upload", checkIP,
-  upload.single("zipFile"),
-  checkForImsmanifest,
-  (req, res) => {
-    res.redirect("/");
-  }
-);
+require("./admin.js")(app);
 app.get("/load/:filename", async (req, res) => {
   const manifestLanguage = req.query.lang;
   try {
@@ -164,14 +97,14 @@ app.get("/load/:filename", async (req, res) => {
 });
 app.use("/shared", express.static("shared"));
 app.use("/public", express.static("public"));
-app.get('/content/enforced/*/*', (req, res) => {
+app.get("/content/enforced/*/*", (req, res) => {
   // The wildcard '*' in the route path will match any string
   // The 'req.params[0]' will return the first matched string (course code in this case)
   // The 'req.params[1]' will return the second matched string (file-or-path in this case)
   const redirectedPath = `/page/${req.params[1]}`;
   res.redirect(redirectedPath);
 });
-app.use('/d2l/common/dialogs/quickLink/quickLink.d2l', function(req, res) {
+app.use("/d2l/common/dialogs/quickLink/quickLink.d2l", function (req, res) {
   const resourceCode = req.query.rcode;
   let href = null;
 
@@ -194,8 +127,8 @@ app.use('/d2l/common/dialogs/quickLink/quickLink.d2l', function(req, res) {
   }
 
   if (!href) {
-    let originalUrl = req.headers.referer || '/';
-    res.render('messagePage', { currentpage: originalUrl });
+    let originalUrl = req.headers.referer || "/";
+    res.render("messagePage", { currentpage: originalUrl });
     return;
   }
 
@@ -212,7 +145,7 @@ app.get("/resource/:id", checkSession, (req, res) => {
 
   for (let key in req.session.manifests) {
     let manifest = req.session.manifests[key];
-    let localAllItems = [];  // Items for the current manifest only
+    let localAllItems = []; // Items for the current manifest only
 
     manifest.forEach((module) => {
       localAllItems = localAllItems.concat(flattenItems(module.items));
@@ -224,8 +157,11 @@ app.get("/resource/:id", checkSession, (req, res) => {
       filename = key;
 
       // If we found the resource, calculate prevResource and nextResource based on the current manifest only
-      const resourceIndex = localAllItems.findIndex((item) => item.identifier === id);
-      const prevResource = resourceIndex > 0 ? localAllItems[resourceIndex - 1] : false;
+      const resourceIndex = localAllItems.findIndex(
+        (item) => item.identifier === id
+      );
+      const prevResource =
+        resourceIndex > 0 ? localAllItems[resourceIndex - 1] : false;
       const nextResource = localAllItems[resourceIndex + 1];
 
       // Set in session or elsewhere for use in rendering
@@ -235,7 +171,6 @@ app.get("/resource/:id", checkSession, (req, res) => {
       break;
     }
   }
-
 
   function searchItems(items, identifier) {
     for (let i = 0; i < items.length; i++) {
@@ -305,7 +240,6 @@ app.get("/resource/:id", checkSession, (req, res) => {
     return;
   }
 
-
   let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
   req.session.currentBasePath = basePath;
   express.static(basePath)(req, res, () => {
@@ -318,13 +252,13 @@ app.get("/resource/:id", checkSession, (req, res) => {
       currentPage: id,
       req,
       manifestLanguage,
-      courseTitle
+      courseTitle,
     });
   });
 });
 
 app.get("/page/*", (req, res) => {
-  const requestedPath = req.params[0].replace(/\\/g, '/'); // Get the requested path
+  const requestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path
   const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
 
   // Check if the requested resource corresponds to a content module resource
@@ -356,8 +290,10 @@ app.get("/page/*", (req, res) => {
       return;
     }
     res.setHeader("Content-Type", mimeType);
-    stream.on("error", function(error) {
-      res.status(404).render('404', { title: "Page Not Found - Page introuvable" });
+    stream.on("error", function (error) {
+      res
+        .status(404)
+        .render("404", { title: "Page Not Found - Page introuvable" });
       console.log(error);
     });
     stream.pipe(res);
@@ -365,13 +301,13 @@ app.get("/page/*", (req, res) => {
 });
 
 // Catch-all middleware for any invalid URL
-app.use(function(req, res) {
-  res.status(404).render('404', { title: "Page Not Found - Page introuvable" });
+app.use(function (req, res) {
+  res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
 });
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  const options = { timeZone: 'America/New_York', hour12: false };
-  const startTime = new Date().toLocaleTimeString('en-CA', options);
+  const options = { timeZone: "America/New_York", hour12: false };
+  const startTime = new Date().toLocaleTimeString("en-CA", options);
   console.log(`App listening on port ${port}`);
-  console.log('Server started at:', startTime);
+  console.log("Server started at:", startTime);
 });
