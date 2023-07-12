@@ -24,9 +24,9 @@ app.use(
 );
 
 const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 600, // limit each IP to 600 requests per windowMs
-  message: "Too many requests from this IP, please try again after 5 minutes",
+  windowMs: 2 * 60 * 1000, // 2 minutes
+  max: 2400, // limit each IP to 1200 requests per windowMs
+  message: "<h1>Too many requests from this IP, please try again after 2 minutes.</h1> <hr> <h1>Trop de requêtes venant de cette adresse IP, veuillez essayer de nouveau dans 2 minutes.</h1>",
 });
 
 // Middleware to check for active session
@@ -104,7 +104,7 @@ app.get("/content/enforced/*/*", (req, res) => {
   const redirectedPath = `/page/${req.params[1]}`;
   res.redirect(redirectedPath);
 });
-app.use("/d2l/common/dialogs/quickLink/quickLink.d2l", function (req, res) {
+app.use("/d2l/common/dialogs/quickLink/quickLink.d2l", function(req, res) {
   const resourceCode = req.query.rcode;
   let href = null;
 
@@ -257,8 +257,8 @@ app.get("/resource/:id", checkSession, (req, res) => {
   });
 });
 
-app.get("/page/*", (req, res) => {
-  const requestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path
+app.get("/page/*",checkSession, (req, res) => {
+  const requestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path, change backslashes to forward slashes.
   const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
 
   // Check if the requested resource corresponds to a content module resource
@@ -290,7 +290,7 @@ app.get("/page/*", (req, res) => {
       return;
     }
     res.setHeader("Content-Type", mimeType);
-    stream.on("error", function (error) {
+    stream.on("error", function(error) {
       res
         .status(404)
         .render("404", { title: "Page Not Found - Page introuvable" });
@@ -301,7 +301,7 @@ app.get("/page/*", (req, res) => {
 });
 
 // Catch-all middleware for any invalid URL
-app.use(function (req, res) {
+app.use(function(req, res) {
   res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
 });
 const port = process.env.PORT || 3000;

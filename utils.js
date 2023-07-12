@@ -61,48 +61,56 @@ function getPackages() {
                 });
 
                 zip.on("ready", () => {
-                  // Check if the manifest exists within the zip
-                  if (zip.entry("imsmanifest.xml")) {
-                    // If it exists, extract it
-                    zip.stream("imsmanifest.xml", (err, stm) => {
-                      if (err) {
-                        reject(err);
-                      } else {
-                        // Convert stream to string
-                        const chunks = [];
-                        stm.on("data", (chunk) => chunks.push(chunk));
-                        stm.on("end", () => {
-                          const xmlString = Buffer.concat(chunks).toString();
+                  try {
+                    // Check if the manifest exists within the zip
+                    if (zip.entry("imsmanifest.xml")) {
+                      // If it exists, extract it
+                      zip.stream("imsmanifest.xml", (err, stm) => {
+                        if (err) {
+                          reject(err);
+                          zip.close();
+                        } else {
+                          // Convert stream to string
+                          const chunks = [];
+                          stm.on("data", (chunk) => chunks.push(chunk));
+                          stm.on("end", () => {
+                            const xmlString = Buffer.concat(chunks).toString();
 
-                          // Parse the XML string
-                          xml2js.parseString(xmlString, (err, result) => {
-                            if (err) {
-                              reject(err);
-                            } else {
-                              // Get the title and xml:lang value
-                              const titleData =
-                                result.manifest.metadata[0]["imsmd:lom"][0][
+                            // Parse the XML string
+                            xml2js.parseString(xmlString, (err, result) => {
+                              if (err) {
+                                reject(err);
+                              } else {
+                                // Get the title and xml:lang value
+                                const titleData =
+                                  result.manifest.metadata[0]["imsmd:lom"][0][
                                   "imsmd:general"
-                                ][0]["imsmd:title"][0]["imsmd:langstring"][0];
-                              const title = titleData._;
-                              const lang = titleData["$"]["xml:lang"];
+                                  ][0]["imsmd:title"][0]["imsmd:langstring"][0];
+                                const title = titleData._;
+                                const lang = titleData["$"]["xml:lang"];
 
-                              resolve({
-                                file,
-                                title,
-                                lang,
-                              });
-                            }
+                                resolve({
+                                  file,
+                                  title,
+                                  lang,
+                                });
+                              }
+                              zip.close();
+                            });
                           });
-                        });
-                      }
-                    });
-                  } else {
-                    resolve({
-                      title: "No file found",
-                      file: null,
-                      lang: "en-ca",
-                    });
+                        }
+                      });
+                    } else {
+                      resolve({
+                        title: "No file found",
+                        file: null,
+                        lang: "en-ca",
+                      });
+                      zip.close();
+                    }
+                  } catch (err) {
+                    reject(err);
+                    zip.close();
                   }
                 });
               })
@@ -116,6 +124,7 @@ function getPackages() {
     });
   });
 }
+
 
 function flattenItems(items) {
   let flat = [];
@@ -231,14 +240,14 @@ const readPackage = (packagePath, session) => {
       fs.readFile(
         path.join(extractionPath, "imsmanifest.xml"),
         "utf8",
-        function (err, data) {
+        function(err, data) {
           if (err) {
             console.error(err);
             reject(err);
             return;
           }
 
-          parser.parseString(stripBom.default(data), function (err, result) {
+          parser.parseString(stripBom.default(data), function(err, result) {
             if (err) {
               console.error(err);
               reject(err);
@@ -250,7 +259,7 @@ const readPackage = (packagePath, session) => {
             const resources = result.manifest.resources[0].resource;
             const titleData =
               result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0][
-                "imsmd:title"
+              "imsmd:title"
               ][0]["imsmd:langstring"][0];
             const courseTitle = titleData._;
 
