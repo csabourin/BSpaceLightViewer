@@ -20,6 +20,7 @@ app.use(
     secret: process.env.SECRET || "GetTheCheeseToSickBay",
     resave: false,
     saveUninitialized: false,
+    cookie: { secure: true, httpOnly: true, sameSite: true }, // added security flags
   })
 );
 
@@ -299,6 +300,8 @@ app.get("/page/*",checkSession, (req, res) => {
     stream.pipe(res);
   }
 });
+
+app.use('/tmp', express.static(path.join(__dirname, 'tmp')));
 
 // Catch-all middleware for any invalid URL
 app.use(function(req, res) {

@@ -50,6 +50,7 @@ body {
 
 .tile {
   display: flex;
+  flex-direction:column;
   width: 100%;
   height: auto;
   align-items: center;
@@ -57,6 +58,12 @@ body {
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 2em;
+}
+.tile img{
+      width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: -2em;
 }
 
 .tile a {

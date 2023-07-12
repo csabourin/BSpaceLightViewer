@@ -5,6 +5,7 @@ module.exports = function(app) {
   const fs = require("fs-extra");
   const path = require("path");
   const StreamZip = require("node-stream-zip");
+  const AdmZip = require("adm-zip");
   const { checkForImsmanifest, getPackages } = require('./utils.js');
   const sanitize = require("sanitize-filename");
   const storage = multer.diskStorage({
@@ -15,6 +16,28 @@ module.exports = function(app) {
       cb(null, file.originalname);
     },
   });
+  
+const imageUpload = multer({
+  storage: multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, "./images/");
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.originalname);
+    },
+  }),
+  limits: {
+    fileSize: 1024 * 1024 * 5, // limit uploaded file size to 5MB
+  },
+  fileFilter: function(req, file, cb) {
+    if (!file.mimetype.startsWith('image/')) {
+      req.fileValidationError = '<p>Only image files are allowed</p> <a href="/">Back</a>'; 
+      return cb(null, false);
+    }
+    cb(null, true);
+  },
+});
+
 const adminPassword=process.env.ADMPASS || 'I have been and always shall be your friend';
   const authMiddleware = basicAuth({
     users: { 'admin': adminPassword }, // replace with your username and password
@@ -87,4 +110,54 @@ const adminPassword=process.env.ADMPASS || 'I have been and always shall be your
       res.redirect("/");
     }
   );
+app.post("/uploadImage", checkIP, authMiddleware, imageUpload.single('imageFile'), async (req, res) => {
+    if (!req.file) {
+    console.log('No file was uploaded or file upload was rejected');
+    return res.status(400).send('No file was uploaded or file upload was rejected');
+  }
+  const imageName = req.file.originalname;
+  const imagePath = path.join(__dirname, 'images', imageName);
+  const zipName = req.body.zipFileName;
+  const zipPath = path.join(__dirname, 'packages', zipName);
+
+  const newFileName = 'imsmanifest_image' + path.extname(imageName);
+  
+  // Check if zip file exists
+  fs.access(zipPath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // If the zip file does not exist, send an error response
+      res.status(400).send("The zip file does not exist");
+    } else {
+      // If the zip file exists, add image to it
+      let zip = new AdmZip(zipPath);
+      
+      // Check if image already exists in the zip file
+      const existingFile = zip.getEntry(newFileName);
+      if (existingFile) {
+        // If the image exists, delete it
+        zip.deleteFile(existingFile);
+      }
+      
+      // Add the new image to the zip file
+      fs.exists(imagePath, (exists) => {
+        if (exists) {
+          zip.addLocalFile(imagePath, '', newFileName); // add the newFileName as the second parameter to rename the file inside the zip
+          zip.writeZip(zipPath);
+          
+          // Delete image file after adding to zip
+          fs.unlink(imagePath, (err) => {
+            if (err) {
+              console.log(err);
+            }
+          });
+          
+          res.redirect("/adminconsole");
+        } else {
+          console.error('File does not exist:', imagePath);
+          res.status(500).send('Failed to add image to zip, file does not exist');
+        }
+      });
+    }
+  });
+});
 }

@@ -41,89 +41,78 @@ function checkForImsmanifest(req, res, next) {
 
 function getPackages() {
   return new Promise((resolve, reject) => {
-    fs.readdir("./packages", (err, files) => {
+    fs.readdir('./packages', (err, files) => {
       if (err) {
-        reject(err);
-      } else {
-        if (files.length == 0) {
-          resolve({
-            title: "No file found",
-            file: null,
-            lang: "en-ca",
-          });
-        } else {
-          const promises = files.map(
-            (file) =>
-              new Promise((resolve, reject) => {
-                const zip = new StreamZip({
-                  file: `./packages/${file}`,
-                  storeEntries: true,
-                });
-
-                zip.on("ready", () => {
-                  try {
-                    // Check if the manifest exists within the zip
-                    if (zip.entry("imsmanifest.xml")) {
-                      // If it exists, extract it
-                      zip.stream("imsmanifest.xml", (err, stm) => {
-                        if (err) {
-                          reject(err);
-                          zip.close();
-                        } else {
-                          // Convert stream to string
-                          const chunks = [];
-                          stm.on("data", (chunk) => chunks.push(chunk));
-                          stm.on("end", () => {
-                            const xmlString = Buffer.concat(chunks).toString();
-
-                            // Parse the XML string
-                            xml2js.parseString(xmlString, (err, result) => {
-                              if (err) {
-                                reject(err);
-                              } else {
-                                // Get the title and xml:lang value
-                                const titleData =
-                                  result.manifest.metadata[0]["imsmd:lom"][0][
-                                  "imsmd:general"
-                                  ][0]["imsmd:title"][0]["imsmd:langstring"][0];
-                                const title = titleData._;
-                                const lang = titleData["$"]["xml:lang"];
-
-                                resolve({
-                                  file,
-                                  title,
-                                  lang,
-                                });
-                              }
-                              zip.close();
-                            });
-                          });
-                        }
-                      });
-                    } else {
-                      resolve({
-                        title: "No file found",
-                        file: null,
-                        lang: "en-ca",
-                      });
-                      zip.close();
-                    }
-                  } catch (err) {
-                    reject(err);
-                    zip.close();
-                  }
-                });
-              })
-          );
-
-          Promise.all(promises)
-            .then((data) => resolve(data))
-            .catch((err) => reject(err));
-        }
+        return reject(err);
       }
+
+      if (files.length === 0) {
+        return resolve({
+          title: 'No file found',
+          file: null,
+          lang: 'en-ca',
+        });
+      }
+
+      const promises = files.map((file) =>
+        new Promise((resolve, reject) => {
+          try {
+            const absoluteZipPath = path.join(__dirname, './packages', file);
+            const zip = new AdmZip(absoluteZipPath);
+            const zipEntries = zip.getEntries();
+
+            const imageEntry = zipEntries.find(entry => /^imsmanifest_image\.(jpg|png|jpeg|gif)$/i.test(entry.name));
+            const xmlEntry = zipEntries.find(entry => entry.name === 'imsmanifest.xml');
+
+            if (imageEntry) {
+              const fileWithoutExt = path.basename(file, '.zip');
+              const dirPath = path.join(__dirname, tempDir, fileWithoutExt);
+              if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+              }
+              const imagePath = path.join(dirPath, imageEntry.entryName);
+              zip.extractEntryTo(imageEntry.entryName, dirPath, false, true);
+            }
+
+            if (xmlEntry) {
+              const xmlString = zip.readAsText(xmlEntry.entryName);
+              xml2js.parseString(xmlString, (err, result) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
+                  const title = titleData._;
+                  const lang = titleData['$']['xml:lang'];
+                  const imageUrl = imageEntry ? path.join(tempDir, path.basename(file, '.zip'), imageEntry.entryName) : null;
+
+                  resolve({
+                    file,
+                    title,
+                    lang,
+                    imageUrl,
+                  });
+                }
+              });
+            } else {
+              resolve({
+                title: 'No manifest file found',
+                file,
+                lang: 'en-ca',
+              });
+            }
+          } catch (err) {
+            reject(err);
+          }
+        })
+      );
+
+      Promise.all(promises)
+        .then((data) => resolve(data))
+        .catch((err) => reject(err));
     });
   });
 }
+
 
 
 function flattenItems(items) {
@@ -287,4 +276,4 @@ module.exports = {
   getPackages,
   processItems,
   readPackage,
-};
+};  

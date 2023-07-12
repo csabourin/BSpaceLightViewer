@@ -22,19 +22,31 @@
 <body>
   <a href="/">Back</a>
     <h1>File upload</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="zipFile" accept=".zip">
-        <input type="submit" value="Upload">
-    </form>
-  <div class="renamer">
-    
-  
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="zipFile" accept=".zip">
+    <input type="submit" value="Upload">
+</form>
+
+<div class="renamer">
     <% for(let i=0; i<packageFiles.length; i++) { %>
-     <div>
-        <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>"> <button onclick="renameFile('<%= packageFiles[i].file%>','file_<%= i %>')">Rename</button>
-    </div>
+        <div>
+          <% if(packageFiles[i].imageUrl){ %>
+            <img src="<%= packageFiles[i].imageUrl %>" style="height:1.5em;width:auto;">
+            <% } else { %>
+              <div style="position:relative;display:inline-block;height:1.5em;width:65px;"></div>
+              <% } %>
+            <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>">
+            <button onclick="renameFile('<%= packageFiles[i].file%>', 'file_<%= i %>')">Rename</button>
+
+            <form action="/uploadImage" method="post" enctype="multipart/form-data" style="display: inline;">
+              <span>Change cover image</span>
+                <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*" onchange="toggleButton('uploadImageButton_<%= i %>')">
+                <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
+                <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image" style="display: none;">
+            </form>
+        </div>
     <% } %>
-      </div>
+</div>
   <script>
 function renameFile(source,targetId){
     let target = document.getElementById(targetId).value + '.zip';
@@ -53,6 +65,17 @@ function renameFile(source,targetId){
             alert('Error renaming file');
         }
     });
+}
+
+function toggleButton(buttonId) {
+    const uploadButton = document.getElementById(buttonId);
+    const fileInput = document.getElementById(buttonId.replace('uploadImageButton', 'imageFile'));
+
+    if (fileInput.value) {
+        uploadButton.style.display = 'inline';
+    } else {
+        uploadButton.style.display = 'none';
+    }
 }
 
   </script>

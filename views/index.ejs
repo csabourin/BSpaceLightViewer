@@ -10,7 +10,7 @@
     const language = localStorage.getItem('language') || 'en';
     document.documentElement.lang = language;
   </script>
-    <title>Open Content Viewer</title>
+    <title>Open Content Viewer - Lecteur de contenu ouvert</title>
 </head>
 <body>
   <div class="fip">
@@ -30,6 +30,9 @@
 
        <% for(let i=0; i<packageFiles.length; i++) { %>
         <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =="en-ca"?"English anglais":"French français" %>">
+          <% if(packageFiles[i].imageUrl){ %>
+            <img src="<%= packageFiles[i].imageUrl %>">
+            <% } %>
   <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>">
     <%= packageFiles[i].title %> <!-- displays the title -->
   </a>
