@@ -4,25 +4,93 @@
    <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="/public/favicon-mobile.ico">
-    <title>File upload</title>
-  <style>
-    body{
-      font-family:sans-serif;
-    }
-    .renamer{
-      margin-top:2em;
-    }
-    .fileName{
-      margin:1em;
-      padding:.5em;
-      width:32em;
-    }
-  </style>
+    <title>Admin COnsole</title>
+   <style>
+       body {
+           font-family: 'Helvetica', sans-serif;
+           background-color: #f5f5f5;
+           color: #333;
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+       
+       h1 {
+           text-align: center;
+           padding: 20px 0;
+           color: #3f2a56;
+       }
+
+       a {
+           display: block;
+           width: 60px;
+           margin: 10px auto;
+           background-color: #3f2a56;
+           color: white;
+           text-align: center;
+           padding: 10px;
+           border-radius: 4px;
+           text-decoration: none;
+       }
+
+       .renamer {
+           width: 90%;
+           margin: 20px auto;
+           box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+           padding: 20px;
+           background-color: #fff;
+           border-radius: 4px;
+       }
+
+       .fileName {
+           width: 50%;
+           padding: 10px;
+           border: 1px solid #ddd;
+           border-radius: 4px;
+           font-size: 14px;
+           margin-bottom: 20px;
+       }
+
+       button {
+           background-color: #3f2a56;
+           color: white;
+           border: none;
+           padding: 10px;
+           border-radius: 4px;
+           cursor: pointer;
+       }
+
+       input[type="submit"] {
+           background-color: #3f2a56;
+           color: white;
+           border: none;
+           padding: 10px;
+           border-radius: 4px;
+           cursor: pointer;
+           margin-top: 10px;
+           display: none;
+       }
+
+       input[type="file"] {
+           border: 1px solid #ddd;
+           border-radius: 4px;
+           padding: 10px;
+           width: 90%;
+           margin-bottom: 20px;
+       }
+
+       @media screen and (min-width: 600px) {
+           .fileName {
+               width: 60%;
+           }
+       }
+   </style>
 </head>
 <body>
   <a href="/">Back</a>
-    <h1>File upload</h1>
+    <h1>Admin Console</h1>
 <form action="/upload" method="post" enctype="multipart/form-data">
+  <legend>Upload Package</legend>
     <input type="file" name="zipFile" accept=".zip">
     <input type="submit" value="Upload">
 </form>
@@ -31,15 +99,15 @@
     <% for(let i=0; i<packageFiles.length; i++) { %>
         <div>
           <% if(packageFiles[i].imageUrl){ %>
-            <img src="<%= packageFiles[i].imageUrl %>" style="height:1.5em;width:auto;">
+            <img src="<%= packageFiles[i].imageUrl %>" style="height:auto;width:300px;">
             <% } else { %>
-              <div style="position:relative;display:inline-block;height:1.5em;width:65px;"></div>
+              <div style="position:relative;display:inline-block;height:auto;width:300px;"></div>
               <% } %>
             <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>">
             <button onclick="renameFile('<%= packageFiles[i].file%>', 'file_<%= i %>')">Rename</button>
 
             <form action="/uploadImage" method="post" enctype="multipart/form-data" style="display: inline;">
-              <span>Change cover image</span>
+              <p>Change cover image</p>
                 <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*" onchange="toggleButton('uploadImageButton_<%= i %>')">
                 <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
                 <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image" style="display: none;">

@@ -6,7 +6,7 @@ module.exports = function(app) {
   const path = require("path");
   const StreamZip = require("node-stream-zip");
   const AdmZip = require("adm-zip");
-  const { checkForImsmanifest, getPackages } = require('./utils.js');
+  const { checkForImsmanifest, getPackages, checkIP } = require('./utils.js');
   const sanitize = require("sanitize-filename");
   const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -58,20 +58,6 @@ const adminPassword=process.env.ADMPASS || 'I have been and always shall be your
       cb(null, true);
     },
   });
-
-  // array of allowed IP addresses
-  let allowedIps = process.env.ALLOWED_IP.split(",");
-
-  // middleware function to check the IP
-  function checkIP(req, res, next) {
-    let clientIp = req.ip;
-
-    if (allowedIps.includes(clientIp)) {
-      next();
-    } else {
-      res.status(403).send('Access denied');
-    }
-  }
 
   app.get("/adminconsole", checkIP, authMiddleware, async (req, res) => {
     const packageFiles = await getPackages();

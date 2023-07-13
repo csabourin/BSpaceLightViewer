@@ -13,6 +13,8 @@ const {
   flattenItems,
   getPackages,
   readPackage,
+  checkIP,
+  displayPI,
 } = require("./utils.js");
 const app = express();
 app.use(
@@ -48,12 +50,13 @@ app.use(limiter);
 app.get("/", async (req, res) => {
   // Check if sessionEnded flag is set
   const sessionEnded = req.session.sessionEnded;
+  const displayPIsymbol = displayPI(req);
   // Remove the flag from the session
   req.session.sessionEnded = null;
   // index page, lists the files
   try {
     const packageFiles = await getPackages();
-    res.render("index", { packageFiles, sessionEnded });
+    res.render("index", { packageFiles, sessionEnded, displayPIsymbol });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error reading packages");

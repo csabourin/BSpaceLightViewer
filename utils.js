@@ -8,6 +8,26 @@ const entities = require("entities");
 let tempDir = os.tmpdir();
 const parser = new xml2js.Parser();
 
+  // array of allowed IP addresses
+  let allowedIps = process.env.ALLOWED_IP.split(",");
+
+  // middleware function to check the IP
+  function checkIP(req, res, next) {
+    let clientIp = req.ip;
+
+    if (allowedIps.includes(clientIp)) {
+      next();
+    } else {
+      res.status(403).send('Access denied')
+        return false;
+    }
+  }
+
+  function displayPI(req) {
+    let clientIp = req.ip;
+    return (allowedIps.includes(clientIp)) 
+  }
+
 function checkForImsmanifest(req, res, next) {
   // Check for imsmanifest.xml in the zip
   const zip = new StreamZip({ file: req.file.path, storeEntries: true });
@@ -276,4 +296,6 @@ module.exports = {
   getPackages,
   processItems,
   readPackage,
+  checkIP,
+  displayPI,
 };  
