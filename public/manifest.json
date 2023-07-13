@@ -1,0 +1,22 @@
+{
+  "name": "CSPS Open Learning",
+  "short_name": "Open Content Viewer",
+  "start_url": "https://bspaceviewer.replit.app/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "Your home for barrier-free, online learning from the federal public service of Canada",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "https://bspaceviewer.replit.app/public/favicon-mobile.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://bspaceviewer.replit.app/public/OpenContentViewer.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}

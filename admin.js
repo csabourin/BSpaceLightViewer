@@ -8,6 +8,8 @@ module.exports = function(app) {
   const AdmZip = require("adm-zip");
   const { checkForImsmanifest, getPackages, checkIP } = require('./utils.js');
   const sanitize = require("sanitize-filename");
+  const bodyParser = require("body-parser");
+  
   const storage = multer.diskStorage({
     destination: function(req, file, cb) {
       cb(null, "./packages/");
@@ -58,6 +60,9 @@ const adminPassword=process.env.ADMPASS || 'I have been and always shall be your
       cb(null, true);
     },
   });
+
+  app.use(bodyParser.json()); // used for renaming files
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.get("/adminconsole", checkIP, authMiddleware, async (req, res) => {
     const packageFiles = await getPackages();

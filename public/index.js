@@ -73,10 +73,10 @@ if (lang === "fr") {
   // French
   langSwitchButton.textContent = "EN";
   document.querySelector("#searchlabel").textContent =
-    "Rechercher par titre, nom de fichier ou langue...";
+    "Rechercher par titre, mot-clé ou langue...";
   document.querySelector("#search").placeholder =
-    "Rechercher par titre, nom de fichier ou langue...";
-  document.querySelector('#appTitle').textContent="Lecteur de contenu ouvert";
+    "Rechercher par titre, mot-clé ou langue...";
+  document.querySelector('#appTitle').textContent="Apprentissage ouvert de l'ÉFPC";
   
   if(sessionEnd){sessionEnd.textContent="Votre session s'est terminée. Vous avez été redirigé à la page d'accueil.";}  
    // Change the src and alt of the image for French
@@ -87,9 +87,10 @@ if (lang === "fr") {
 } else {
   // English
   langSwitchButton.textContent = "FR";
+  document.querySelector("#searchlabel").textContent = "Search by title, tag or language..."
   document.querySelector("#search").placeholder =
-    "Search by title, filename or language...";
-  document.querySelector('#appTitle').textContent="Open Content Viewer";
+    "Search by title, tag or language...";
+  document.querySelector('#appTitle').textContent="CSPS Open Learning";
    if(sessionEnd){sessionEnd.textContent="Your session has ended. You have been redirected to the homepage.";}
     // Change the src and alt of the image for English
   let imgElement = document.querySelector(".fip img");

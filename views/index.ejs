@@ -3,6 +3,7 @@
 <head>
    <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/public/manifest.json">
   <meta property="og:title" content="CSPS Open Learning" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://bspaceviewer.replit.app/" />
@@ -23,14 +24,14 @@
     <img width="300" src="/public/CSPS_FipEng_Black-Red-Final.svg" alt="Canada School of Public Service">
   </div>
     <button id="langSwitch" onclick="switchLanguage()"></button>
-    <h1 id="appTitle">Open Content Viewer</h1>
+    <h1 id="appTitle">CSPS Open Learning</h1>
   <% if (sessionEnded) { %>
   <div id="sessionEnd" class="alert alert-warning" role="alert">
     Your session has ended. You have been redirected to the homepage.
   </div>
 <% } %>
-  <label id="searchlabel" class="sr-only" for="search">Search by title, filename or language:</label>
-  <input type="text" id="search" placeholder="Search by title, filename or language...">
+  <label id="searchlabel" class="sr-only" for="search">Search by title, tag or language:</label>
+  <input type="text" id="search" placeholder="Search by title, tag or language...">
   <main class="container" role="main">
     <p id="srUpdate" class="sr-only" aria-live="polite"></p>   
 

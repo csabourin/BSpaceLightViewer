@@ -126,8 +126,8 @@ h1 {
   border: 16px solid #f3f3f3;
   border-top: 16px solid #3498db;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   animation: spin 2s linear infinite;
 }
 
@@ -141,13 +141,17 @@ h1 {
 }
 
 #loadingText {
+  display:grid;
+  align-content:center;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, calc(-50% - 0px));
+  transform: translate(-50%, -50%);
   color: #ffffff;
   font-size: 16px;
   text-align: center;
+  width:120px;
+  height:120px;
 }
 
 #search {
@@ -208,8 +212,8 @@ h1 {
   }
 
   #loadingText {
-    top:30%;
-    transform: translate(-50%, -30%);
+    top:50%;
+    transform: translate(-50%, calc(-50% - 180px));
     font-size: 40px;
   }
 
@@ -217,11 +221,11 @@ h1 {
     width: 75%;
   }
 }
-@media (max-height: 770px) {
+@media (max-height: 767px) {
     #loadingText {
-      top: 45%;
+      top: 50%;
   left: 50%;
-    transform: translate(-50%, -45%);
+    transform: translate(-50%, calc(-50% - 18px));
     font-size: 18px;
   }
 }

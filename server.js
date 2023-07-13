@@ -3,17 +3,16 @@ const session = require("express-session");
 const rateLimit = require("express-rate-limit");
 const fs = require("fs-extra");
 const ejs = require("ejs"); // required for templates
+//Todo: require("matomo-tracker")
 const path = require("path");
 const os = require("os");
 const mime = require("mime-types");
-const bodyParser = require("body-parser");
 const sanitize = require("sanitize-filename");
 const {
   checkForImsmanifest,
   flattenItems,
   getPackages,
   readPackage,
-  checkIP,
   displayPI,
 } = require("./utils.js");
 const app = express();
@@ -43,8 +42,6 @@ function checkSession(req, res, next) {
 }
 app.set("view engine", "ejs");
 app.set("trust proxy", true);
-app.use(bodyParser.json()); // used for renaming files
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(limiter);
 
 app.get("/", async (req, res) => {
