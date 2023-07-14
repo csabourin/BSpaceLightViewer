@@ -258,7 +258,7 @@ app.get("/resource/:id", checkSession, (req, res) => {
   });
 });
 
-app.get("/page/*",checkSession, (req, res) => {
+app.get("/page/*", checkSession, (req, res) => {
   const requestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path, change backslashes to forward slashes.
   const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
 

@@ -21,11 +21,21 @@ body {
 }
 
 .topic-name {
-  text-align: center;
+    flex: 1; 
+    min-width: 0; /* This allows .topic-name to shrink below its content's intrinsic width. It's needed to handle long unbreakable strings */
 }
 
 .topic-name p {
-  text-align: center;
+    text-align: center;
+    line-height: 1em;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    margin:.5em;
+}
+
+.topic-name p:first-of-type {
+ font-weight:700;
 }
 
 .openbtn {
@@ -147,7 +157,9 @@ body {
 iframe {
   display: block;
   margin: auto;
-  height: 90vh;
+  height: calc(
+      100vh - 150px
+    ); /* Adjust as necessary, 120px accounts for the topbar and bottom navbar */
   width: 100%;
   border: none;
   box-shadow: 0 0 10px #cccccc;
@@ -158,8 +170,8 @@ iframe {
   iframe {
     width: 100%;
     height: calc(
-      100vh - 60px
-    ); /* Adjust as necessary, 60px accounts for the topbar */
+      100vh - 150px
+    ); 
   }
 }
 
@@ -168,7 +180,7 @@ iframe {
   iframe {
     width: 100%; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
-      100vh - 60px
+      100vh - 150px
     ); /* Adjust as necessary, 60px accounts for the topbar */
   }
 }
@@ -176,7 +188,7 @@ iframe {
 iframe {
     width: 860px; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
-      100vh - 60px
+      100vh - 150px
     ); /* Adjust as necessary, 60px accounts for the topbar */
   }
   

@@ -72,6 +72,8 @@ const sessionEnd=document.querySelector('#sessionEnd');
 if (lang === "fr") {
   // French
   langSwitchButton.textContent = "EN";
+  langSwitchButton.title = "English"; 
+   langSwitchButton.setAttribute("aria-label", "Change language to English");
   document.querySelector("#searchlabel").textContent =
     "Rechercher par titre, mot-clé ou langue...";
   document.querySelector("#search").placeholder =
@@ -87,6 +89,8 @@ if (lang === "fr") {
 } else {
   // English
   langSwitchButton.textContent = "FR";
+  langSwitchButton.title = "Français";
+   langSwitchButton.setAttribute("aria-label", "Changer la langue en français");
   document.querySelector("#searchlabel").textContent = "Search by title, tag or language..."
   document.querySelector("#search").placeholder =
     "Search by title, tag or language...";

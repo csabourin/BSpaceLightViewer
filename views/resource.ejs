@@ -1,152 +1,176 @@
 <!DOCTYPE html>
 <html lang="<%= manifestLanguage %>">
+
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="/public/favicon-mobile.ico">
   <link rel="stylesheet" href="/public/d2l.css" />
   <link rel="stylesheet" href="/public/resource.css" />
-    <title>
-        <%= courseTitle %>
-    </title>
+  <title>
+    <%= courseTitle %>
+  </title>
 </head>
 
 <body>
-    <header role="banner" class="topbar">
-        <div id="header-left">
-            <a href="/"><%= manifestLanguage=="en-ca"?"Home":"Accueil" %></a>
-            <button class="openbtn" onclick="openNav()" aria-label="<%= manifestLanguage=='en-ca'?'Open navigation':'Ouvrir la navigation' %>">☰</button>
-        </div>
-        <div class="topic-name hidden-small">
-            <p>
-              <%= courseTitle %>
-                </p> <p><%= resource.title %></p>
-        </div>
-        <div id="header-right">
-            <div class="nav-buttons">
-                <% if (prevResource) { %>
-                    <!-- <a data-direction='prev' href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a> -->
-                    <a data-direction='prev' href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>" title="<%= manifestLanguage=="en-ca"?"Previous":"Précédent" %>"><svg xmlns="http://www.w3.org/2000/svg" style="" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2c7.2 0 13 5.8 13 13s-5.8 13-13 13S2 22.2 2 15 7.8 2 15 2m0-2C6.7 0 0 6.7 0 15s6.7 15 15 15 15-6.7 15-15S23.3 0 15 0z"></path>
-  <path d="M10.3 14.3l6-6c.4-.4 1-.4 1.4 0s.4 1 0 1.4L12.4 15l5.3 5.3c.4.4.4 1 0 1.4-.2.2-.4.3-.7.3s-.5-.1-.7-.3l-6-6c-.4-.4-.4-1 0-1.4z"></path>
-</svg></a>
-                    <% } else { %>
-                        <button data-direction="prev" disabled><svg xmlns="http://www.w3.org/2000/svg" style="" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2c7.2 0 13 5.8 13 13s-5.8 13-13 13S2 22.2 2 15 7.8 2 15 2m0-2C6.7 0 0 6.7 0 15s6.7 15 15 15 15-6.7 15-15S23.3 0 15 0z"></path>
-  <path d="M10.3 14.3l6-6c.4-.4 1-.4 1.4 0s.4 1 0 1.4L12.4 15l5.3 5.3c.4.4.4 1 0 1.4-.2.2-.4.3-.7.3s-.5-.1-.7-.3l-6-6c-.4-.4-.4-1 0-1.4z"></path>
-</svg></button>
-                        <% } %>
-                          <svg style="height: var(--d2l-icon-height, 24px);
-    width: var(--d2l-icon-width, 24px);fill:var(--d2l-color-corundum);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <circle cx="12" cy="2" r="1.5"></circle>
-  <circle cx="12" cy="7" r="1.5"></circle>
-  <circle cx="12" cy="12" r="1.5"></circle>
-  <circle cx="12" cy="17" r="1.5"></circle>
-  <circle cx="12" cy="22" r="1.5"></circle>
-</svg>
-                            <% if (nextResource) { %>
-                                <!-- <a data-direction='next' href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a> -->
-                                <a data-direction='next' href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>" title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" ><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2A13 13 0 1 1 2 15 13.015 13.015 0 0 1 15 2m0-2a15 15 0 1 0 15 15A15 15 0 0 0 15 0z"></path>
-  <path d="M19.707 14.293l-6-6a1 1 0 0 0-1.414 1.414L17.586 15l-5.293 5.293a1 1 0 1 0 1.414 1.414l6-6a1 1 0 0 0 0-1.414z"></path>
-</svg></a>
-                                <% } else { %>
-                                    <button title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2A13 13 0 1 1 2 15 13.015 13.015 0 0 1 15 2m0-2a15 15 0 1 0 15 15A15 15 0 0 0 15 0z"></path>
-  <path d="M19.707 14.293l-6-6a1 1 0 0 0-1.414 1.414L17.586 15l-5.293 5.293a1 1 0 1 0 1.414 1.414l6-6a1 1 0 0 0 0-1.414z"></path>
-</svg></button>
-                                    <% } %>
-            </div>
-        </div>
-    </header>
+  <header role="banner" class="topbar">
+    <div id="header-left">
+      <a href="/">
+        <%= manifestLanguage=="en-ca" ?"Home":"Accueil" %>
+      </a>
+      <button class="openbtn" onclick="openNav()"
+        aria-label="<%= manifestLanguage=='en-ca'?'Open navigation':'Ouvrir la navigation' %>">☰</button>
+    </div>
+    <div class="topic-name hidden-small">
+      <p>
+        <%= courseTitle %>
+      </p>
+      <p>
+        <%= resource.title %>
+      </p>
+    </div>
+    <div id="header-right">
+      <div class="nav-buttons">
+        <% if (prevResource) { %>
+            <a data-direction='prev'
+            href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
+            title="<%= manifestLanguage==" en-ca"?"Previous":"Précédent" %>"> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#prev"></use>
+    </svg></a>
+          <% } else { %>
+            <button data-direction="prev" disabled> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#prev"></use>
+    </svg></button>
+            <% } %>
+              <svg style="height: var(--d2l-icon-height, 24px);
+    width: var(--d2l-icon-width, 24px);fill:var(--d2l-color-corundum);" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
+                <circle cx="12" cy="2" r="1.5"></circle>
+                <circle cx="12" cy="7" r="1.5"></circle>
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <circle cx="12" cy="17" r="1.5"></circle>
+                <circle cx="12" cy="22" r="1.5"></circle>
+              </svg>
+              <% if (nextResource) { %>
+                <a data-direction='next'
+                  href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
+                  title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" ><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#next"></use>
+    </svg></a>
+                <% } else { %>
+                  <button title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#next"></use>
+    </svg></button>
+                  <% } %>
+      </div>
+    </div>
+  </header>
 
-<nav id="mySidebar" class="sidebar" role="navigation" aria-label="<%= manifestLanguage=='en-ca'?'Site navigation':'Navigation du site' %>">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" aria-label="<%= manifestLanguage=='en-ca'?'Close navigation':'Fermer la navigation' %>" >×</a>
-  <div class="sideContainer">  
-  <h2><%= manifestLanguage=="en-ca"?"Table of Contents":"Table des matières" %></h2>
-    <% manifest.forEach(function(module) { %>
+  <nav id="mySidebar" class="sidebar" role="navigation"
+    aria-label="<%= manifestLanguage=='en-ca'?'Site navigation':'Navigation du site' %>">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+      aria-label="<%= manifestLanguage=='en-ca'?'Close navigation':'Fermer la navigation' %>">×</a>
+    <div class="sideContainer">
+      <h2>
+        <%= manifestLanguage=="en-ca" ?"Table of Contents":"Table des matières" %>
+      </h2>
+      <% manifest.forEach(function(module) { %>
         <h3>
-            <%= module.moduleTitle %>
+          <%= module.moduleTitle %>
         </h3>
         <% function renderItems(items) { %>
-            <% items.forEach(function(item) { %>
-                <% if (item.type === "contentmodule") { %>
-                    <h4><%= item.title %></h4>
-                    <% if (item.items) { %>
-                        <% renderItems(item.items); %>
-                    <% } %>
-                <% } else { %>
-                    <a href="/resource/<%= encodeURIComponent(item.identifier) %>?lang=<%= manifestLanguage %>">
-                        <%= item.title %>
-                    </a>
-                <% } %>
-            <% }); %>
-        <% } %>
-        <% renderItems(module.items); %>
-    <% }); %>
-    </div>
-      <hr class="endcourse" />
-</nav>
-    <main id="main" role="main">
-
-
-        <iframe src="/page/<%= resource.href %>"></iframe>
-        <div class="nav-buttons">
-                <% if (prevResource) { %>
-                    <!-- <a data-direction='prev' href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Previous":"Précédent" %></a> -->
-                    <a data-direction='prev' href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>" title="<%= manifestLanguage=="en-ca"?"Previous":"Précédent" %>"><svg xmlns="http://www.w3.org/2000/svg" style="" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2c7.2 0 13 5.8 13 13s-5.8 13-13 13S2 22.2 2 15 7.8 2 15 2m0-2C6.7 0 0 6.7 0 15s6.7 15 15 15 15-6.7 15-15S23.3 0 15 0z"></path>
-  <path d="M10.3 14.3l6-6c.4-.4 1-.4 1.4 0s.4 1 0 1.4L12.4 15l5.3 5.3c.4.4.4 1 0 1.4-.2.2-.4.3-.7.3s-.5-.1-.7-.3l-6-6c-.4-.4-.4-1 0-1.4z"></path>
-</svg></a>
+          <% items.forEach(function(item) { %>
+            <% if (item.type==="contentmodule" ) { %>
+              <h4>
+                <%= item.title %>
+              </h4>
+              <% if (item.items) { %>
+                <% renderItems(item.items); %>
+                  <% } %>
                     <% } else { %>
-                        <button data-direction="prev" disabled><svg xmlns="http://www.w3.org/2000/svg" style="" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2c7.2 0 13 5.8 13 13s-5.8 13-13 13S2 22.2 2 15 7.8 2 15 2m0-2C6.7 0 0 6.7 0 15s6.7 15 15 15 15-6.7 15-15S23.3 0 15 0z"></path>
-  <path d="M10.3 14.3l6-6c.4-.4 1-.4 1.4 0s.4 1 0 1.4L12.4 15l5.3 5.3c.4.4.4 1 0 1.4-.2.2-.4.3-.7.3s-.5-.1-.7-.3l-6-6c-.4-.4-.4-1 0-1.4z"></path>
-</svg></button>
-                        <% } %>
-                          <svg style="height: var(--d2l-icon-height, 24px);
-    width: var(--d2l-icon-width, 24px);fill:var(--d2l-color-corundum);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <circle cx="12" cy="2" r="1.5"></circle>
-  <circle cx="12" cy="7" r="1.5"></circle>
-  <circle cx="12" cy="12" r="1.5"></circle>
-  <circle cx="12" cy="17" r="1.5"></circle>
-  <circle cx="12" cy="22" r="1.5"></circle>
-</svg>
-                            <% if (nextResource) { %>
-                                <!-- <a data-direction='next' href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"><%= manifestLanguage=="en-ca"?"Next":"Suivant" %></a> -->
-                                <a data-direction='next' href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>" title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" ><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2A13 13 0 1 1 2 15 13.015 13.015 0 0 1 15 2m0-2a15 15 0 1 0 15 15A15 15 0 0 0 15 0z"></path>
-  <path d="M19.707 14.293l-6-6a1 1 0 0 0-1.414 1.414L17.586 15l-5.293 5.293a1 1 0 1 0 1.414 1.414l6-6a1 1 0 0 0 0-1.414z"></path>
-</svg></a>
-                                <% } else { %>
-                                    <button title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
-  <path d="M15 2A13 13 0 1 1 2 15 13.015 13.015 0 0 1 15 2m0-2a15 15 0 1 0 15 15A15 15 0 0 0 15 0z"></path>
-  <path d="M19.707 14.293l-6-6a1 1 0 0 0-1.414 1.414L17.586 15l-5.293 5.293a1 1 0 1 0 1.414 1.414l6-6a1 1 0 0 0 0-1.414z"></path>
-</svg></button>
-                                    <% } %>
-            </div>
-    </main>
+                      <a href="/resource/<%= encodeURIComponent(item.identifier) %>?lang=<%= manifestLanguage %>">
+                        <%= item.title %>
+                      </a>
+                      <% } %>
+                        <% }); %>
+                          <% } %>
+                            <% renderItems(module.items); %>
+                              <% }); %>
+    </div>
+    <hr class="endcourse" />
+  </nav>
+  <main id="main" role="main">
 
-<script src="/public/resource.js"></script>
-                                      <script>
-                                        window.onload = function() {
-  var currentPageTitle = '<%= currentPage %>'; // get the current page resource from the server-side data
-  localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
 
-  // Get all links in the sidebar
-  var links = document.getElementById('mySidebar').getElementsByTagName('a');
+    <iframe src="/page/<%= resource.href %>"></iframe>
+    <div class="nav-buttons">
+        <% if (prevResource) { %>
+            <a data-direction='prev'
+            href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
+            title="<%= manifestLanguage==" en-ca"?"Previous":"Précédent" %>"> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#prev"></use>
+    </svg></a>
+          <% } else { %>
+            <button data-direction="prev" disabled> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#prev"></use>
+    </svg></button>
+            <% } %>
+              <svg style="height: var(--d2l-icon-height, 24px);
+    width: var(--d2l-icon-width, 24px);fill:var(--d2l-color-corundum);" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
+                <circle cx="12" cy="2" r="1.5"></circle>
+                <circle cx="12" cy="7" r="1.5"></circle>
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <circle cx="12" cy="17" r="1.5"></circle>
+                <circle cx="12" cy="22" r="1.5"></circle>
+              </svg>
+              <% if (nextResource) { %>
+                <a data-direction='next'
+                  href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
+                  title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" ><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#next"></use>
+    </svg></a>
+                <% } else { %>
+                  <button title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <use xlink:href="#next"></use>
+    </svg></button>
+                  <% } %>
+      </div>
+  </main>
 
-  for (var i = 0; i < links.length; i++) {
-    var url = new URL(links[i].href); // Create URL object from href
-    var pathParts = url.pathname.split('/'); // Split the path into parts
-    var resourceId = pathParts[pathParts.length - 1]; // The resource ID is the last part of the path
+  <script src="/public/resource.js"></script>
+  <script>
+    window.onload = function () {
+      var currentPageTitle = '<%= currentPage %>'; // get the current page resource from the server-side data
+      localStorage.setItem(currentPageTitle, 'visited'); // mark the current page as visited
 
-    if (localStorage.getItem(resourceId) === 'visited') {
-      // Add a checkmark after the link
-      links[i].innerHTML += ' ✓';
+      // Get all links in the sidebar
+      var links = document.getElementById('mySidebar').getElementsByTagName('a');
+
+      for (var i = 0; i < links.length; i++) {
+        var url = new URL(links[i].href); // Create URL object from href
+        var pathParts = url.pathname.split('/'); // Split the path into parts
+        var resourceId = pathParts[pathParts.length - 1]; // The resource ID is the last part of the path
+
+        if (localStorage.getItem(resourceId) === 'visited') {
+          // Add a checkmark after the link
+          links[i].innerHTML += ' ✓';
+        }
+      }
     }
-  }
-}
-                                      </script>
+  </script>
+
+<svg style="display:none;">
+  <symbol id="prev" viewBox="0 0 30 30">
+    <path d="M15 2c7.2 0 13 5.8 13 13s-5.8 13-13 13S2 22.2 2 15 7.8 2 15 2m0-2C6.7 0 0 6.7 0 15s6.7 15 15 15 15-6.7 15-15S23.3 0 15 0z"></path>
+    <path d="M10.3 14.3l6-6c.4-.4 1-.4 1.4 0s.4 1 0 1.4L12.4 15l5.3 5.3c.4.4.4 1 0 1.4-.2.2-.4.3-.7.3s-.5-.1-.7-.3l-6-6c-.4-.4-.4-1 0-1.4z"></path>
+  </symbol>
+
+  <symbol id="next" viewBox="0 0 30 30">
+    <path d="M15 2A13 13 0 1 1 2 15 13.015 13.015 0 0 1 15 2m0-2a15 15 0 1 0 15 15A15 15 0 0 0 15 0z"></path>
+    <path d="M19.707 14.293l-6-6a1 1 0 0 0-1.414 1.414L17.586 15l-5.293 5.293a1 1 0 1 0 1.414 1.414l6-6a1 1 0 0 0 0-1.414z"></path>
+  </symbol>
+</svg>
 
 </body>
+
 </html>

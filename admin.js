@@ -4,7 +4,6 @@ module.exports = function(app) {
   const basicAuth = require('express-basic-auth');
   const fs = require("fs-extra");
   const path = require("path");
-  const StreamZip = require("node-stream-zip");
   const AdmZip = require("adm-zip");
   const { checkForImsmanifest, getPackages, checkIP } = require('./utils.js');
   const sanitize = require("sanitize-filename");
@@ -42,7 +41,7 @@ const imageUpload = multer({
 
 const adminPassword=process.env.ADMPASS || 'I have been and always shall be your friend';
   const authMiddleware = basicAuth({
-    users: { 'admin': adminPassword }, // replace with your username and password
+    users: { 'admin': adminPassword }, // password from process.env
     challenge: true
 });
 
