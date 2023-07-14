@@ -33,7 +33,7 @@
         <% if (prevResource) { %>
             <a data-direction='prev'
             href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
-            title="<%= manifestLanguage==" en-ca"?"Previous":"Précédent" %>"> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+            title="<%= manifestLanguage=="en-ca"?"Previous":"Précédent" %>"> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></a>
           <% } else { %>
@@ -53,11 +53,11 @@
               <% if (nextResource) { %>
                 <a data-direction='next'
                   href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
-                  title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" ><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+                  title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" ><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></a>
                 <% } else { %>
-                  <button title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+                  <button title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></button>
                   <% } %>

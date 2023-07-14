@@ -3,6 +3,7 @@ var main = document.querySelector("#main");
 function openNav() {
   sidebar.classList.toggle("open");
   main.classList.toggle("open");
+  sidebar.setAttribute('aria-hidden', 'false');
   var focusableEls = document.querySelectorAll('#mySidebar a, #mySidebar button');
   focusableEls.forEach(function(el) {
     el.removeAttribute('tabindex');
@@ -13,6 +14,7 @@ function openNav() {
 function closeNav() {
   sidebar.classList.toggle("open");
   main.classList.toggle("open");
+  sidebar.setAttribute('aria-hidden', 'true');
   var focusableEls = document.querySelectorAll('#mySidebar a, #mySidebar button');
   focusableEls.forEach(function(el) {
     el.setAttribute('tabindex', '-1');
@@ -21,6 +23,7 @@ function closeNav() {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
+  sidebar.setAttribute('aria-hidden', 'true');
   var focusableEls = document.querySelectorAll('#mySidebar a, #mySidebar button');
   focusableEls.forEach(function(el) {
     el.setAttribute('tabindex', '-1');

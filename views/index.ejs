@@ -23,7 +23,7 @@
   <div class="fip">
     <img width="300" src="/public/CSPS_FipEng_Black-Red-Final.svg" alt="Canada School of Public Service">
   </div>
-    <button id="langSwitch" onclick="switchLanguage()"></button>
+    <button lang="fr-ca" id="langSwitch" onclick="switchLanguage()" aria-label="Changer la langue en français">FR</button>
     <h1 id="appTitle">CSPS Open Learning</h1>
   <% if (sessionEnded) { %>
   <div id="sessionEnd" class="alert alert-warning" role="alert">
@@ -36,12 +36,12 @@
     <p id="srUpdate" class="sr-only" aria-live="polite"></p>   
 
        <% for(let i=0; i<packageFiles.length; i++) { %>
-        <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =="en-ca"?"English anglais":"French français" %>">
+        <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
           
   <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>"><% if(packageFiles[i].imageUrl){ %>
-            <img src="<%= packageFiles[i].imageUrl %>">
+            <img src="<%= packageFiles[i].imageUrl %>" alt="">
             <% } %>
-    <span class="textLink"><%= packageFiles[i].title %> </span>
+    <span class="textLink" lang="<%= packageFiles[i].lang %>"><%= packageFiles[i].title %> </span>
   </a>
 </div>
     <% } %>
@@ -49,7 +49,7 @@
       <div class="adminConsole"><a tabindex="-1" href="/adminconsole" aria-label="Admin console">&#120645;</a></div>
         <% } %>
        </main>
-          <div id="overlay">
+          <div id="overlay" aria-live="assertive">
             <p id="loadingText">Loading...</p> <!-- Loading text -->
   <div id="spinner"></div>
   

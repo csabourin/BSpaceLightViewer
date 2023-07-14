@@ -72,6 +72,7 @@ const sessionEnd=document.querySelector('#sessionEnd');
 if (lang === "fr") {
   // French
   langSwitchButton.textContent = "EN";
+  langSwitchButton.lang = "en-ca";
   langSwitchButton.title = "English"; 
    langSwitchButton.setAttribute("aria-label", "Change language to English");
   document.querySelector("#searchlabel").textContent =
@@ -89,6 +90,7 @@ if (lang === "fr") {
 } else {
   // English
   langSwitchButton.textContent = "FR";
+  langSwitchButton.lang = "fr-ca";
   langSwitchButton.title = "Français";
    langSwitchButton.setAttribute("aria-label", "Changer la langue en français");
   document.querySelector("#searchlabel").textContent = "Search by title, tag or language..."
