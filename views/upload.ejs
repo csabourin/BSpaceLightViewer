@@ -68,7 +68,6 @@
            border-radius: 4px;
            cursor: pointer;
            margin-top: 10px;
-           display: none;
        }
 
        input[type="file"] {
@@ -110,7 +109,7 @@
               <p>Change cover image</p>
                 <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*" onchange="toggleButton('uploadImageButton_<%= i %>')">
                 <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
-                <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image" style="display: none;">
+                <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image">
             </form>
         </div>
     <% } %>
@@ -133,17 +132,6 @@ function renameFile(source,targetId){
             alert('Error renaming file');
         }
     });
-}
-
-function toggleButton(buttonId) {
-    const uploadButton = document.getElementById(buttonId);
-    const fileInput = document.getElementById(buttonId.replace('uploadImageButton', 'imageFile'));
-
-    if (fileInput.value) {
-        uploadButton.style.display = 'inline';
-    } else {
-        uploadButton.style.display = 'none';
-    }
 }
 
   </script>

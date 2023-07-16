@@ -106,10 +106,9 @@ module.exports = function(app) {
       return res.status(400).send('No file was uploaded or file upload was rejected');
     }
     const imageName = req.file.originalname;
-    const imagePath = path.join(__dirname, 'tmp', imageName);
+    const imagePath = path.join(__dirname, '../tmp', imageName);
     const zipName = req.body.zipFileName;
-    const zipPath = path.join(__dirname, 'packages', zipName);
-
+    const zipPath = path.join(__dirname, '../packages', zipName);
     const newFileName = 'imsmanifest_image' + path.extname(imageName);
 
     // Check if zip file exists
