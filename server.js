@@ -39,7 +39,7 @@ app.get("/", async (req, res) => {
   req.session.sessionEnded = null;
   // index page, lists the files
   try {
-    const packageFiles = await getPackages();
+    const packageFiles = await getPackages(); // Read all zip files and return an array of courses
     res.render("index", { packageFiles, sessionEnded, displayPIsymbol });
   } catch (error) {
     console.error(error);

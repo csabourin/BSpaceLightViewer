@@ -39,7 +39,7 @@
         <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
           
   <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>"><% if(packageFiles[i].imageUrl){ %>
-            <img src="<%= packageFiles[i].imageUrl %>" alt="">
+            <img role="presentation" src="<%= packageFiles[i].imageUrl %>" alt="">
             <% } %>
     <span class="textLink" lang="<%= packageFiles[i].lang %>"><%= packageFiles[i].title %> </span>
   </a>

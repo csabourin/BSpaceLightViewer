@@ -12,6 +12,7 @@
 </head>
 
 <body>
+  <a href="#main" class="skip-link"><%= manifestLanguage=='en-ca'?'Skip to content':'Sauter au contenu' %></a>
   <header role="banner" class="topbar">
     <div id="header-left">
       <a href="/">
@@ -33,15 +34,15 @@
         <% if (prevResource) { %>
             <a data-direction='prev'
             href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
-            title="<%= manifestLanguage=="en-ca"?"Previous":"Précédent" %>"> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+            title="<%= manifestLanguage=="en-ca"?"Previous":"Précédent" %>"> <svg alt="<%= manifestLanguage=='en-ca'?'Previous':'Précédent' %>" xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></a>
           <% } else { %>
-            <button data-direction="prev" disabled> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+            <button aria-label="<%= manifestLanguage=='en-ca'?'Previous button disabled':'Bouton précédent désactivé' %>" data-direction="prev" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></button>
             <% } %>
-              <svg style="height: var(--d2l-icon-height, 24px);
+              <svg alt="" role="presentation" style="height: var(--d2l-icon-height, 24px);
     width: var(--d2l-icon-width, 24px);fill:var(--d2l-color-corundum);" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
                 <circle cx="12" cy="2" r="1.5"></circle>
@@ -53,11 +54,11 @@
               <% if (nextResource) { %>
                 <a data-direction='next'
                   href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
-                  title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" ><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+                  title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" ><svg alt="<%= manifestLanguage=='en-ca'?'Next':'Suivant' %>"xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></a>
                 <% } else { %>
-                  <button title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+                  <button  aria-label="<%= manifestLanguage=='en-ca'?'Next button disabled':'Bouton suivant désactivé' %>" title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></button>
                   <% } %>
@@ -99,22 +100,20 @@
     <hr class="endcourse" />
   </nav>
   <main id="main" role="main">
-
-
-    <iframe src="/page/<%= resource.href %>"></iframe>
+    <iframe title="<%= manifestLanguage=='en-ca'?'Page content':'Contenu de la page' %>" src="/page/<%= resource.href %>"></iframe>
     <div class="nav-buttons">
         <% if (prevResource) { %>
             <a data-direction='prev'
             href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
-            title="<%= manifestLanguage==" en-ca"?"Previous":"Précédent" %>"> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+            title="<%= manifestLanguage==" en-ca"?"Previous":"Précédent" %>"> <svg alt="<%= manifestLanguage=='en-ca'?'Previous':'Précédent' %>"xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></a>
           <% } else { %>
-            <button data-direction="prev" disabled> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+            <button aria-label="<%= manifestLanguage=='en-ca'?'Previous button disabled':'Bouton précédent désactivé' %>" data-direction="prev" disabled> <svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></button>
             <% } %>
-              <svg style="height: var(--d2l-icon-height, 24px);
+              <svg  alt="" role="presentation" style="height: var(--d2l-icon-height, 24px);
     width: var(--d2l-icon-width, 24px);fill:var(--d2l-color-corundum);" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
                 <circle cx="12" cy="2" r="1.5"></circle>
@@ -126,11 +125,12 @@
               <% if (nextResource) { %>
                 <a data-direction='next'
                   href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
-                  title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" ><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+                  title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" ><svg alt="<%= manifestLanguage=='en-ca'?'Next':'Suivant' %>" 
+ xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></a>
                 <% } else { %>
-                  <button title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
+                  <button aria-label="<%= manifestLanguage=='en-ca'?'Next button disabled':'Bouton suivant désactivé' %>"  title="<%= manifestLanguage==" en-ca"?"Next":"Suivant" %>" data-direction="next" disabled><svg xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></button>
                   <% } %>
