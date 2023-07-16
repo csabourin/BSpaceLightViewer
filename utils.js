@@ -8,25 +8,25 @@ const entities = require("entities");
 let tempDir = os.tmpdir();
 const parser = new xml2js.Parser();
 
-  // array of allowed IP addresses
-  let allowedIps = process.env.ALLOWED_IP.split(",");
+// array of allowed IP addresses
+let allowedIps = process.env.ALLOWED_IP.split(",");
 
-  // middleware function to check the IP
-  function checkIP(req, res, next) {
-    let clientIp = req.ip;
+// middleware function to check the IP
+function checkIP(req, res, next) {
+  let clientIp = req.ip;
 
-    if (allowedIps.includes(clientIp)) {
-      next();
-    } else {
-      res.status(403).send('Access denied')
-        return false;
-    }
+  if (allowedIps.includes(clientIp)) {
+    next();
+  } else {
+    res.status(403).send('Access denied')
+    return false;
   }
+}
 
-  function displayPI(req) {
-    let clientIp = req.ip;
-    return (allowedIps.includes(clientIp)) 
-  }
+function displayPI(req) {
+  let clientIp = req.ip;
+  return (allowedIps.includes(clientIp))
+}
 
 function checkForImsmanifest(req, res, next) {
   // Check for imsmanifest.xml in the zip
@@ -103,7 +103,7 @@ function getPackages() {
                   const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
                   const title = titleData._;
                   const lang = titleData['$']['xml:lang'];
-                  const imageUrl = imageEntry ? path.join(tempDir, path.basename(file, '.zip'), imageEntry.entryName) : null;
+                  const imageUrl = imageEntry ? path.join('/thumbnails/', path.basename(file, '.zip'), imageEntry.entryName) : null;
 
                   resolve({
                     file,
