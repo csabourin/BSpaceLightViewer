@@ -2,13 +2,7 @@ const express = require('express');
 const router = express.Router();
 const os = require("os");
 const path = require("path");
-const {
-  checkForImsmanifest,
-  flattenItems,
-  getPackages,
-  readPackage,
-  displayPI,
-} = require("../utils.js");
+const {  flattenItems } = require("../utils.js");
 const checkSession = require("../middleware/checkSession");
 
 router.get("/:id", checkSession, (req, res) => {
@@ -16,15 +10,15 @@ router.get("/:id", checkSession, (req, res) => {
   const id = req.params.id;
   let resource = null;
   let filename = null;
-  let module = null;
+  let isModule = null;
   let allItems = [];
 
   for (let key in req.session.manifests) {
     let manifest = req.session.manifests[key];
     let localAllItems = []; // Items for the current manifest only
 
-    manifest.forEach((module) => {
-      localAllItems = localAllItems.concat(flattenItems(module.items));
+    manifest.forEach((isModule) => {
+      localAllItems = localAllItems.concat(flattenItems(isModule.items));
     });
 
     let found = searchModules(manifest, id);
@@ -66,7 +60,7 @@ router.get("/:id", checkSession, (req, res) => {
     for (let m of modules) {
       let found = searchItems(m.items, identifier);
       if (found) {
-        module = m;
+        isModule = m;
         return found;
       }
     }
@@ -105,7 +99,7 @@ router.get("/:id", checkSession, (req, res) => {
     return;
   }
 
-  if (!module) {
+  if (!isModule) {
     res.status(404).send("Module not found");
     return;
   }
@@ -124,7 +118,7 @@ router.get("/:id", checkSession, (req, res) => {
       prevResource: req.session.prevResource,
       nextResource: req.session.nextResource,
       manifest, // pass the manifest to the view
-      description: module.description,
+      description: isModule.description,
       currentPage: id,
       req,
       manifestLanguage,
