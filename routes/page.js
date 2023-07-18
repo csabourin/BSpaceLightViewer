@@ -7,6 +7,7 @@ const checkSession = require("../middleware/checkSession");
 
 router.get("/*", checkSession, (req, res) => {
   const requestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path, change backslashes to forward slashes.
+  
   const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
 
   // Check if the requested resource corresponds to a content module resource

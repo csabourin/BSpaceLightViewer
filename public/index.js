@@ -24,7 +24,7 @@ window.addEventListener('pageshow', function(event) {
 // When the user types in the search field
 document.querySelector("#search").addEventListener("input", function() {
   // Get the current search value (lowercase for case-insensitive search)
-  let searchValue = this.value.toLowerCase();
+  let searchValue = this.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   // Get all tiles
   let tiles = document.querySelectorAll(".tile");
@@ -35,9 +35,9 @@ document.querySelector("#search").addEventListener("input", function() {
   // Loop over each tile
   tiles.forEach(function(tile) {
     // Get the tile's title, file and lang data attributes
-    let title = tile.getAttribute("data-title").toLowerCase();
-    let file = tile.getAttribute("data-file").toLowerCase();
-    let lang = tile.getAttribute("data-lang").toLowerCase();
+    let title = tile.getAttribute("data-title").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    let file = tile.getAttribute("data-file").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    let lang = tile.getAttribute("data-lang").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
     // If the search value is found in the title, file, or lang, show the tile; otherwise, hide it
     if (
@@ -51,10 +51,12 @@ document.querySelector("#search").addEventListener("input", function() {
       tile.style.display = "none";
     }
   });
+
   // Update the screen-reader-only text with the number of visible tiles
   document.querySelector("#srUpdate").textContent =
     visibleTiles + " results found.";
 });
+
 
 // Language switcher function
 window.switchLanguage = function() {

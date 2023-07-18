@@ -133,8 +133,6 @@ function getPackages() {
   });
 }
 
-
-
 function flattenItems(items) {
   let flat = [];
 

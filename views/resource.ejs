@@ -100,7 +100,7 @@
     <hr class="endcourse" />
   </nav>
   <main id="main" role="main">
-    <iframe title="<%= manifestLanguage=='en-ca'?'Page content':'Contenu de la page' %>" src="/page/<%= resource.href %>"></iframe>
+    <iframe title="<%= manifestLanguage=='en-ca'?'Page content':'Contenu de la page' %>" src="/page/<%= resource.href.replace(/ /g, "%20").replace(/#/g, "%23") %>"></iframe>
     <div class="nav-buttons">
         <% if (prevResource) { %>
             <a data-direction='prev'
