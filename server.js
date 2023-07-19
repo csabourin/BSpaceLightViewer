@@ -30,6 +30,12 @@ const limiter = rateLimit({
 
 app.set("view engine", "ejs");
 app.set("trust proxy", true);
+app.get('*.(jpg|jpeg|png|gif)', function (req, res, next) {
+    // set Cache-Control for these specific types
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // one day
+    next(); // pass control to the next handler
+});
+// Disabled Helmet because the content policy was too strict.
 // app.use(helmet.contentSecurityPolicy({
 //   directives: {
 //     defaultSrc: ["'self'"],
@@ -45,6 +51,7 @@ app.set("trust proxy", true);
 app.use(limiter);
 require("./routes/admin.js")(app);
 app.get("/", async (req, res) => {
+  res.set('Vary', 'Accept-Language');
   const displayPIsymbol = displayPI(req); // Check if authorized IP to display link to /adminconsole
   const sessionLanguage = req.session.language || 'en-ca'; // Default to 'en' if no language is set in the session
   // Check if sessionEnded flag is set

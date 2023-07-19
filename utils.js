@@ -67,11 +67,13 @@ function getPackages() {
       }
 
       if (files.length === 0) {
-        return resolve({
-          title: 'No file found',
-          file: null,
-          lang: 'en-ca',
-        });
+        return resolve([
+          {
+            title: 'No file found',
+            file: null,
+            lang: 'en-ca',
+          },
+        ]);
       }
 
       try {
@@ -79,58 +81,83 @@ function getPackages() {
           new Promise((resolve, reject) => {
             const absoluteZipPath = path.join(__dirname, './packages', file);
             const zip = new StreamZip({ file: absoluteZipPath, storeEntries: true });
-            
+
             zip.on('ready', () => {
               const imageEntry = Object.values(zip.entries()).find(entry => /^imsmanifest_image\.(jpg|png|jpeg|gif)$/i.test(entry.name));
               const xmlEntry = Object.values(zip.entries()).find(entry => entry.name === 'imsmanifest.xml');
-              
-              if (imageEntry) {
-                const fileWithoutExt = path.basename(file, '.zip');
-                const dirPath = path.join(__dirname, tempDir, fileWithoutExt);
-                if (!fs.existsSync(dirPath)) {
-                  fs.mkdirSync(dirPath, { recursive: true });
-                }
-                const imagePath = path.join(dirPath, imageEntry.name);
-                zip.extract(imageEntry.name, imagePath, err => {
-                  if (err) reject(err);
-                });
-              }
 
-              if (xmlEntry) {
-                zip.stream(xmlEntry.name, (err, stream) => {
-                  if (err) return reject(err);
-                  let xmlString = '';
-                  stream.on('data', chunk => { xmlString += chunk; });
-                  stream.on('end', () => {
-                    xml2js.parseString(xmlString, (err, result) => {
+              let title = 'No manifest file found';
+              let lang = 'en-ca';
+              let imageUrl = null;
+
+              const imagePromise = imageEntry
+                ? new Promise((imageResolve, imageReject) => {
+                    const fileWithoutExt = path.basename(file, '.zip');
+                    const dirPath = path.join(__dirname, tempDir, fileWithoutExt);
+                    if (!fs.existsSync(dirPath)) {
+                      fs.mkdirSync(dirPath, { recursive: true });
+                    }
+                    const imagePath = path.join(dirPath, imageEntry.name);
+                    zip.extract(imageEntry.name, imagePath, err => {
                       if (err) {
-                        reject(err);
+                        console.error('Error extracting image from zip:', err);
+                        imageReject(err);
                       } else {
-                        const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
-                        const title = titleData._;
-                        const lang = titleData['$']['xml:lang'];
-                        const imageUrl = imageEntry ? path.join('/thumbnails/', path.basename(file, '.zip'), imageEntry.name) : null;
-
-                        resolve({
-                          file,
-                          title,
-                          lang,
-                          imageUrl,
-                        });
+                        imageUrl = path.join('/thumbnails/', fileWithoutExt, imageEntry.name);
+                        imageResolve();
                       }
                     });
+                  })
+                : Promise.resolve();
+
+              const xmlPromise = xmlEntry
+                ? new Promise((xmlResolve, xmlReject) => {
+                    zip.stream(xmlEntry.name, (err, stream) => {
+                      if (err) {
+                        xmlReject(err);
+                      }
+
+                      let xmlString = '';
+                      stream.on('data', chunk => { xmlString += chunk; });
+                      stream.on('end', () => {
+                        try {
+                          xml2js.parseString(xmlString, (err, result) => {
+                            if (err) {
+                              console.error('Error parsing XML:', err);
+                              xmlReject(err);
+                            } else {
+                              const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
+                              title = titleData._;
+                              lang = titleData['$']['xml:lang'];
+                              xmlResolve();
+                            }
+                          });
+                        } catch (err) {
+                          xmlReject(err);
+                        }
+                      });
+                    });
+                  })
+                : Promise.resolve();
+
+              Promise.all([imagePromise, xmlPromise])
+                .then(() => {
+                  zip.close();
+                  resolve({
+                    file,
+                    title,
+                    lang,
+                    imageUrl,
                   });
+                })
+                .catch((err) => {
+                  zip.close();
+                  reject(err);
                 });
-              } else {
-                resolve({
-                  title: 'No manifest file found',
-                  file,
-                  lang: 'en-ca',
-                });
-              }
             });
-            
+
             zip.on('error', (err) => {
+              zip.close();
               reject(err);
             });
           })
@@ -144,6 +171,7 @@ function getPackages() {
     });
   });
 }
+
 
 function flattenItems(items) {
   let flat = [];

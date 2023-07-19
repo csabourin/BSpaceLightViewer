@@ -87,7 +87,7 @@ window.switchLanguage = function() {
       // If the server successfully updated the session language,
       // update the language in local storage and reload the page
       localStorage.setItem("language", newLang);
-      location.reload();
+      location.href = updateQueryStringParameter(location.href, 'lang', newLang);
     } else {
       console.error('Failed to update language on the server');
     }
@@ -95,4 +95,15 @@ window.switchLanguage = function() {
     console.error('Failed to send language update request to server:', error);
   });
 };
+
+// Helper function to update or add a query parameter
+function updateQueryStringParameter(uri, key, value) {
+  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + key + "=" + value + '$2');
+  } else {
+    return uri + separator + key + "=" + value;
+  }
+}
 
