@@ -40,7 +40,7 @@ body {
     min-width: 0; /* This allows .topic-name to shrink below its content's intrinsic width. It's needed to handle long unbreakable strings */
 }
 
-.topic-name p {
+.topic-name p,.topic-name h1 {
     text-align: center;
     line-height: 1em;
     white-space: nowrap; 
@@ -49,7 +49,8 @@ body {
     margin:.5em;
 }
 
-.topic-name p:first-of-type {
+.topic-name h1 {
+font-size:1em;
  font-weight:700;
 }
 

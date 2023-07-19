@@ -1,39 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= sessionLanguage %>">
 <head>
    <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="/public/manifest.json">
-  <meta property="og:title" content="CSPS Open Learning" />
+  <meta property="og:title" content="<%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %>" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://bspaceviewer.replit.app/" />
 <meta property="og:image" content="https://bspaceviewer.replit.app/public/OpenContentViewer.png" />
-<meta property="og:description" content="Your home for barrier-free, online learning from the federal public service of Canada" />
+<meta property="og:description" content="<%= sessionLanguage === 'en-ca' ? 'Your home for barrier-free, online learning from the federal public service of Canada' : 'Votre domicile pour l\'apprentissage en ligne sans barrières du service public fédéral du Canada' %>" />
 <meta property="og:site_name" content="Open Content Viewer" />
   <link rel="icon" href="/public/favicon-mobile.ico">
- <link rel="stylesheet" href="/public/index.css">
-  <!-- language switcher -->
-  <script>
-    const language = localStorage.getItem('language') || 'en';
-    document.documentElement.lang = language;
-  </script>
+  <link rel="stylesheet" href="/public/index.css">
     <title>Open Content Viewer - Lecteur de contenu ouvert</title>
 </head>
 <body>
+  <header>
   <div class="fip">
-    <img width="300" src="/public/CSPS_FipEng_Black-Red-Final.svg" alt="Canada School of Public Service">
+    <img width="300" src="<%= sessionLanguage === 'en-ca' ? '/public/CSPS_FipEng_Black-Red-Final.svg' : '/public/CSPS_FIP_BlackRed_F.svg' %>" alt="<%= sessionLanguage === 'en-ca' ? 'Canada School of Public Service' : 'École de la fonction publique du Canada' %>">
   </div>
-    <button lang="fr-ca" id="langSwitch" onclick="switchLanguage()" aria-label="Changer la langue en français">FR</button>
-    <h1 id="appTitle">CSPS Open Learning</h1>
+    <button lang="<%= sessionLanguage === 'en-ca' ? 'fr-ca' : 'en-ca' %>" id="langSwitch" onclick="switchLanguage()" aria-label="<%= sessionLanguage === 'en-ca' ? 'Changer la langue en français' : 'Change language to English' %>"><%= sessionLanguage === 'en-ca' ? 'FR' : 'EN' %></button>
+    <h1 id="appTitle"><%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %></h1>
   <% if (sessionEnded) { %>
   <div id="sessionEnd" class="alert alert-warning" role="alert">
-    Your session has ended. You have been redirected to the homepage.
+    <%= sessionLanguage === 'en-ca' ? 'Your session has ended. You have been redirected to the homepage.' : 'Votre session s\'est terminée. Vous avez été redirigé à la page d\'accueil.' %>
   </div>
+    
 <% } %>
-  <label id="searchlabel" class="sr-only" for="search">Search by title, tag or language:</label>
-  <input type="text" id="search" placeholder="Search by title, tag or language...">
+  </header>
+  <div role="search">
+  <label id="searchlabel" class="sr-only" for="search"><%= sessionLanguage === 'en-ca' ? 'Search by title, tag or language:' : 'Rechercher par titre, mot-clé ou langue:' %></label>
+  <input type="text" id="search" placeholder="<%= sessionLanguage === 'en-ca' ? 'Search by title, tag or language...' : 'Rechercher par titre, mot-clé ou langue...' %>">
+  <p id="srUpdate" tabindex="-1" aria-live="polite"></p>
+    </div>
   <main class="container" role="main">
-    <p id="srUpdate" class="sr-only" aria-live="polite"></p>   
+    
 
        <% for(let i=0; i<packageFiles.length; i++) { %>
         <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
@@ -45,12 +46,14 @@
   </a>
 </div>
     <% } %>
-      <% if(displayPIsymbol){ %>
-      <div class="adminConsole"><a tabindex="-1" href="/adminconsole" aria-label="Admin console">&#120645;</a></div>
-        <% } %>
        </main>
+      <% if(displayPIsymbol){ %>
+        <footer>
+      <div class="adminConsole"><a tabindex="-1" href="/adminconsole" aria-label="Admin console">&#120645;</a></div>
+          </footer>
+        <% } %>
           <div id="overlay" aria-live="assertive">
-            <p id="loadingText">Loading...</p> <!-- Loading text -->
+            <h2 id="loadingText"><%= sessionLanguage === 'en-ca' ? 'Loading...' : 'Chargement...' %></h2> <!-- Loading text -->
   <div id="spinner"></div>
   
 </div>

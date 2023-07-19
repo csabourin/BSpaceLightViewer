@@ -13,7 +13,7 @@
 
 body {
   background-color: #f0f0f0;
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
   min-height: 80vh;
   margin: 0;
   padding: 0;
@@ -80,22 +80,23 @@ body {
   margin: 1em;
 }
 .adminConsole {
-  font-size: 18px;
+  font-size: 16px;
   position: fixed;
   bottom: 1em;
   right: 1em;
-  color: #ffffff;
 }
 
 .adminConsole a {
   cursor:default;
   text-decoration: none;
-  color: #ffffff;
+  color:transparent;
   transition: all 1s;
+  -webkit-text-stroke: 1px -webkit-text-stroke: .5px rgba(255,255,255,.5);;
 }
 
 .adminConsole a:hover {
   text-shadow: 0 0 3px #555555;
+  -webkit-text-stroke: .5px rgba(255,255,255,.8);
 }
 
 h1 {
@@ -103,6 +104,17 @@ h1 {
   background-color: #3f2a56;
   color: #ffffff;
   margin:0;
+}
+
+#srUpdate{
+  display:block;
+  width:100%;
+  text-align:center;
+}
+
+#srUpdate:focus {
+    outline: none;
+    text-decoration: underline;
 }
 
 #overlay {

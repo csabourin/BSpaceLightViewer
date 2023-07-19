@@ -1,3 +1,4 @@
+const docLang = document.documentElement.lang;
 const links = document.querySelectorAll(".tile a");
 links.forEach((link) => {
   link.addEventListener("click", (event) => {
@@ -24,7 +25,7 @@ window.addEventListener('pageshow', function(event) {
 // When the user types in the search field
 document.querySelector("#search").addEventListener("input", function() {
   // Get the current search value (lowercase for case-insensitive search)
-  let searchValue = this.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  let searchValues = this.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ');
 
   // Get all tiles
   let tiles = document.querySelectorAll(".tile");
@@ -39,12 +40,15 @@ document.querySelector("#search").addEventListener("input", function() {
     let file = tile.getAttribute("data-file").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     let lang = tile.getAttribute("data-lang").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-    // If the search value is found in the title, file, or lang, show the tile; otherwise, hide it
-    if (
+    // Check if the tile contains all search keywords
+    const tileMatchesAllKeywords = searchValues.every(searchValue => 
       title.includes(searchValue) ||
       file.includes(searchValue) ||
       lang.includes(searchValue)
-    ) {
+    );
+
+    // If the tile contains all search keywords, show it; otherwise, hide it
+    if (tileMatchesAllKeywords) {
       tile.style.display = "flex";
       visibleTiles++;
     } else {
@@ -54,54 +58,41 @@ document.querySelector("#search").addEventListener("input", function() {
 
   // Update the screen-reader-only text with the number of visible tiles
   document.querySelector("#srUpdate").textContent =
-    visibleTiles + " results found.";
+    visibleTiles + (docLang.startsWith("fr") ? " résultats trouvés." : " results found.");
+});
+
+
+document.querySelector("#search").addEventListener("keydown", function(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault(); // prevent form submission
+    document.querySelector("#srUpdate").focus();
+  }
 });
 
 
 // Language switcher function
 window.switchLanguage = function() {
-  const currentLang = localStorage.getItem("language") || "en";
-  const newLang = currentLang === "en" ? "fr" : "en";
-  localStorage.setItem("language", newLang);
-  location.reload();
+  const currentLang = localStorage.getItem("language") || "en-ca";
+  const newLang = currentLang.startsWith("en") ? "fr-ca" : "en-ca";
+
+  // Send a request to the server to update the language in the session
+  fetch('/setLanguage', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ language: newLang })  // Pass the new language as data
+  }).then((response) => {
+    if (response.ok) {
+      // If the server successfully updated the session language,
+      // update the language in local storage and reload the page
+      localStorage.setItem("language", newLang);
+      location.reload();
+    } else {
+      console.error('Failed to update language on the server');
+    }
+  }).catch((error) => {
+    console.error('Failed to send language update request to server:', error);
+  });
 };
 
-// Language specific script
-const lang = document.documentElement.lang;
-const langSwitchButton = document.getElementById("langSwitch");
-const sessionEnd = document.querySelector('#sessionEnd');
-
-if (lang === "fr") {
-  // French
-  langSwitchButton.textContent = "EN";
-  langSwitchButton.lang = "en-ca";
-  langSwitchButton.title = "English";
-  langSwitchButton.setAttribute("aria-label", "Change language to English");
-  document.querySelector("#searchlabel").textContent =
-    "Rechercher par titre, mot-clé ou langue...";
-  document.querySelector("#search").placeholder =
-    "Rechercher par titre, mot-clé ou langue...";
-  document.querySelector('#appTitle').textContent = "Apprentissage ouvert de l'ÉFPC";
-
-  if (sessionEnd) { sessionEnd.textContent = "Votre session s'est terminée. Vous avez été redirigé à la page d'accueil."; }
-  // Change the src and alt of the image for French
-  let imgElement = document.querySelector(".fip img");
-  imgElement.src = "/public/CSPS_FIP_BlackRed_F.svg";
-  imgElement.alt = "École de la fonction publique du Canada";
-
-} else {
-  // English
-  langSwitchButton.textContent = "FR";
-  langSwitchButton.lang = "fr-ca";
-  langSwitchButton.title = "Français";
-  langSwitchButton.setAttribute("aria-label", "Changer la langue en français");
-  document.querySelector("#searchlabel").textContent = "Search by title, tag or language..."
-  document.querySelector("#search").placeholder =
-    "Search by title, tag or language...";
-  document.querySelector('#appTitle').textContent = "CSPS Open Learning";
-  if (sessionEnd) { sessionEnd.textContent = "Your session has ended. You have been redirected to the homepage."; }
-  // Change the src and alt of the image for English
-  let imgElement = document.querySelector(".fip img");
-  imgElement.src = "/public/CSPS_FipEng_Black-Red-Final.svg";
-  imgElement.alt = "Canada School of Public Service";
-}

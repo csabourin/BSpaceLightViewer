@@ -12,6 +12,7 @@
     "express-rate-limit": "^6.7.0",
     "express-session": "^1.17.3",
     "fs-extra": "^11.1.1",
+    "helmet": "^7.0.0",
     "jquery": "^3.7.0",
     "matomo-tracker": "^2.2.4",
     "mime-types": "^2.1.35",
