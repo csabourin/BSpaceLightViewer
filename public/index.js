@@ -1,5 +1,6 @@
 const docLang = document.documentElement.lang;
 const links = document.querySelectorAll(".tile a");
+
 links.forEach((link) => {
   link.addEventListener("click", (event) => {
     const lang = new URL(link.href).searchParams.get("lang");
@@ -23,7 +24,8 @@ window.addEventListener('pageshow', function(event) {
   }
 });
 // When the user types in the search field
-document.querySelector("#search").addEventListener("input", function() {
+// Define the function that performs the search
+function performSearch() {
   // Get the current search value (lowercase for case-insensitive search)
   let searchValues = this.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ');
 
@@ -59,7 +61,23 @@ document.querySelector("#search").addEventListener("input", function() {
   // Update the screen-reader-only text with the number of visible tiles
   document.querySelector("#srUpdate").textContent =
     visibleTiles + (docLang.startsWith("fr") ? " résultats trouvés." : " results found.");
-});
+}
+
+// Add the event listener for #search
+document.querySelector("#search").addEventListener("input", performSearch);
+
+// After the page reloads, restore the search value from localStorage
+window.onload = function() {
+  if (localStorage.getItem('searchValue')) {
+    document.getElementById('search').value = localStorage.getItem('searchValue');
+    
+    // If searchValue is not empty, trigger the performSearch function
+    if(document.getElementById('search').value.trim() !== "") {
+      performSearch.call(document.getElementById('search'));
+    }
+  }
+};
+
 
 
 document.querySelector("#search").addEventListener("keydown", function(event) {
@@ -75,35 +93,23 @@ window.switchLanguage = function() {
   const currentLang = localStorage.getItem("language") || "en-ca";
   const newLang = currentLang.startsWith("en") ? "fr-ca" : "en-ca";
 
-  // Send a request to the server to update the language in the session
   fetch('/setLanguage', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ language: newLang })  // Pass the new language as data
-  }).then((response) => {
+    body: JSON.stringify({ language: newLang })
+  })
+  .then((response) => {
     if (response.ok) {
-      // If the server successfully updated the session language,
-      // update the language in local storage and reload the page
       localStorage.setItem("language", newLang);
-      location.href = updateQueryStringParameter(location.href, 'lang', newLang);
+      localStorage.setItem('searchValue', document.getElementById('search').value);
+      window.location.reload(true);
     } else {
       console.error('Failed to update language on the server');
     }
-  }).catch((error) => {
+  })
+  .catch((error) => {
     console.error('Failed to send language update request to server:', error);
   });
 };
-
-// Helper function to update or add a query parameter
-function updateQueryStringParameter(uri, key, value) {
-  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-  var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-  if (uri.match(re)) {
-    return uri.replace(re, '$1' + key + "=" + value + '$2');
-  } else {
-    return uri + separator + key + "=" + value;
-  }
-}
-

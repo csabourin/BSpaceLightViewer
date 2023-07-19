@@ -53,7 +53,6 @@ require("./routes/admin.js")(app);
 app.get("/", async (req, res) => {
   res.set('Vary', 'Accept-Language');
   const displayPIsymbol = displayPI(req); // Check if authorized IP to display link to /adminconsole
-  const sessionLanguage = req.session.language || 'en-ca'; // Default to 'en' if no language is set in the session
   // Check if sessionEnded flag is set
   const sessionEnded = req.session.sessionEnded;
   // Remove the flag from the session
@@ -61,6 +60,7 @@ app.get("/", async (req, res) => {
   // index page, lists the files
   try {
     const packageFiles = await getPackages(); // Read all zip files and return an array of courses
+    const sessionLanguage = req.session.language || 'en-ca'; // Default to 'en-ca' if no language is set in the session
     res.render("index", { packageFiles, sessionEnded, sessionLanguage, displayPIsymbol });
   } catch (error) {
     console.error(error);
