@@ -61,23 +61,39 @@ function performSearch() {
   // Update the screen-reader-only text with the number of visible tiles
   document.querySelector("#srUpdate").textContent =
     visibleTiles + (docLang.startsWith("fr") ? " résultats trouvés." : " results found.");
+    localStorage.setItem('searchValue', document.getElementById('search').value);
 }
 
 // Add the event listener for #search
 document.querySelector("#search").addEventListener("input", performSearch);
 
-// After the page reloads, restore the search value from localStorage
 window.onload = function() {
-  if (localStorage.getItem('searchValue')) {
-    document.getElementById('search').value = localStorage.getItem('searchValue');
-    
-    // If searchValue is not empty, trigger the performSearch function
-    if(document.getElementById('search').value.trim() !== "") {
-      performSearch.call(document.getElementById('search'));
+  fetch('/getLanguage', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
     }
-  }
-};
+  })
+  .then(response => response.json())
+  .then(data => {
+    const currentLang = data.language || localStorage.getItem("language") || "en-ca";
+    localStorage.setItem("language", currentLang);  // Update localStorage with the server session language
+    document.documentElement.lang = currentLang;  // Update the document language
 
+    // Language-dependent operations go here
+    if (localStorage.getItem('searchValue')) {
+      document.getElementById('search').value = localStorage.getItem('searchValue');
+      
+      // If searchValue is not empty, trigger the performSearch function
+      if(document.getElementById('search').value.trim() !== "") {
+        performSearch.call(document.getElementById('search'));
+      }
+    }
+  })
+  .catch((error) => {
+    console.error('Failed to fetch language from server:', error);
+  });
+};
 
 
 document.querySelector("#search").addEventListener("keydown", function(event) {
@@ -86,7 +102,6 @@ document.querySelector("#search").addEventListener("keydown", function(event) {
     document.querySelector("#srUpdate").focus();
   }
 });
-
 
 // Language switcher function
 window.switchLanguage = function() {
@@ -103,7 +118,6 @@ window.switchLanguage = function() {
   .then((response) => {
     if (response.ok) {
       localStorage.setItem("language", newLang);
-      localStorage.setItem('searchValue', document.getElementById('search').value);
       window.location.reload(true);
     } else {
       console.error('Failed to update language on the server');

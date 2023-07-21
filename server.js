@@ -72,6 +72,13 @@ app.post('/setLanguage', (req, res) => {
   req.session.language = newLang;
   res.sendStatus(200);
 });
+app.get('/getLanguage', function(req, res) {
+  if (req.session && req.session.language) {
+    res.json({ language: req.session.language });
+  } else {
+    res.json({ language: null });
+  }
+});
 app.use("/load", require("./routes/load.js")); // Route that serves the zip package and creates the session
 app.use("/shared", express.static("shared")); // Path for D2L shared files
 app.use("/public", express.static("public")); // General shared path for the app

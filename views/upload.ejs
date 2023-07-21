@@ -74,7 +74,7 @@
            border: 1px solid #ddd;
            border-radius: 4px;
            padding: 10px;
-           width: 90%;
+           width: 30em;
            margin-bottom: 20px;
        }
 
@@ -94,8 +94,9 @@
     <input type="submit" value="Upload">
 </form>
 
-<div class="renamer">
+
     <% for(let i=0; i<packageFiles.length; i++) { %>
+      <div class="renamer">
         <div>
           <% if(packageFiles[i].imageUrl){ %>
             <img src="<%= packageFiles[i].imageUrl %>" style="height:auto;width:300px;">
@@ -111,9 +112,12 @@
                 <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
                 <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image">
             </form>
+              <hr />
+          <button onclick="deletePackage('<%= packageFiles[i].file %>')">Delete package</button>
         </div>
+                </div>
     <% } %>
-</div>
+
   <script>
 function renameFile(source,targetId){
     let target = document.getElementById(targetId).value + '.zip';
@@ -132,6 +136,27 @@ function renameFile(source,targetId){
             alert('Error renaming file');
         }
     });
+}
+
+function deletePackage(fileName) {
+  // Display a confirmation dialog
+  if (confirm("Are you sure you want to delete this package?")) {
+    // Send a post request to the server to delete the package
+    fetch('/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fileName: fileName })
+    }).then((response) => {
+      if (response.ok) {
+        alert('Package deleted successfully');
+        location.reload();
+      } else {
+        alert('Error deleting package');
+      }
+    });
+  }
 }
 
   </script>

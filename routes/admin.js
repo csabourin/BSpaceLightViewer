@@ -69,8 +69,8 @@ module.exports = function(app) {
   });
 
   app.post("/rename", checkIP, authMiddleware, async (req, res) => {
-    const oldName = path.join(__dirname, "packages", sanitize(req.body.old));
-    const newName = path.join(__dirname, "packages", sanitize(req.body.new));
+    const oldName = path.join("./packages", sanitize(req.body.old));
+    const newName = path.join("./packages", sanitize(req.body.new));
 
     // Check if new file already exists
     fs.access(newName, fs.constants.F_OK, (err) => {
@@ -91,6 +91,30 @@ module.exports = function(app) {
       }
     });
   });
+
+  app.post("/delete", checkIP, authMiddleware, async (req, res) => {
+  const fileName = req.body.fileName;
+  const filePath = path.join("./packages", sanitize(fileName));
+
+  // Check if file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // If the file does not exist, send an error response
+      res.status(400).send("The file does not exist");
+    } else {
+      // If the file exists, delete it
+      fs.unlink(filePath, function(err) {
+        if (err) {
+          console.log(err);
+          res.status(500).send();
+        } else {
+          console.log("Successfully deleted the package!");
+          res.status(200).send();
+        }
+      });
+    }
+  });
+});
 
   app.post(
     "/upload", checkIP, authMiddleware,
