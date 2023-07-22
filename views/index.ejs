@@ -38,7 +38,7 @@
     
 
        <% for(let i=0; i<packageFiles.length; i++) { %>
-        <div class="tile" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
+        <div class="tile" data-tags="<%= packageFiles[i].tags %>" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
           
   <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>"><% if(packageFiles[i].imageUrl){ %>
             <img role="presentation" src="<%= packageFiles[i].imageUrl %>" alt="">

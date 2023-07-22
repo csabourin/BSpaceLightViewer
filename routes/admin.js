@@ -124,6 +124,47 @@ module.exports = function(app) {
       res.redirect("/");
     }
   );
+
+  app.post("/addDescription", checkIP, authMiddleware, bodyParser.json(), async (req, res) => {
+  const description = req.body.description;
+  const tags = req.body.tags;
+  const zipFileName = req.body.zipFileName;
+
+  // Validate and sanitize input
+  if (typeof description !== 'string' || !Array.isArray(tags)) {
+    return res.status(400).send("Invalid input data");
+  }
+  
+  const sanitizedDescription = sanitize(description);
+  const sanitizedTags = tags.map(tag => sanitize(tag.toString())); // ensuring each tag is a string
+
+  const zipFilePath = path.join("./packages", sanitize(zipFileName));
+
+  // Check if zip file exists
+  fs.access(zipFilePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // If the zip file does not exist, send an error response
+      res.status(400).send("The zip file does not exist");
+    } else {
+      // If the zip file exists, add imsdescription.json to it
+      const zip = new AdmZip(zipFilePath);
+
+    // Create imsdescription.json content
+const jsonContent = JSON.stringify({ description: sanitizedDescription, tags: sanitizedTags });
+
+// Add imsdescription.json to the zip file
+zip.addFile("imsdescription.json", Buffer.from(jsonContent));
+
+// Write changes to the zip file
+zip.writeZip(zipFilePath);
+
+res.status(200).send("Successfully added imsdescription.json to the zip file");
+
+    }
+  });
+});
+
+  
   app.post("/uploadImage", checkIP, authMiddleware, imageUpload.single('imageFile'), async (req, res) => {
     if (!req.file) {
       console.log('No file was uploaded or file upload was rejected');

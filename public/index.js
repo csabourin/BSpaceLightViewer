@@ -41,11 +41,13 @@ function performSearch() {
     let title = tile.getAttribute("data-title").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     let file = tile.getAttribute("data-file").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     let lang = tile.getAttribute("data-lang").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        let tags = tile.getAttribute("data-tags").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
     // Check if the tile contains all search keywords
     const tileMatchesAllKeywords = searchValues.every(searchValue => 
       title.includes(searchValue) ||
       file.includes(searchValue) ||
+      tags.includes(searchValue) ||
       lang.includes(searchValue)
     );
 
