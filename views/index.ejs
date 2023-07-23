@@ -38,13 +38,21 @@
     
 
        <% for(let i=0; i<packageFiles.length; i++) { %>
-        <div class="tile" data-tags="<%= packageFiles[i].tags %>" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
+        <div lang="<%= packageFiles[i].lang %>" class="tile" data-tags="<%= packageFiles[i].tags %>" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
           
   <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>"><% if(packageFiles[i].imageUrl){ %>
-            <img role="presentation" src="<%= packageFiles[i].imageUrl %>" alt="">
+            <img role="presentation" width="320" height="118" src="<%= packageFiles[i].imageUrl %>" alt="">
             <% } %>
     <span class="textLink" lang="<%= packageFiles[i].lang %>"><%= packageFiles[i].title %> </span>
   </a>
+             <% if(packageFiles[i].description){ %>
+      <div class="details">
+        <button class="details-toggle" aria-expanded="false" aria-controls="detail-content-<%= i %>">Description</button>
+        <div id="detail-content-<%= i %>" class="detail-content" aria-hidden="true">
+          <p lang="<%= packageFiles[i].lang %>" class="detail-text"><%= packageFiles[i].description %></p>
+        </div>
+      </div>
+    <% } %>
 </div>
     <% } %>
        </main>

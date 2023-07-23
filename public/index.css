@@ -107,6 +107,45 @@ h1 {
   margin:0;
 }
 
+.details{
+      width: 100%;
+    padding-top: 0.5em;
+    border-top: 1px solid #dddddd;
+}
+
+.details .details-toggle::before {
+  content: '▶';
+  display: inline-block;
+  margin-right: .5em;
+}
+
+.details.opened .details-toggle::before {
+  content: '▼';
+}
+
+.detail-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.details-toggle{
+  border: none;
+    margin: auto;
+    width: max-content;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 0.5em;
+    text-decoration: underline;
+    background-color: transparent;
+    font-size: 1em;
+}
+
+.detail-text{
+  margin:0;
+}
+
 #srUpdate{
   display:block;
   width:100%;

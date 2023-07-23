@@ -1,5 +1,4 @@
 module.exports = function(app) {
-  const express = require("express");
   const multer = require("multer"); // used for uploading files
   const basicAuth = require('express-basic-auth');
   const fs = require("fs-extra");
@@ -8,6 +7,11 @@ module.exports = function(app) {
   const { checkForImsmanifest, getPackages, checkIP } = require('../utils.js');
   const sanitize = require("sanitize-filename");
   const bodyParser = require("body-parser");
+  const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
 
   const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -135,8 +139,8 @@ module.exports = function(app) {
     return res.status(400).send("Invalid input data");
   }
   
-  const sanitizedDescription = sanitize(description);
-  const sanitizedTags = tags.map(tag => sanitize(tag.toString())); // ensuring each tag is a string
+const sanitizedDescription = DOMPurify.sanitize(description);
+const sanitizedTags = tags.map(tag => DOMPurify.sanitize(tag.toString()));// ensuring each tag is a string
 
   const zipFilePath = path.join("./packages", sanitize(zipFileName));
 

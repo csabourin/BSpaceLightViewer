@@ -129,3 +129,45 @@ window.switchLanguage = function() {
     console.error('Failed to send language update request to server:', error);
   });
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+  var detailToggles = document.querySelectorAll('.details-toggle');
+
+  detailToggles.forEach(function(toggle) {
+    // Set up the function that will be called when the detail toggle is clicked or pressed
+    var toggleDetails = function() {
+      var detailContent = document.getElementById(this.getAttribute('aria-controls'));
+
+      var isExpanded = this.getAttribute('aria-expanded') === 'true';
+
+      // Update the "aria-expanded" attribute
+      this.setAttribute('aria-expanded', !isExpanded);
+
+      // Update the "aria-hidden" attribute
+      detailContent.setAttribute('aria-hidden', isExpanded);
+
+      // Toggle the "opened" class on the parent div
+      this.parentElement.classList.toggle('opened');
+
+      if (detailContent.style.maxHeight) {
+        detailContent.style.maxHeight = null;
+      } else {
+        var detailText = detailContent.querySelector('.detail-text');
+        detailContent.style.maxHeight = detailText.scrollHeight + "px";
+      }
+    };
+
+    // Add the event listener for the "click" event
+    toggle.addEventListener('click', toggleDetails);
+
+    // Add the event listener for the "keydown" event
+    toggle.addEventListener('keydown', function(event) {
+      // Check if the key pressed was Enter or Space (key codes 13 and 32 respectively)
+      if (event.keyCode === 13 || event.keyCode === 32) {
+        event.preventDefault();  // Prevent the default action for these keys
+        toggleDetails.call(this);  // Call the toggleDetails function
+      }
+    });
+  });
+});
+

@@ -117,13 +117,17 @@
               </form>
               <form id="descForm_<%= i %>" style="display: block;">
                 <h3>Add description</h3>
-                <textarea rows=6 cols=80 placeholder="Description" name="description"><% if(packageFiles[i].description){ %><%= packageFiles[i].description %><% } %></textarea>
+                <textarea id="desc_<%= i %>" rows=5 cols=60 placeholder="Description" name="description"
+                  oninput="updateCharCount('desc_<%= i %>', 215)"><% if(packageFiles[i].description){ %><%= packageFiles[i].description %><% } %></textarea>
+                <div id="desc_<%= i %>_remaining">215 characters maximum</div>
+
                 <h4>Add tags</h4>
-                <input style="width:80%" type="text" value="<%= packageFiles[i].tags %>" name="tags" placeholder="Tags (separate by space)">
+                <input style="width:80%" type="text" value="<%= packageFiles[i].tags %>" name="tags"
+                  placeholder="Tags (separate by space)">
                 <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
                 <input type="button" value="Submit" onclick="submitDescription('descForm_<%= i %>')">
               </form>
-              
+
               <hr />
               <button onclick="deletePackage('<%= packageFiles[i].file %>')">Delete package</button>
       </div>
@@ -132,19 +136,25 @@
 
       <script>
 
-        document.getElementById('uploadForm').addEventListener('submit', function(e){
-    const fileInput = document.getElementById('zipFileInput');
-    
-    if (!fileInput.files.length) {
-        e.preventDefault();
-        alert("Please select a file before submitting");
-    }
-});
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+          const fileInput = document.getElementById('zipFileInput');
+
+          if (!fileInput.files.length) {
+            e.preventDefault();
+            alert("Please select a file before submitting");
+          }
+        });
 
 
         function submitDescription(formId) {
+           const maxLength = 215;
           let form = document.getElementById(formId);
           let formData = new FormData(form);
+          let description = formData.get('description');
+          if (description.length > maxLength) {
+            alert('Description is too long, it should be less than 215 characters');
+            return;
+          }
 
           let data = {
             description: formData.get('description'),
@@ -167,6 +177,23 @@
               alert('Error adding description');
             }
           });
+        }
+
+        function updateCharCount(textareaId, maxLength) {
+          let textarea = document.getElementById(textareaId);
+          let remainingCharsDiv = document.getElementById(textareaId + '_remaining');
+
+          let currentLength = textarea.value.length;
+          let charsRemaining = maxLength - currentLength;
+
+          remainingCharsDiv.textContent = charsRemaining + ' characters remaining';
+
+          // If there are no characters remaining, add a red color to the text to indicate an error
+          if (charsRemaining < 0) {
+            remainingCharsDiv.style.color = 'red';
+          } else {
+            remainingCharsDiv.style.color = 'black';
+          }
         }
 
         function renameFile(source, targetId) {
