@@ -1,6 +1,6 @@
 const fs = require("fs-extra");
 const xml2js = require("xml2js");
-const AdmZip = require("adm-zip");
+const unzipper = require('unzipper');
 const StreamZip = require("node-stream-zip");
 const path = require("path");
 const os = require("os");
@@ -313,62 +313,57 @@ const readPackage = (packagePath, session) => {
     const extractionPath = path.join(tempDir, basePath);
 
     // Ensure the extraction directory exists
-    fs.ensureDirSync(extractionPath);
+    fs.mkdirSync(extractionPath, { recursive: true });
 
-    const zip = new AdmZip(imsPackagePath);
-
-    // Ensure extractionPath is defined
-    if (!extractionPath) {
-      console.error("extractionPath is not defined");
-      reject(new Error("extractionPath is not defined"));
-      return;
-    }
-
-    zip.extractAllTo(extractionPath, /*overwrite*/ true);
-    import("strip-bom").then((stripBom) => {
-      fs.readFile(
-        path.join(extractionPath, "imsmanifest.xml"),
-        "utf8",
-        function(err, data) {
-          if (err) {
-            console.error(err);
-            reject(err);
-            return;
-          }
-
-          parser.parseString(stripBom.default(data), function(err, result) {
+    fs.createReadStream(imsPackagePath)
+      .pipe(unzipper.Extract({ path: extractionPath }))
+      .on('close', () => {
+        fs.readFile(
+          path.join(extractionPath, "imsmanifest.xml"),
+          "utf8",
+          function(err, data) {
             if (err) {
               console.error(err);
               reject(err);
               return;
             }
 
-            const manifestItems =
-              result.manifest.organizations[0].organization[0].item;
-            const resources = result.manifest.resources[0].resource;
-            const titleData =
-              result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0][
-              "imsmd:title"
-              ][0]["imsmd:langstring"][0];
-            const courseTitle = titleData._;
+            parser.parseString(data, function(err, result) {
+              if (err) {
+                console.error(err);
+                reject(err);
+                return;
+              }
 
-            // Check if session.manifests is defined. If not, initialize it
-            session.manifests = session.manifests || {};
-            session.courseTitles = session.courseTitles || {};
-            session.courseTitles[packagePath] = courseTitle;
+              const manifestItems =
+                result.manifest.organizations[0].organization[0].item;
+              const resources = result.manifest.resources[0].resource;
+              const titleData =
+                result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
+              const courseTitle = titleData._;
 
-            // Store the manifest in session.manifests with the package filename as the key
-            session.manifests[packagePath] = manifestItems.map((item) =>
-              processItems(item, resources)
-            );
+              // Check if session.manifests is defined. If not, initialize it
+              session.manifests = session.manifests || {};
+              session.courseTitles = session.courseTitles || {};
+              session.courseTitles[packagePath] = courseTitle;
 
-            resolve(session.manifests[packagePath]);
-          });
-        }
-      );
-    });
+              // Store the manifest in session.manifests with the package filename as the key
+              session.manifests[packagePath] = manifestItems.map((item) =>
+                processItems(item, resources)
+              );
+
+              resolve(session.manifests[packagePath]);
+            });
+          }
+        );
+      })
+      .on('error', (err) => {
+        console.error(err);
+        reject(err);
+      });
   });
 };
+
 
 module.exports = {
   checkForImsmanifest,
