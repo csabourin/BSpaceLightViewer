@@ -136,7 +136,7 @@ h1 {
     text-align: center;
     display: inline-block;
     cursor: pointer;
-    margin-bottom: 0.5em;
+    margin-bottom: 0;
     text-decoration: underline;
     background-color: transparent;
     font-size: 1em;
