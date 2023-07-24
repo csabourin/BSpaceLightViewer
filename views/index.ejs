@@ -1,71 +1,102 @@
 <!DOCTYPE html>
 <html lang="<%= sessionLanguage %>">
+
 <head>
-   <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="lbJ7GBq3xoy-Yhf3nYQ0bSFws8OvLK7GH2tM__TVH04" />
   <link rel="manifest" href="/public/manifest.json">
-  <meta property="og:title" content="<%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %>" />
-<meta property="og:type" content="website" />
-<meta name="description" content="Explore comprehensive, barrier-free online learning with the Canada School of Public Service. Dive into a diverse range of topics from digital transformation and leadership to indigenous learning and workplace inclusivity. Craft your skills to shape an agile, connected, and collaborative public service sector." />
-<meta property="og:url" content="https://bspaceviewer.replit.app/" />
-<meta property="og:image" content="https://bspaceviewer.replit.app/public/OpenContentViewer.png" />
-<meta property="og:description" content="<%= sessionLanguage === 'en-ca' ? 'Your home for barrier-free, online learning from the federal public service of Canada' : 'Votre source d\'apprentissage en ligne sans barrières de la fonction publique fédérale du Canada' %>" />
-<meta property="og:site_name" content="Open Content Viewer" />
+  <meta property="og:title"
+    content="<%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %>" />
+  <meta property="og:type" content="website" />
+  <meta name="description"
+    content="Explore comprehensive, barrier-free online learning with the Canada School of Public Service. Dive into a diverse range of topics from digital transformation and leadership to indigenous learning and workplace inclusivity. Craft your skills to shape an agile, connected, and collaborative public service sector." />
+  <meta property="og:url" content="https://bspaceviewer.replit.app/" />
+  <meta property="og:image" content="https://bspaceviewer.replit.app/public/OpenContentViewer.png" />
+  <meta property="og:description"
+    content="<%= sessionLanguage === 'en-ca' ? 'Your home for barrier-free, online learning from the federal public service of Canada' : 'Votre source d\'apprentissage en ligne sans barrières de la fonction publique fédérale du Canada' %>" />
+  <meta property="og:site_name" content="Open Content Viewer" />
   <link rel="icon" href="/public/favicon-mobile.ico">
   <link rel="stylesheet" href="/public/index.css">
-    <title><%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %></title>
+  <title>
+    <%= sessionLanguage==='en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\' ÉFPC' %>
+  </title>
 </head>
+
 <body>
   <header>
-  <div class="fip">
-    <img width="300" src="<%= sessionLanguage === 'en-ca' ? '/public/CSPS_FipEng_Black-Red-Final.svg' : '/public/CSPS_FIP_BlackRed_F.svg' %>" alt="<%= sessionLanguage === 'en-ca' ? 'Canada School of Public Service' : 'École de la fonction publique du Canada' %>">
-  </div>
-    <button lang="<%= sessionLanguage === 'en-ca' ? 'fr-ca' : 'en-ca' %>" id="langSwitch" onclick="switchLanguage()" aria-label="<%= sessionLanguage === 'en-ca' ? 'Changer la langue en français' : 'Change language to English' %>"><%= sessionLanguage === 'en-ca' ? 'FR' : 'EN' %></button>
-    <h1 id="appTitle"><%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %></h1>
-  <% if (sessionEnded) { %>
-  <div id="sessionEnd" class="alert alert-warning" role="alert">
-    <%= sessionLanguage === 'en-ca' ? 'Your session has ended. You have been redirected to the homepage.' : 'Votre session s\'est terminée. Vous avez été redirigé à la page d\'accueil.' %>
-  </div>
-    
-<% } %>
+    <div class="fip">
+      <img width="300"
+        src="<%= sessionLanguage === 'en-ca' ? '/public/CSPS_FipEng_Black-Red-Final.svg' : '/public/CSPS_FIP_BlackRed_F.svg' %>"
+        alt="<%= sessionLanguage === 'en-ca' ? 'Canada School of Public Service' : 'École de la fonction publique du Canada' %>">
+    </div>
+    <button lang="<%= sessionLanguage === 'en-ca' ? 'fr-ca' : 'en-ca' %>" id="langSwitch" onclick="switchLanguage()"
+      aria-label="<%= sessionLanguage === 'en-ca' ? 'Changer la langue en français' : 'Change language to English' %>">
+      <%= sessionLanguage==='en-ca' ? 'FR' : 'EN' %>
+    </button>
+    <h1 id="appTitle">
+      <%= sessionLanguage==='en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\' ÉFPC' %>
+    </h1>
+    <% if (sessionEnded) { %>
+      <div id="sessionEnd" class="alert alert-warning" role="alert">
+        <%= sessionLanguage==='en-ca' ? 'Your session has ended. You have been redirected to the homepage.'
+          : 'Votre session s\' est terminée. Vous avez été redirigé à la page d\'accueil.' %>
+      </div>
+
+      <% } %>
   </header>
   <div role="search">
-  <label id="searchlabel" class="sr-only" for="search"><%= sessionLanguage === 'en-ca' ? 'Search by title, tag or language:' : 'Rechercher par titre, mot-clé ou langue:' %></label>
-  <input type="text" id="search" placeholder="<%= sessionLanguage === 'en-ca' ? 'Search by title, tag or language...' : 'Rechercher par titre, mot-clé ou langue...' %>">
-  <p id="srUpdate" tabindex="-1" aria-live="polite"></p>
-    </div>
+    <label lang="<%= sessionLanguage %>" id="searchlabel" class="sr-only" for="search">
+      <%= sessionLanguage==='en-ca' ? 'Search bar' : 'Barre de recherche' %>
+    </label>
+    <input lang="<%= sessionLanguage %>" type="text" id="search"
+      placeholder="<%= sessionLanguage === 'en-ca' ? 'Search by title, tag or language.' : 'Rechercher par titre, mot-clé ou langue.' %>">
+    <p id="srUpdate" tabindex="-1" aria-live="polite"></p>
+  </div>
   <main class="container" role="main">
-    
 
-       <% for(let i=0; i<packageFiles.length; i++) { %>
-        <div lang="<%= packageFiles[i].lang %>" class="tile" data-tags="<%= packageFiles[i].tags %>" data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>" data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
-          
-  <a href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>"><% if(packageFiles[i].imageUrl){ %>
+
+    <% for(let i=0; i<packageFiles.length; i++) { %>
+      <div lang="<%= packageFiles[i].lang %>" class="tile" data-tags="<%= packageFiles[i].tags %>"
+        data-title="<%= packageFiles[i].title %>" data-file="<%= packageFiles[i].file %>"
+        data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
+
+        <a
+          href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>">
+          <% if(packageFiles[i].imageUrl){ %>
             <img role="presentation" width="320" height="118" src="<%= packageFiles[i].imageUrl %>" alt="">
             <% } %>
-    <span class="textLink" lang="<%= packageFiles[i].lang %>"><%= packageFiles[i].title %> </span>
-  </a>
-             <% if(packageFiles[i].description){ %>
-      <div class="details">
-        <button class="details-toggle" aria-expanded="false" aria-controls="detail-content-<%= i %>">Description</button>
-        <div id="detail-content-<%= i %>" class="detail-content" aria-hidden="true">
-          <p lang="<%= packageFiles[i].lang %>" class="detail-text"><%= packageFiles[i].description %></p>
-        </div>
+              <span class="textLink" lang="<%= packageFiles[i].lang %>">
+                <%= packageFiles[i].title %>
+              </span>
+        </a>
+        <% if(packageFiles[i].description){ %>
+          <div class="details">
+            <button class="details-toggle" aria-expanded="false"
+              aria-controls="detail-content-<%= i %>">Description</button>
+            <div id="detail-content-<%= i %>" class="detail-content" aria-hidden="true">
+              <p lang="<%= packageFiles[i].lang %>" class="detail-text">
+                <%= packageFiles[i].description %>
+              </p>
+            </div>
+          </div>
+          <% } %>
       </div>
-    <% } %>
-</div>
-    <% } %>
-       </main>
-      <% if(displayPIsymbol){ %>
-        <footer>
+      <% } %>
+  </main>
+  <% if(displayPIsymbol){ %>
+    <footer>
       <div class="adminConsole"><a tabindex="-1" href="/adminconsole" aria-label="Admin console">&#120645;</a></div>
-          </footer>
-        <% } %>
-          <div id="overlay" aria-live="assertive">
-            <h2 id="loadingText"><%= sessionLanguage === 'en-ca' ? 'Loading...' : 'Chargement...' %></h2> <!-- Loading text -->
-  <div id="spinner"></div>
-  
-</div>
-<script src="/public/index.js"></script>
+    </footer>
+    <% } %>
+      <div id="overlay" aria-live="assertive">
+        <h2 id="loadingText">
+          <%= sessionLanguage==='en-ca' ? 'Loading...' : 'Chargement...' %>
+        </h2> <!-- Loading text -->
+        <div id="spinner"></div>
+
+      </div>
+      <script src="/public/index.js"></script>
 </body>
+
 </html>

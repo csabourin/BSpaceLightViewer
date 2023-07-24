@@ -244,7 +244,7 @@ h1 {
     height: 20em;
     align-content:flex-start;
     padding: 2em;
-    overflow:
+    overflow: visible;
   }
 
   .tile a {

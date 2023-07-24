@@ -1,6 +1,5 @@
 module.exports = function(app) {
   const multer = require("multer"); // used for uploading files
-  const basicAuth = require('express-basic-auth');
   const fs = require("fs-extra");
   const path = require("path");
   const AdmZip = require("adm-zip");
@@ -8,10 +7,10 @@ module.exports = function(app) {
   const sanitize = require("sanitize-filename");
   const bodyParser = require("body-parser");
   const createDOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
+  const { JSDOM } = require('jsdom');
 
-const window = new JSDOM('').window;
-const DOMPurify = createDOMPurify(window);
+  const window = new JSDOM('').window;
+  const DOMPurify = createDOMPurify(window);
 
   const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -43,12 +42,6 @@ const DOMPurify = createDOMPurify(window);
     },
   });
 
-  const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend';
-  const authMiddleware = basicAuth({
-    users: { 'admin': adminPassword }, // password from process.env
-    challenge: true
-  });
-
   const upload = multer({
     storage: storage,
     limits: {
@@ -66,6 +59,31 @@ const DOMPurify = createDOMPurify(window);
 
   app.use(bodyParser.json()); // used for renaming files
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend';
+  app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    if (username === 'admin' && password === adminPassword) {
+      req.session.user = { username }; // you can store the whole user object if you have one
+      res.sendStatus(200);
+    } else {
+      res.status(401).send('Invalid credentials');
+    }
+  });
+
+  function authMiddleware(req, res, next) {
+    if (req.session.user) {
+      next();
+    } else {
+      res.redirect('/login');
+    }
+  }
+
+  app.get('/login', (req, res) => {
+    // You can render a template for the login form
+    res.render('login');
+  });
 
   app.get("/adminconsole", checkIP, authMiddleware, async (req, res) => {
     const packageFiles = await getPackages();
@@ -97,28 +115,28 @@ const DOMPurify = createDOMPurify(window);
   });
 
   app.post("/delete", checkIP, authMiddleware, async (req, res) => {
-  const fileName = req.body.fileName;
-  const filePath = path.join("./packages", sanitize(fileName));
+    const fileName = req.body.fileName;
+    const filePath = path.join("./packages", sanitize(fileName));
 
-  // Check if file exists
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      // If the file does not exist, send an error response
-      res.status(400).send("The file does not exist");
-    } else {
-      // If the file exists, delete it
-      fs.unlink(filePath, function(err) {
-        if (err) {
-          console.log(err);
-          res.status(500).send();
-        } else {
-          console.log("Successfully deleted the package!");
-          res.status(200).send();
-        }
-      });
-    }
+    // Check if file exists
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        // If the file does not exist, send an error response
+        res.status(400).send("The file does not exist");
+      } else {
+        // If the file exists, delete it
+        fs.unlink(filePath, function(err) {
+          if (err) {
+            console.log(err);
+            res.status(500).send();
+          } else {
+            console.log("Successfully deleted the package!");
+            res.status(200).send();
+          }
+        });
+      }
+    });
   });
-});
 
   app.post(
     "/upload", checkIP, authMiddleware,
@@ -130,45 +148,45 @@ const DOMPurify = createDOMPurify(window);
   );
 
   app.post("/addDescription", checkIP, authMiddleware, bodyParser.json(), async (req, res) => {
-  const description = req.body.description;
-  const tags = req.body.tags;
-  const zipFileName = req.body.zipFileName;
+    const description = req.body.description;
+    const tags = req.body.tags;
+    const zipFileName = req.body.zipFileName;
 
-  // Validate and sanitize input
-  if (typeof description !== 'string' || !Array.isArray(tags)) {
-    return res.status(400).send("Invalid input data");
-  }
-  
-const sanitizedDescription = DOMPurify.sanitize(description);
-const sanitizedTags = tags.map(tag => DOMPurify.sanitize(tag.toString()));// ensuring each tag is a string
-
-  const zipFilePath = path.join("./packages", sanitize(zipFileName));
-
-  // Check if zip file exists
-  fs.access(zipFilePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      // If the zip file does not exist, send an error response
-      res.status(400).send("The zip file does not exist");
-    } else {
-      // If the zip file exists, add imsdescription.json to it
-      const zip = new AdmZip(zipFilePath);
-
-    // Create imsdescription.json content
-const jsonContent = JSON.stringify({ description: sanitizedDescription, tags: sanitizedTags });
-
-// Add imsdescription.json to the zip file
-zip.addFile("imsdescription.json", Buffer.from(jsonContent));
-
-// Write changes to the zip file
-zip.writeZip(zipFilePath);
-
-res.status(200).send("Successfully added imsdescription.json to the zip file");
-
+    // Validate and sanitize input
+    if (typeof description !== 'string' || !Array.isArray(tags)) {
+      return res.status(400).send("Invalid input data");
     }
-  });
-});
 
-  
+    const sanitizedDescription = DOMPurify.sanitize(description);
+    const sanitizedTags = tags.map(tag => DOMPurify.sanitize(tag.toString()));// ensuring each tag is a string
+
+    const zipFilePath = path.join("./packages", sanitize(zipFileName));
+
+    // Check if zip file exists
+    fs.access(zipFilePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        // If the zip file does not exist, send an error response
+        res.status(400).send("The zip file does not exist");
+      } else {
+        // If the zip file exists, add imsdescription.json to it
+        const zip = new AdmZip(zipFilePath);
+
+        // Create imsdescription.json content
+        const jsonContent = JSON.stringify({ description: sanitizedDescription, tags: sanitizedTags });
+
+        // Add imsdescription.json to the zip file
+        zip.addFile("imsdescription.json", Buffer.from(jsonContent));
+
+        // Write changes to the zip file
+        zip.writeZip(zipFilePath);
+
+        res.status(200).send("Successfully added imsdescription.json to the zip file");
+
+      }
+    });
+  });
+
+
   app.post("/uploadImage", checkIP, authMiddleware, imageUpload.single('imageFile'), async (req, res) => {
     if (!req.file) {
       console.log('No file was uploaded or file upload was rejected');
