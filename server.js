@@ -30,10 +30,10 @@ const limiter = rateLimit({
 
 app.set("view engine", "ejs");
 app.set("trust proxy", true);
-app.get('*.(jpg|jpeg|png|gif)', function (req, res, next) {
-    // set Cache-Control for these specific types
-    res.setHeader('Cache-Control', 'public, max-age=86400'); // one day
-    next(); // pass control to the next handler
+app.get('*.(jpg|jpeg|png|gif)', function(req, res, next) {
+  // set Cache-Control for these specific types
+  res.setHeader('Cache-Control', 'public, max-age=31536000'); // one month
+  next(); // pass control to the next handler
 });
 // Disabled Helmet because the content policy was too strict.
 // app.use(helmet.contentSecurityPolicy({

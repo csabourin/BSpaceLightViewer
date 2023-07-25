@@ -8,54 +8,12 @@ module.exports = function(app) {
   const bodyParser = require("body-parser");
   const createDOMPurify = require('dompurify');
   const { JSDOM } = require('jsdom');
+  const authMiddleware = require('../middleware/authMiddleware.js');
+  const imageUpload = require('../middleware/imageUpload.js');
+  const upload = require('../middleware/upload.js');
 
   const window = new JSDOM('').window;
   const DOMPurify = createDOMPurify(window);
-
-  const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, "./packages/");
-    },
-    filename: function(req, file, cb) {
-      cb(null, file.originalname);
-    },
-  });
-
-  const imageUpload = multer({
-    storage: multer.diskStorage({
-      destination: function(req, file, cb) {
-        cb(null, "./tmp/");
-      },
-      filename: function(req, file, cb) {
-        cb(null, file.originalname);
-      },
-    }),
-    limits: {
-      fileSize: 1024 * 1024 * 5, // limit uploaded file size to 5MB
-    },
-    fileFilter: function(req, file, cb) {
-      if (!file.mimetype.startsWith('image/')) {
-        req.fileValidationError = '<p>Only image files are allowed</p> <a href="/">Back</a>';
-        return cb(null, false);
-      }
-      cb(null, true);
-    },
-  });
-
-  const upload = multer({
-    storage: storage,
-    limits: {
-      fileSize: 1024 * 1024 * 160, // limit uploaded file size to 160MB
-    },
-    fileFilter: function(req, file, cb) {
-      if (path.extname(file.originalname) !== ".zip") {
-        req.fileValidationError =
-          '<p>Only .zip files are allowed</p> <a href="/">Back</a>'; // Assign custom error message
-        return cb(null, false); // Pass false as acceptance status
-      }
-      cb(null, true);
-    },
-  });
 
   app.use(bodyParser.json()); // used for renaming files
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -71,14 +29,6 @@ module.exports = function(app) {
       res.status(401).send('Invalid credentials');
     }
   });
-
-  function authMiddleware(req, res, next) {
-    if (req.session.user) {
-      next();
-    } else {
-      res.redirect('/login');
-    }
-  }
 
   app.get('/login', (req, res) => {
     // Render a template for the login form
@@ -123,7 +73,6 @@ module.exports = function(app) {
       }
     });
   });
-
 
   app.post("/delete", checkIP, authMiddleware, async (req, res) => {
     const fileName = req.body.fileName;
