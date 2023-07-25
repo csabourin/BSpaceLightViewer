@@ -81,7 +81,7 @@ module.exports = function(app) {
   }
 
   app.get('/login', (req, res) => {
-    // You can render a template for the login form
+    // Render a template for the login form
     res.render('login');
   });
 
@@ -93,6 +93,7 @@ module.exports = function(app) {
   app.post("/rename", checkIP, authMiddleware, async (req, res) => {
     const oldName = path.join("./packages", sanitize(req.body.old));
     const newName = path.join("./packages", sanitize(req.body.new));
+    const oldTempDir = path.join("./tmp", sanitize(path.basename(req.body.old, '.zip'))); // Temporary directory corresponding to the oldName
 
     // Check if new file already exists
     fs.access(newName, fs.constants.F_OK, (err) => {
@@ -103,16 +104,26 @@ module.exports = function(app) {
         // If the file does not exist, proceed with renaming
         fs.rename(oldName, newName, function(err) {
           if (err) {
-            console.log(err);
+            console.error(err);
             res.status(500).send();
           } else {
-            console.log("Successfully renamed - AKA moved!");
-            res.status(200).send();
+            console.log(`Successfully renamed - ${oldName} to ${newName}`);
+
+            // Now delete the old temp directory
+            fs.remove(oldTempDir, function(err) {
+              if (err) {
+                console.error(err);
+                res.status(500).send(`Failed to delete temporary directory ${oldTempDir}`);
+              } else {
+                res.status(200).send();
+              }
+            });
           }
         });
       }
     });
   });
+
 
   app.post("/delete", checkIP, authMiddleware, async (req, res) => {
     const fileName = req.body.fileName;
@@ -147,44 +158,70 @@ module.exports = function(app) {
     }
   );
 
-  app.post("/addDescription", checkIP, authMiddleware, bodyParser.json(), async (req, res) => {
-    const description = req.body.description;
-    const tags = req.body.tags;
-    const zipFileName = req.body.zipFileName;
+  app.post(
+    "/addDescription",
+    checkIP,
+    authMiddleware,
+    bodyParser.json(),
+    async (req, res) => {
+      const description = req.body.description;
+      const tags = req.body.tags;
+      const zipFileName = req.body.zipFileName;
 
-    // Validate and sanitize input
-    if (typeof description !== 'string' || !Array.isArray(tags)) {
-      return res.status(400).send("Invalid input data");
-    }
-
-    const sanitizedDescription = DOMPurify.sanitize(description);
-    const sanitizedTags = tags.map(tag => DOMPurify.sanitize(tag.toString()));// ensuring each tag is a string
-
-    const zipFilePath = path.join("./packages", sanitize(zipFileName));
-
-    // Check if zip file exists
-    fs.access(zipFilePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        // If the zip file does not exist, send an error response
-        res.status(400).send("The zip file does not exist");
-      } else {
-        // If the zip file exists, add imsdescription.json to it
-        const zip = new AdmZip(zipFilePath);
-
-        // Create imsdescription.json content
-        const jsonContent = JSON.stringify({ description: sanitizedDescription, tags: sanitizedTags });
-
-        // Add imsdescription.json to the zip file
-        zip.addFile("imsdescription.json", Buffer.from(jsonContent));
-
-        // Write changes to the zip file
-        zip.writeZip(zipFilePath);
-
-        res.status(200).send("Successfully added imsdescription.json to the zip file");
-
+      // Validate and sanitize input
+      if (typeof description !== "string" || !Array.isArray(tags)) {
+        return res.status(400).send("Invalid input data");
       }
-    });
-  });
+
+      const sanitizedDescription = DOMPurify.sanitize(description);
+      const sanitizedTags = tags.map((tag) => DOMPurify.sanitize(tag.toString())); // ensuring each tag is a string
+
+      const zipFilePath = path.join("./packages", sanitize(zipFileName));
+      let tmpFolderPath = path.join(__dirname, '../tmp', path.basename(zipFileName, '.zip'), 'imsdescription.json'); // 
+
+      // Check if zip file exists
+      fs.access(zipFilePath, fs.constants.F_OK, (err) => {
+        if (err) {
+          // If the zip file does not exist, send an error response
+          res.status(400).send("The zip file does not exist");
+        } else {
+          // If the zip file exists, add imsdescription.json to it
+          const zip = new AdmZip(zipFilePath);
+
+          // Create imsdescription.json content
+          const jsonContent = JSON.stringify({
+            description: sanitizedDescription,
+            tags: sanitizedTags,
+          });
+
+          // Add imsdescription.json to the zip file
+          zip.addFile("imsdescription.json", Buffer.from(jsonContent));
+
+          // Write changes to the zip file
+          zip.writeZip(zipFilePath, function(err) {
+            if (err) {
+              console.error("Error writing zip: ", err);
+              res.status(500).send("Error writing zip file");
+            } else {
+              // Successfully written the zip, now delete the directory
+              fs.remove(tmpFolderPath, (err) => {
+                if (err) {
+                  console.error('Failed to delete the temporary directory:', err);
+                }
+                else {
+                  res
+                    .status(200)
+                    .send(
+                      "Successfully added imsdescription.json to the zip file"
+                    );
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  );
 
 
   app.post("/uploadImage", checkIP, authMiddleware, imageUpload.single('imageFile'), async (req, res) => {
@@ -218,7 +255,15 @@ module.exports = function(app) {
         fs.exists(imagePath, (exists) => {
           if (exists) {
             zip.addLocalFile(imagePath, '', newFileName); // add the newFileName as the second parameter to rename the file inside the zip
-            zip.writeZip(zipPath);
+            zip.writeZip(zipPath, () => {
+              // The zip file has been modified, so we delete the corresponding directory in ./tmp
+              let tmpFolderPath = path.join(__dirname, '../tmp', path.basename(zipName, '.zip'), newFileName); // Removes the image from the temp directory
+              fs.remove(tmpFolderPath, (err) => {
+                if (err) {
+                  console.log('Failed to delete the temporary directory:', err);
+                }
+              });
+            });
 
             // Delete image file after adding to zip
             fs.unlink(imagePath, (err) => {

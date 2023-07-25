@@ -1,0 +1,176 @@
+  /* CSS Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Body and Global Styles */
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 20px;
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Headings */
+  h1 {
+    text-align: center;
+    padding: 20px 0;
+    color: #3f2a56;
+    margin-bottom: 1em;
+  }
+
+  /* Links */
+  a {
+    display: inline-block;
+    background-color: #3f2a56;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-bottom: 1em;
+  }
+
+  /* Renamer Styles */
+  .renamer {
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .renamer__header,
+  .renamer__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1em;
+  }
+
+  .renamer__body {
+    justify-content: space-between;
+  }
+
+  .renamer__image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 1em;
+  }
+
+  .renamer__footer {
+    margin-top: 1em;
+    text-align: center;
+  }
+
+  /* Input Fields and Buttons */
+  .fileName,
+  input[type="file"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 1em;
+  }
+
+  button,
+  input[type="submit"] {
+    background-color: #3f2a56;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover,
+  input[type="submit"]:hover {
+    background-color: #5d4077;
+  }
+
+  /* Renamer Form */
+  .renamer__form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+    width: 100%;
+  }
+
+  .renamer__form__group {
+    width: 100%;
+  }
+
+  .renamer__form__group input,
+  .renamer__form__group textarea {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .renamer__form__group button {
+    margin-top: 0.5em;
+  }
+
+  /* Renamer Header */
+  .renamer__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .renamer__upload-image {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .renamer__file-renaming {
+    width: 100%;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* Responsive Styles */
+  @media screen and (min-width: 600px) {
+    .fileName,
+    input[type="file"],
+    textarea {
+      width: 80%;
+    }
+  }
+
+  @media screen and (min-width: 900px) {
+    .fileName,
+    input[type="file"],
+    textarea {
+      width: 60%;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .renamer__header,
+    .renamer__body {
+      flex-direction: column;
+    }
+
+    .renamer__form {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2em;
+    }
+  }

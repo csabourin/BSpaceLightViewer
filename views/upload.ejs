@@ -6,237 +6,172 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="/public/favicon-mobile.ico">
   <title>Admin Console</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <link rel="stylesheet" href="/public/admin.css">
 
-    h1 {
-      text-align: center;
-      padding: 20px 0;
-      color: #3f2a56;
-    }
 
-    a {
-      display: block;
-      width: 60px;
-      margin: 10px auto;
-      background-color: #3f2a56;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      border-radius: 4px;
-      text-decoration: none;
-    }
-
-    .renamer {
-      width: 90%;
-      margin: 20px auto;
-      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 4px;
-    }
-
-    .fileName {
-      width: 50%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    button {
-      background-color: #3f2a56;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    input[type="submit"] {
-      background-color: #3f2a56;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    input[type="file"] {
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 10px;
-      width: 30em;
-      margin-bottom: 20px;
-    }
-
-    @media screen and (min-width: 600px) {
-      .fileName {
-        width: 60%;
-      }
-    }
-  </style>
 </head>
 
 <body>
-  <a href="/">Back</a>
-  <h1>Admin Console</h1>
-  <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-    <legend>Upload Package</legend>
-    <input id="zipFileInput" type="file" name="zipFile" accept=".zip">
-    <input type="submit" value="Upload">
-  </form>
+  <div class="container">
+    <a href="/">Back</a>
+    <h1>Admin Console</h1>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+      <legend>Upload Package</legend>
+      <input id="zipFileInput" type="file" name="zipFile" accept=".zip">
+      <input type="submit" value="Upload">
+    </form>
 
 
-  <% for(let i=0; i<packageFiles.length; i++) { %>
-    <div class="renamer">
-      <div>
-        <% if(packageFiles[i].imageUrl){ %>
-          <img src="<%= packageFiles[i].imageUrl %>" style="height:auto;width:300px;">
-          <% } else { %>
-            <div style="position:relative;display:inline-block;height:auto;width:300px;"></div>
-            <% } %>
-              <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>">
-              <button onclick="renameFile('<%= packageFiles[i].file%>', 'file_<%= i %>')">Rename</button>
+    <% for(let i=0; i<packageFiles.length; i++) { %>
+      <div class="renamer">
+        <div class="renamer__header">
+          <% if(packageFiles[i].imageUrl){ %>
+            <img class="renamer__image" src="<%= packageFiles[i].imageUrl %>">
+            <% } else { %>
+              <div style="position:relative;display:inline-block;height:auto;width:300px;"></div>
+              <% } %>
+                <form action="/uploadImage" method="post" enctype="multipart/form-data" style="display: inline;">
+                  <p>Change cover image</p>
+                  <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*"
+                    onchange="toggleButton('uploadImageButton_<%= i %>')">
+                  <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
+                  <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image">
+                </form>
+        </div>
+        <div class="renamer__body">
+          <div class="renamer__file-renaming">
+            <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>">
+            <button onclick="renameFile('<%= packageFiles[i].file%>', 'file_<%= i %>')">Rename</button>
+          </div>
+          <form id="descForm_<%= i %>" class="renamer__form">
+            <div class="renamer__form__group">
+              <h3>Add description</h3>
+              <textarea id="desc_<%= i %>" rows=5 placeholder="Description" name="description"
+                oninput="updateCharCount('desc_<%= i %>', 215)"><% if(packageFiles[i].description){ %><%= packageFiles[i].description %><% } %></textarea>
+              <div id="desc_<%= i %>_remaining">215 characters maximum</div>
+            </div>
+            <div class="renamer__form__group">
+              <h4>Add tags</h4>
+              <input type="text" value="<%= packageFiles[i].tags %>" name="tags" placeholder="Tags (separate by space)">
+              <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
+              <input type="submit" value="Set Description and tags" onclick="submitDescription('descForm_<%= i %>')">
+            </div>
+          </form>
+        </div>
 
-              <form action="/uploadImage" method="post" enctype="multipart/form-data" style="display: inline;">
-                <p>Change cover image</p>
-                <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*"
-                  onchange="toggleButton('uploadImageButton_<%= i %>')">
-                <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
-                <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image">
-              </form>
-              <form id="descForm_<%= i %>" style="display: block;">
-                <h3>Add description</h3>
-                <textarea id="desc_<%= i %>" rows=5 cols=60 placeholder="Description" name="description"
-                  oninput="updateCharCount('desc_<%= i %>', 215)"><% if(packageFiles[i].description){ %><%= packageFiles[i].description %><% } %></textarea>
-                <div id="desc_<%= i %>_remaining">215 characters maximum</div>
-
-                <h4>Add tags</h4>
-                <input style="width:80%" type="text" value="<%= packageFiles[i].tags %>" name="tags"
-                  placeholder="Tags (separate by space)">
-                <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
-                <input type="button" value="Submit" onclick="submitDescription('descForm_<%= i %>')">
-              </form>
-
-              <hr />
-              <button onclick="deletePackage('<%= packageFiles[i].file %>')">Delete package</button>
+        <div class="renamer__footer">
+          <button onclick="deletePackage('<%= packageFiles[i].file %>')">Delete package</button>
+        </div>
       </div>
-    </div>
-    <% } %>
+      <% } %>
 
-      <script>
+        <script>
 
-        document.getElementById('uploadForm').addEventListener('submit', function (e) {
-          const fileInput = document.getElementById('zipFileInput');
+          document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            const fileInput = document.getElementById('zipFileInput');
 
-          if (!fileInput.files.length) {
-            e.preventDefault();
-            alert("Please select a file before submitting");
-          }
-        });
-
-
-        function submitDescription(formId) {
-           const maxLength = 215;
-          let form = document.getElementById(formId);
-          let formData = new FormData(form);
-          let description = formData.get('description');
-          if (description.length > maxLength) {
-            alert('Description is too long, it should be less than 215 characters');
-            return;
-          }
-
-          let data = {
-            description: formData.get('description'),
-            tags: formData.get('tags').split(' ').map(tag => tag.trim()),
-            zipFileName: formData.get('zipFileName'),
-          };
-
-          // send a post request to the server with the description and tags
-          fetch('/addDescription', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-          }).then((response) => {
-            if (response.ok) {
-              alert('Description added successfully');
-              location.reload();
-            } else {
-              alert('Error adding description');
+            if (!fileInput.files.length) {
+              e.preventDefault();
+              alert("Please select a file before submitting");
             }
           });
-        }
 
-        function updateCharCount(textareaId, maxLength) {
-          let textarea = document.getElementById(textareaId);
-          let remainingCharsDiv = document.getElementById(textareaId + '_remaining');
 
-          let currentLength = textarea.value.length;
-          let charsRemaining = maxLength - currentLength;
-
-          remainingCharsDiv.textContent = charsRemaining + ' characters remaining';
-
-          // If there are no characters remaining, add a red color to the text to indicate an error
-          if (charsRemaining < 0) {
-            remainingCharsDiv.style.color = 'red';
-          } else {
-            remainingCharsDiv.style.color = 'black';
-          }
-        }
-
-        function renameFile(source, targetId) {
-          let target = document.getElementById(targetId).value + '.zip';
-          // send a post request to the server with the old and new filenames
-          fetch('/rename', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ old: source, new: target })
-          }).then((response) => {
-            if (response.ok) {
-              alert('File renamed successfully');
-              location.reload();
-            } else {
-              alert('Error renaming file');
+          function submitDescription(formId) {
+            const maxLength = 215;
+            let form = document.getElementById(formId);
+            let formData = new FormData(form);
+            let description = formData.get('description');
+            if (description.length > maxLength) {
+              alert('Description is too long, it should be less than 215 characters');
+              return;
             }
-          });
-        }
 
-        function deletePackage(fileName) {
-          // Display a confirmation dialog
-          if (confirm("Are you sure you want to delete this package?")) {
-            // Send a post request to the server to delete the package
-            fetch('/delete', {
+            let data = {
+              description: formData.get('description'),
+              tags: formData.get('tags')
+                .split(/[\s,]+/)
+                .map(tag => tag.trim())
+                .filter(Boolean),
+              zipFileName: formData.get('zipFileName'),
+            };
+
+            // send a post request to the server with the description and tags
+            fetch('/addDescription', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ fileName: fileName })
+              body: JSON.stringify(data)
             }).then((response) => {
               if (response.ok) {
-                alert('Package deleted successfully');
-                location.reload();
+                alert('Description added successfully');
+                location.reload(true);
               } else {
-                alert('Error deleting package');
+                alert('Error adding description');
               }
             });
           }
-        }
 
-      </script>
+          function updateCharCount(textareaId, maxLength) {
+            let textarea = document.getElementById(textareaId);
+            let remainingCharsDiv = document.getElementById(textareaId + '_remaining');
+
+            let currentLength = textarea.value.length;
+            let charsRemaining = maxLength - currentLength;
+
+            remainingCharsDiv.textContent = charsRemaining + ' characters remaining';
+
+            // If there are no characters remaining, add a red color to the text to indicate an error
+            if (charsRemaining < 0) {
+              remainingCharsDiv.style.color = 'red';
+            } else {
+              remainingCharsDiv.style.color = 'black';
+            }
+          }
+
+          function renameFile(source, targetId) {
+            let target = document.getElementById(targetId).value + '.zip';
+            // send a post request to the server with the old and new filenames
+            fetch('/rename', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ old: source, new: target })
+            }).then((response) => {
+              if (response.ok) {
+                alert('File renamed successfully');
+                location.reload(true);
+              } else {
+                alert('Error renaming file');
+              }
+            });
+          }
+
+          function deletePackage(fileName) {
+            // Display a confirmation dialog
+            if (confirm("Are you sure you want to delete this package?")) {
+              // Send a post request to the server to delete the package
+              fetch('/delete', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fileName: fileName })
+              }).then((response) => {
+                if (response.ok) {
+                  alert('Package deleted successfully');
+                  location.reload(true);
+                } else {
+                  alert('Error deleting package');
+                }
+              });
+            }
+          }
+
+        </script>
+  </div>
 </body>
 
 </html>
