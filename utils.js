@@ -88,153 +88,227 @@ function getPackages() {
   });
 }
 
-function processFile(file, retryCount = 0) {
-  return new Promise((resolve, reject) => {
-    const absoluteZipPath = path.join(__dirname, './packages', file);
-    const fileWithoutExt = path.basename(file, '.zip');
-    const dirPath = path.join(__dirname, tempDir, fileWithoutExt);
+const processFile = async (file, retryCount = 0) => {
+  const absoluteZipPath = path.join(__dirname, './packages', file);
+  const fileWithoutExt = path.basename(file, '.zip');
+  const dirPath = path.join(__dirname, tempDir, fileWithoutExt);
 
-    // Check if the directory exists
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath, { recursive: true });
+  // Check if the directory exists
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+
+  // Check if files exist
+  const xmlPath = path.join(dirPath, 'imsmanifest.xml');
+  const jsonPath = path.join(dirPath, 'imsdescription.json');
+  const imagePath = fs.readdirSync(dirPath).find(file => /^imsmanifest_image\.(jpg|png|jpeg|gif)$/i.test(file));
+
+  const xmlExists = fs.existsSync(xmlPath);
+  const jsonExists = fs.existsSync(jsonPath);
+  const imageExists = !!imagePath;  // Convert imagePath to boolean
+
+  let zip, entries;
+
+  if (!xmlExists || !jsonExists || !imageExists) {
+    zip = new StreamZip({ file: absoluteZipPath, storeEntries: true });
+    try {
+      entries = await getZipEntries(zip);
+    } catch (err) {
+      return handleZipError(err, file, retryCount, zip);
+    }
+  }
+
+  let imageEntry, xmlEntry, jsonEntry;
+
+  if (!xmlExists || !jsonExists || !imageExists) {
+    zip = new StreamZip({ file: absoluteZipPath, storeEntries: true });
+    try {
+      entries = await getZipEntries(zip);
+      imageEntry = entries.find(entry => /^imsmanifest_image\.(jpg|png|jpeg|gif)$/i.test(entry.name));
+      xmlEntry = entries.find(entry => entry.name === 'imsmanifest.xml');
+      jsonEntry = entries.find(entry => entry.name === 'imsdescription.json');
+    } catch (err) {
+      return handleZipError(err, file, retryCount, zip);
+    }
+  } else {
+    const dirFiles = fs.readdirSync(dirPath);
+    imageEntry = dirFiles.find(file => /^imsmanifest_image\.(jpg|png|jpeg|gif)$/i.test(file));
+    xmlEntry = dirFiles.find(file => file === 'imsmanifest.xml') ? { name: 'imsmanifest.xml' } : null;
+    jsonEntry = dirFiles.find(file => file === 'imsdescription.json') ? { name: 'imsdescription.json' } : null;
+  }
+  let title = 'No manifest file found';
+  let lang = 'en-ca';
+  let imageUrl = imageEntry ? path.join('/thumbnails/', fileWithoutExt, typeof imageEntry === 'string' ? imageEntry : imageEntry.name) : null;
+  let description = '';
+  let tags = [];
+
+  try {
+    if (!jsonExists && jsonEntry) {
+      ({ description, tags } = await extractAndParseJSON(zip, jsonEntry, dirPath));
+    } else if (jsonEntry) {
+      ({ description, tags } = await parseJSONFile(path.join(dirPath, jsonEntry.name)));
     }
 
-    const zip = new StreamZip({ file: absoluteZipPath, storeEntries: true });
+    if (!imageExists && imageEntry) {
+      imageUrl = await extractImage(zip, imageEntry, dirPath, fileWithoutExt);
+    }
 
+    if (!xmlExists && xmlEntry) {
+      ({ title, lang } = await extractAndParseXML(zip, xmlEntry, dirPath));
+    } else if (xmlEntry) {
+      ({ title, lang } = await parseXMLFile(path.join(dirPath, xmlEntry.name)));
+    }
+  } catch (err) {
+    return handleError(err, file, retryCount, zip);
+  }
+  if (entries) { zip.close(); }
+
+
+  return {
+    file,
+    title,
+    lang,
+    imageUrl,
+    description,
+    tags,
+  };
+};
+
+const getZipEntries = (zip) => {
+  return new Promise((resolve, reject) => {
     zip.on('ready', () => {
-
-      const imageEntry = Object.values(zip.entries()).find(entry => /^imsmanifest_image\.(jpg|png|jpeg|gif)$/i.test(entry.name));
-      const xmlEntry = Object.values(zip.entries()).find(entry => entry.name === 'imsmanifest.xml');
-      const jsonEntry = Object.values(zip.entries()).find(entry => entry.name === 'imsdescription.json');
-
-      let title = 'No manifest file found';
-      let lang = 'en-ca';
-      let imageUrl = imageEntry ? path.join('/thumbnails/', fileWithoutExt, imageEntry.name) : null;
-      let description = '';
-      let tags = [];
-
-      // Skipping the unzip process if the files already exist
-      const imageExists = fs.existsSync(path.join(dirPath, imageEntry ? imageEntry.name : ''));
-      const xmlExists = fs.existsSync(path.join(dirPath, xmlEntry ? xmlEntry.name : ''));
-      const jsonExists = fs.existsSync(path.join(dirPath, jsonEntry ? jsonEntry.name : ''));
-
-      const jsonPromise = jsonEntry && !jsonExists
-        ? new Promise((jsonResolve, jsonReject) => {
-          zip.stream(jsonEntry.name, (err, stream) => {
-            if (err) {
-              jsonReject(err);
-            }
-
-            let jsonString = '';
-            stream.on('data', chunk => { jsonString += chunk; });
-            stream.on('end', () => {
-              try {
-                const jsonData = JSON.parse(jsonString);
-                description = jsonData.description;
-                tags = jsonData.tags;
-                jsonResolve();
-              } catch (err) {
-                jsonReject(err);
-              }
-            });
-          });
-        })
-        : Promise.resolve();
-
-      const imagePromise = imageEntry && !imageExists
-        ? new Promise((imageResolve, imageReject) => {
-          const fileWithoutExt = path.basename(file, '.zip');
-          const dirPath = path.join(__dirname, tempDir, fileWithoutExt);
-          if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
-          }
-          const imagePath = path.join(dirPath, imageEntry.name);
-          zip.extract(imageEntry.name, imagePath, err => {
-            if (err) {
-              console.error('Error extracting image from zip:', err);
-              imageReject(err);
-            } else {
-              imageUrl = path.join('/thumbnails/', fileWithoutExt, imageEntry.name);
-              imageResolve();
-            }
-          });
-        })
-        : Promise.resolve();
-
-      const xmlPromise = xmlEntry && !xmlExists
-        ? new Promise((xmlResolve, xmlReject) => {
-          zip.stream(xmlEntry.name, (err, stream) => {
-            if (err) {
-              xmlReject(err);
-            }
-
-            let xmlString = '';
-            stream.on('data', chunk => { xmlString += chunk; });
-            stream.on('end', () => {
-              try {
-                xml2js.parseString(xmlString, (err, result) => {
-                  if (err) {
-                    console.error('Error parsing XML:', err);
-                    xmlReject(err);
-                  } else {
-                    const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
-                    title = titleData._;
-                    lang = titleData['$']['xml:lang'];
-                    xmlResolve();
-                  }
-                });
-              } catch (err) {
-                xmlReject(err);
-              }
-            });
-          });
-        })
-        : Promise.resolve();
-
-      Promise.all([imagePromise, xmlPromise])
-        .then(() => {
-          zip.close();
-          resolve({
-            file,
-            title,
-            lang,
-            imageUrl,
-            description,
-            tags,
-          });
-        })
-        .catch((err) => {
-          // Close the zip file and retry or skip the file based on the retryCount
-          zip.close();
-
-          if (retryCount < 3) {
-            console.error(`Error processing file ${file}. Retrying...`);
-            setTimeout(() => {
-              resolve(processFile(file, retryCount + 1));
-            }, 500);
-          } else {
-            console.error(`Error processing file ${file}. Skipping file after 3 attempts.`);
-            resolve(null); // Resolve with null to indicate that the file was skipped
-          }
-        });
+      resolve(Object.values(zip.entries()));
     });
 
-    zip.on('error', (err) => {
-      // Close the zip file and retry or skip the file based on the retryCount
-      zip.close();
+    zip.on('error', reject);
+  });
+};
 
-      if (retryCount < 3) {
-        console.error(`Error processing file ${file}. Retrying...`);
-        setTimeout(() => {
-          resolve(processFile(file, retryCount + 1));
-        }, 1000);
-      } else {
-        console.error(`Error processing file ${file}. Skipping file after 3 attempts.`);
-        resolve(null); // Resolve with null to indicate that the file was skipped
+const handleZipError = (err, file, retryCount, zip) => {
+  console.error(`Error processing file ${file}: ${err}`);
+
+  // Close the zip file and retry or skip the file based on the retryCount
+  zip.close();
+
+  if (retryCount < 3) {
+    console.error(`Retrying...`);
+    return processFile(file, retryCount + 1);
+  } else {
+    console.error(`Skipping file after 3 attempts.`);
+    return null; // Resolve with null to indicate that the file was skipped
+  }
+};
+
+const extractAndParseJSON = (zip, jsonEntry, dirPath) => {
+  return new Promise((resolve, reject) => {
+    const jsonFilePath = path.join(dirPath, jsonEntry.name);
+
+    // Extract the JSON file from the zip
+    zip.extract(jsonEntry.name, jsonFilePath, err => {
+      if (err) reject(err);
+
+      // Read the extracted file
+      fs.readFile(jsonFilePath, 'utf8', (err, jsonString) => {
+        if (err) reject(err);
+
+        try {
+          // Parse the JSON string
+          const jsonData = JSON.parse(jsonString);
+          resolve(jsonData);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    });
+  });
+};
+
+
+const extractImage = (zip, imageEntry, dirPath, fileWithoutExt) => {
+  return new Promise((resolve, reject) => {
+    const imagePath = path.join(dirPath, imageEntry.name);
+    zip.extract(imageEntry.name, imagePath, err => {
+      if (err) reject(err);
+      resolve(path.join('/thumbnails/', fileWithoutExt, imageEntry.name));
+    });
+  });
+};
+
+const extractAndParseXML = (zip, xmlEntry, dirPath) => {
+  return new Promise((resolve, reject) => {
+    // Define the file path where the XML file should be written
+    const xmlFilePath = path.join(dirPath, xmlEntry.name);
+    // Extract the XML file from the zip
+    zip.extract(xmlEntry.name, xmlFilePath, err => {
+      if (err) reject(err);
+      // Read the extracted file
+      fs.readFile(xmlFilePath, 'utf8', (err, xmlString) => {
+        if (err) reject(err);
+        // Parse the XML string
+        xml2js.parseString(xmlString, (err, result) => {
+          if (err) reject(err);
+          try {
+            const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
+            const title = titleData._;
+            const lang = titleData['$']['xml:lang'];
+            resolve({ title, lang });
+          } catch (err) {
+            reject(err);
+          }
+        });
+      });
+    });
+  });
+};
+
+
+const parseJSONFile = (jsonFilePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(jsonFilePath, 'utf8', (err, jsonString) => {
+      if (err) reject(err);
+      try {
+        const jsonData = JSON.parse(jsonString);
+        resolve(jsonData);
+      } catch (err) {
+        reject(err);
       }
     });
   });
-}
+};
+
+const parseXMLFile = (xmlFilePath) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(xmlFilePath, 'utf8', (err, xmlString) => {
+      if (err) reject(err);
+      xml2js.parseString(xmlString, (err, result) => {
+        if (err) reject(err);
+        try {
+          const titleData = result.manifest.metadata[0]['imsmd:lom'][0]['imsmd:general'][0]['imsmd:title'][0]['imsmd:langstring'][0];
+          const title = titleData._;
+          const lang = titleData['$']['xml:lang'];
+          resolve({ title, lang });
+        } catch (err) {
+          reject(err);
+        }
+      });
+    });
+  });
+};
+
+const handleError = (err, file, retryCount, zip) => {
+  console.error(`Error processing file ${file}: ${err}`);
+
+  // Close the zip file and retry or skip the file based on the retryCount
+  zip.close();
+
+  if (retryCount < 3) {
+    console.error(`Retrying...`);
+    return processFile(file, retryCount + 1);
+  } else {
+    console.error(`Skipping file after 3 attempts.`);
+    return null; // Resolve with null to indicate that the file was skipped
+  }
+};
 
 function flattenItems(items) {
   let flat = [];

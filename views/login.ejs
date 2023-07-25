@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -6,15 +7,59 @@
   <link rel="icon" href="/public/favicon-mobile.ico">
   <link rel="stylesheet" href="/public/d2l.css" />
   <link rel="stylesheet" href="/public/resource.css" />
+  <title>Restricted Access</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    #login-form {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+      background-color: #fff;
+    }
+    #login-form input[type="text"], #login-form input[type="password"] {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    #login-form input[type="submit"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      color: #fff;
+      background-color: #007BFF;
+      cursor: pointer;
+    }
+    #login-form input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Admin Console Login Page</h1>
-  <form id="login-form">
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <input type="submit" value="Submit">
-  </form>
+  <div id="login-form">
+    <h1>Admin Console</h1>
+    <form>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="submit" value="Login">
+    </form>
+  </div>
   <script src="/public/client.js"></script>
 </body>
 </html>
