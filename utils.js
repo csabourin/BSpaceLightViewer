@@ -30,6 +30,7 @@ function displayPI(req) {
 
 function checkForImsmanifest(req, res, next) {
   // Check for imsmanifest.xml in the zip when uploading
+  const sanitizedPath = path.normalize(req.file.path).replace(/^(\.\.[\/\\])+/, '');
   const zip = new StreamZip({ file: req.file.path, storeEntries: true });
 
   zip.on("ready", () => {
@@ -38,11 +39,11 @@ function checkForImsmanifest(req, res, next) {
         req.fileValidationError =
           '<p>Zip files must contain an imsmanifest.xml file.</p> <a href="/">Back</a>';
 
-        fs.unlink(req.file.path, (err) => {
+        fs.unlink(sanitizedPath, (err) => {
           if (err) {
             console.error("Error deleting file:", err);
           } else {
-            console.log("Deleted invalid file:", req.file.path);
+            console.log("Deleted invalid file:", sanitizedPath);
           }
         });
 

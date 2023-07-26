@@ -21,7 +21,6 @@ app.use(
     cookie: { secure: true, httpOnly: true, sameSite: true }, // added security flags
   })
 );
-
 const limiter = rateLimit({
   windowMs: 2 * 60 * 1000, // 2 minutes
   max: 2400, // limit each IP to 2400 requests per windowMs
