@@ -1,12 +1,12 @@
 module.exports = function(app) {
+  const express = require("express");
   const multer = require("multer"); // used for uploading files
   const fs = require("fs-extra");
   const path = require("path");
   const AdmZip = require("adm-zip");
   const { checkForImsmanifest, getPackages, checkIP } = require('../utils.js');
   const sanitize = require("sanitize-filename");
-  const bodyParser = require("body-parser");
-  const createDOMPurify = require('dompurify');
+   const createDOMPurify = require('dompurify');
   const { JSDOM } = require('jsdom');
   const authMiddleware = require('../middleware/authMiddleware.js');
   const imageUpload = require('../middleware/imageUpload.js');
@@ -14,10 +14,6 @@ module.exports = function(app) {
 
   const window = new JSDOM('').window;
   const DOMPurify = createDOMPurify(window);
-
-  app.use(bodyParser.json()); // used for renaming files
-  app.use(bodyParser.urlencoded({ extended: true }));
-
   const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend';
   app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -111,7 +107,7 @@ module.exports = function(app) {
     "/addDescription",
     checkIP,
     authMiddleware,
-    bodyParser.json(),
+    express.json(),
     async (req, res) => {
       const description = req.body.description;
       const tags = req.body.tags;

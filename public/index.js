@@ -105,9 +105,23 @@ document.querySelector("#search").addEventListener("keydown", function(event) {
   }
 });
 
+// Fetch current language from the server on page load
+fetch('/getLanguage')
+  .then(response => response.json())
+  .then(data => {
+    if (data.language) {
+      // Set local storage language based on the server session
+      localStorage.setItem("language", data.language);
+    } else {
+      // If no language is set in the server session, set default language
+      localStorage.setItem("language", "en-ca");
+    }
+  })
+  .catch(error => console.error('Failed to fetch language from the server:', error));
+
 // Language switcher function
 window.switchLanguage = function() {
-  const currentLang = localStorage.getItem("language") || "en-ca";
+  const currentLang = localStorage.getItem("language");
   const newLang = currentLang.startsWith("en") ? "fr-ca" : "en-ca";
 
   fetch('/setLanguage', {

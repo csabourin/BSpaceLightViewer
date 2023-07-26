@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const rateLimit = require("express-rate-limit");
+
 // const helmet = require('helmet');
 const ejs = require("ejs"); // required for templates
 //Todo: require("matomo-tracker")
@@ -21,14 +22,20 @@ app.use(
     cookie: { secure: true, httpOnly: true, sameSite: true }, // added security flags
   })
 );
+
 const limiter = rateLimit({
   windowMs: 2 * 60 * 1000, // 2 minutes
   max: 2400, // limit each IP to 2400 requests per windowMs
   message: "<h1>Too many requests from this IP, please try again after 2 minutes.</h1> <hr> <h1>Trop de requêtes venant de cette adresse IP, veuillez essayer de nouveau dans 2 minutes.</h1>",
+  keyGenerator: (req) => {
+    return req.app.get('trust proxy') ? req.headers['x-forwarded-for'] || req.ip : req.connection.remoteAddress;
+  },
 });
 
 app.set("view engine", "ejs");
 app.set("trust proxy", true);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.get('*.(jpg|jpeg|png|gif)', function(req, res, next) {
   // set Cache-Control for these specific types
   res.setHeader('Cache-Control', 'public, max-age=31536000'); // one month
