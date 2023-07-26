@@ -1,6 +1,7 @@
 module.exports = function(app) {
   const express = require("express");
-  const multer = require("multer"); // used for uploading files
+  const rateLimit = require('express-rate-limit');
+  // const multer = require("multer"); // used for uploading files
   const fs = require("fs-extra");
   const path = require("path");
   const AdmZip = require("adm-zip");
@@ -9,8 +10,15 @@ module.exports = function(app) {
   const authMiddleware = require('../middleware/authMiddleware.js');
   const imageUpload = require('../middleware/imageUpload.js');
   const upload = require('../middleware/upload.js');
-  const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend';
-  app.post('/login', (req, res) => {
+
+  const loginLimiter = rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: 'Too many login attempts from this IP, please try again later.'
+  });
+
+  const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend'; // The admin password is a placeholder, please set ADMPASS in environment variables!
+  app.post('/login', checkIP, loginLimiter, (req, res) => {
     const { username, password } = req.body;
 
     if (username === 'admin' && password === adminPassword) {
