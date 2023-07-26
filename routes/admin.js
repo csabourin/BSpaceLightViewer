@@ -6,14 +6,9 @@ module.exports = function(app) {
   const AdmZip = require("adm-zip");
   const { checkForImsmanifest, getPackages, checkIP } = require('../utils.js');
   const sanitize = require("sanitize-filename");
-   const createDOMPurify = require('dompurify');
-  const { JSDOM } = require('jsdom');
   const authMiddleware = require('../middleware/authMiddleware.js');
   const imageUpload = require('../middleware/imageUpload.js');
   const upload = require('../middleware/upload.js');
-
-  const window = new JSDOM('').window;
-  const DOMPurify = createDOMPurify(window);
   const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend';
   app.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -118,8 +113,8 @@ module.exports = function(app) {
         return res.status(400).send("Invalid input data");
       }
 
-      const sanitizedDescription = DOMPurify.sanitize(description);
-      const sanitizedTags = tags.map((tag) => DOMPurify.sanitize(tag.toString())); // ensuring each tag is a string
+      const sanitizedDescription = description; // Output is escaped, sanitize only if you intent to include html
+      const sanitizedTags = tags.map((tag) => tag.toString()); // ensuring each tag is a string
 
       const zipFilePath = path.join("./packages", sanitize(zipFileName));
       let tmpFolderPath = path.join(__dirname, '../tmp', path.basename(zipFileName, '.zip'), 'imsdescription.json'); // 

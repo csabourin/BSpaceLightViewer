@@ -46,7 +46,7 @@
           <form id="descForm_<%= i %>" class="renamer__form">
             <div class="renamer__form__group">
               <h3>Add description</h3>
-              <textarea id="desc_<%= i %>" rows=5 placeholder="Description" name="description"
+              <textarea lang="<%= packageFiles[i].lang %>" id="desc_<%= i %>" rows=5 placeholder="Description" name="description"
                 oninput="updateCharCount('desc_<%= i %>', 215)"><% if(packageFiles[i].description){ %><%= packageFiles[i].description %><% } %></textarea>
               <div id="desc_<%= i %>_remaining">215 characters maximum</div>
             </div>

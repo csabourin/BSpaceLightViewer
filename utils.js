@@ -23,6 +23,19 @@ function checkIP(req, res, next) {
   }
 }
 
+function escapeSpecialChars(str) {
+  return str.replace(/[\\"'&<>]/g, function(c) {
+    switch (c) {
+      case '"': return '\\"';
+      case "'": return "\\'";
+      case '\\': return '\\\\';
+      case '&': return '\\&';
+      case '<': return '\\<';
+      case '>': return '\\>';
+    }
+  });
+}
+
 function displayPI(req) {
   let clientIp = req.ip;
   return (allowedIps.includes(clientIp))
@@ -464,6 +477,7 @@ const readPackage = (packagePath, session) => {
 module.exports = {
   checkForImsmanifest,
   flattenItems,
+  escapeSpecialChars,
   getPackages,
   processItems,
   readPackage,

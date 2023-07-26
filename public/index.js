@@ -41,10 +41,10 @@ function performSearch() {
     let title = tile.getAttribute("data-title").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     let file = tile.getAttribute("data-file").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     let lang = tile.getAttribute("data-lang").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        let tags = tile.getAttribute("data-tags").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    let tags = tile.getAttribute("data-tags").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
     // Check if the tile contains all search keywords
-    const tileMatchesAllKeywords = searchValues.every(searchValue => 
+    const tileMatchesAllKeywords = searchValues.every(searchValue =>
       title.includes(searchValue) ||
       file.includes(searchValue) ||
       tags.includes(searchValue) ||
@@ -63,7 +63,7 @@ function performSearch() {
   // Update the screen-reader-only text with the number of visible tiles
   document.querySelector("#srUpdate").textContent =
     visibleTiles + (docLang.startsWith("fr") ? " résultats trouvés." : " results found.");
-    localStorage.setItem('searchValue', document.getElementById('search').value);
+  localStorage.setItem('searchValue', document.getElementById('search').value);
 }
 
 // Add the event listener for #search
@@ -76,25 +76,25 @@ window.onload = function() {
       'Content-Type': 'application/json'
     }
   })
-  .then(response => response.json())
-  .then(data => {
-    const currentLang = data.language || localStorage.getItem("language") || "en-ca";
-    localStorage.setItem("language", currentLang);  // Update localStorage with the server session language
-    document.documentElement.lang = currentLang;  // Update the document language
+    .then(response => response.json())
+    .then(data => {
+      const currentLang = data.language || localStorage.getItem("language") || "en-ca";
+      localStorage.setItem("language", currentLang);  // Update localStorage with the server session language
+      document.documentElement.lang = currentLang;  // Update the document language
 
-    // Language-dependent operations go here
-    if (localStorage.getItem('searchValue')) {
-      document.getElementById('search').value = localStorage.getItem('searchValue');
-      
-      // If searchValue is not empty, trigger the performSearch function
-      if(document.getElementById('search').value.trim() !== "") {
-        performSearch.call(document.getElementById('search'));
+      // Language-dependent operations go here
+      if (localStorage.getItem('searchValue')) {
+        document.getElementById('search').value = localStorage.getItem('searchValue');
+
+        // If searchValue is not empty, trigger the performSearch function
+        if (document.getElementById('search').value.trim() !== "") {
+          performSearch.call(document.getElementById('search'));
+        }
       }
-    }
-  })
-  .catch((error) => {
-    console.error('Failed to fetch language from server:', error);
-  });
+    })
+    .catch((error) => {
+      console.error('Failed to fetch language from server:', error);
+    });
 };
 
 
@@ -131,17 +131,17 @@ window.switchLanguage = function() {
     },
     body: JSON.stringify({ language: newLang })
   })
-  .then((response) => {
-    if (response.ok) {
-      localStorage.setItem("language", newLang);
-      window.location.reload(true);
-    } else {
-      console.error('Failed to update language on the server');
-    }
-  })
-  .catch((error) => {
-    console.error('Failed to send language update request to server:', error);
-  });
+    .then((response) => {
+      if (response.ok) {
+        localStorage.setItem("language", newLang);
+        window.location.reload(true);
+      } else {
+        console.error('Failed to update language on the server');
+      }
+    })
+    .catch((error) => {
+      console.error('Failed to send language update request to server:', error);
+    });
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -185,3 +185,42 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+window.addEventListener('DOMContentLoaded', (event) => {
+  // Get the page language from the <html> element
+  const pageLang = document.documentElement.lang.substring(0, 2);  // "fr" for French, "en" for English
+
+  // Grab the container that holds all the tiles
+  const tileContainer = document.querySelector('.container');
+
+  // Get all the tiles in an array
+  const tiles = Array.from(tileContainer.getElementsByClassName('tile'));
+
+  // Sort the array of tiles by language and then by title
+  const sortedTiles = tiles.sort((a, b) => {
+    const aLang = a.getAttribute('lang').substring(0, 2);
+    const bLang = b.getAttribute('lang').substring(0, 2);
+    const aTitle = a.dataset.title;
+    const bTitle = b.dataset.title;
+
+    // If page language is French, put French tiles first, otherwise put English tiles first
+    if (pageLang === 'fr') {
+      if (aLang === 'fr' && bLang === 'en') return -1;
+      if (aLang === 'en' && bLang === 'fr') return 1;
+    } else {
+      if (aLang === 'en' && bLang === 'fr') return -1;
+      if (aLang === 'fr' && bLang === 'en') return 1;
+    }
+
+    // If both tiles have the same language, sort by title
+    if (aTitle < bTitle) return -1;
+    if (aTitle > bTitle) return 1;
+
+    return 0;  // If both tiles have the same language and title, don't change their order
+  });
+
+  // Remove all tiles from the container
+  tiles.forEach(tile => tileContainer.removeChild(tile));
+
+  // Append the sorted tiles back to the container
+  sortedTiles.forEach(tile => tileContainer.appendChild(tile));
+});
