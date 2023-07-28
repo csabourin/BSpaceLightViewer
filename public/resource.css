@@ -1,3 +1,4 @@
+:root{font-size:16px;}
 body {
   font-family: sans-serif;
   padding: 0;
@@ -23,7 +24,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: 3.5rem;
   color: #333333;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
   padding: 0 20px;
@@ -88,10 +89,11 @@ font-size:1em;
 
 #main {
   transition: margin-left 0.5s;
-  padding: 20px;
+  padding: 1rem 0 0 0;
 }
 
 .nav-buttons {
+  height:3.5rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -174,7 +176,7 @@ iframe {
   display: block;
   margin: auto;
   height: calc(
-      100vh - 150px
+      100vh - 8rem
     ); /* Adjust as necessary, 120px accounts for the topbar and bottom navbar */
   width: 100%;
   border: none;
@@ -183,10 +185,21 @@ iframe {
 
 /* Media Query for devices with width less than or equal to 768px */
 @media (max-width: 767px) {
+  body, .navbar, iframe {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+  #main{
+    padding:0 1em;
+  }
   iframe {
+      margin: 0;
+  padding: 0;
+  box-sizing: border-box;
     width: 100%;
     height: calc(
-      100vh - 150px
+      100vh - 7rem
     ); 
   }
 }
@@ -196,7 +209,7 @@ iframe {
   iframe {
     width: 100%; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
-      100vh - 150px
+      100vh - 8rem;
     ); /* Adjust as necessary, 60px accounts for the topbar */
   }
 }
@@ -204,7 +217,7 @@ iframe {
 iframe {
     width: 860px; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
-      100vh - 150px
+      100vh - 8rem;
     ); /* Adjust as necessary, 60px accounts for the topbar */
   }
   
