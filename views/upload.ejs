@@ -32,8 +32,8 @@
               <% } %>
                 <form action="/uploadImage" method="post" enctype="multipart/form-data" style="display: inline;">
                   <p>Change cover image</p>
-                  <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*"
-                    onchange="toggleButton('uploadImageButton_<%= i %>')">
+                  <input type="file" id="imageFile_<%= i %>" name="imageFile" accept="image/*" onchange="checkFileSelected('imageFile_<%= i %>'); toggleButton('uploadImageButton_<%= i %>')">
+
                   <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
                   <input type="submit" id="uploadImageButton_<%= i %>" value="Upload Image">
                 </form>
@@ -57,6 +57,16 @@
               <input type="submit" value="Set Description and tags" onclick="submitDescription('descForm_<%= i %>')">
             </div>
           </form>
+<div class="renamer__form__group">
+          <form id="replaceForm_<%= i %>" enctype="multipart/form-data" style="display: inline;" onsubmit="replacePackage(event, '<%= packageFiles[i].file %>', 'replaceForm_<%= i %>'); return false;">
+  <h3>Replace this package</h3>
+  <input type="file" id="replacementPackage_<%= i %>" name="replacementPackage" accept=".zip" onchange="checkFileSelected('replacementPackage_<%= i %>'); toggleButton('replaceButton_<%= i %>')">
+
+  <input type="hidden" name="originalPackageName" value="<%= packageFiles[i].file %>">
+  <input type="submit" id="replaceButton_<%= i %>" value="Upload Replacement">
+</form>
+
+</div>  
         </div>
 
         <div class="renamer__footer">
@@ -66,6 +76,14 @@
       <% } %>
 
         <script>
+
+          function checkFileSelected(inputId) {
+  let fileInput = document.getElementById(inputId);
+  if (!fileInput.files.length) {
+    alert("Please select a file before submitting");
+    return false;
+  } else {return true;}
+}
 
           document.getElementById('uploadForm').addEventListener('submit', function (e) {
             const fileInput = document.getElementById('zipFileInput');
@@ -169,6 +187,32 @@
               });
             }
           }
+
+          function replacePackage(event, originalPackageName, formId) {
+  event.preventDefault();
+  let form = document.getElementById(formId);
+  let formData = new FormData(form);
+
+  // check if a replacement package was selected
+  if (!formData.get('replacementPackage').size) {
+    alert('Please select a replacement package before submitting');
+    return;
+  }
+
+  // send a post request to the server with the form data
+  fetch('/replacePackage', {
+    method: 'POST',
+    body: formData
+  }).then((response) => {
+    if (response.ok) {
+      alert('Package replaced successfully');
+      location.reload(true);
+    } else {
+      alert('Error replacing package');
+    }
+  });
+}
+
 
         </script>
   </div>

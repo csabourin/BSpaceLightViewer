@@ -229,4 +229,58 @@ module.exports = function(app) {
       }
     });
   });
+  
+app.post('/replacePackage', checkIP, authMiddleware, upload.single('replacementPackage'), async (req, res) => {
+  try {
+    const originalPackageName = req.body.originalPackageName;
+    const tmpFolder = path.join(__dirname, '../tmp', path.basename(originalPackageName, '.zip'));
+    const replacementPackage = sanitize(path.basename(req.file.originalname));
+
+    console.log("replacement package: ",replacementPackage);
+console.log("Looking for tmp folder at: ", tmpFolder);
+if (!fs.existsSync(tmpFolder)) {
+  console.log("The folder does not exist");
+  res.status(400).send('Temp folder does not exist for this package');
+  return;
+}
+console.log("Tmp folder exists. Contents: ", fs.readdirSync(tmpFolder));
+
+
+    // Load the replacement package
+    const newZip = new AdmZip(req.file.path);
+
+    // Get the temporary files from the tmp folder
+    const tmpFiles = fs.readdirSync(tmpFolder);
+
+    // Add the temporary files to the replacement package
+    for (const file of tmpFiles) {
+      if(file !== 'imsmanifest.xml'){
+        newZip.addLocalFile(path.join(tmpFolder, file));
+      }
+    }
+
+    // Write the updated zip to the packages folder
+    newZip.writeZip(path.join(__dirname, '../packages', replacementPackage), function(err){
+      if (err) {
+        console.error("Error writing zip: ", err);
+        res.status(500).send("Error writing zip file");
+      } else {
+        // Only if no error during writing zip, delete the original package
+        fs.unlink(path.join(__dirname, '../packages', originalPackageName), function(err){
+          if(err){
+            console.error("Error deleting original package: ", err);
+            res.status(500).send("Error deleting original package");
+          } else {
+            console.log("Successfully replaced the package");
+            res.redirect("/adminconsole");
+          }
+        });
+      }
+    });
+  } catch (err) {
+    res.status(500).send('An error occurred');
+    console.error(err);
+  }
+});
+
 }

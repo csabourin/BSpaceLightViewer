@@ -92,12 +92,15 @@ function getPackages() {
       }
 
       try {
-        const promises = files.map(file => processFile(file));
+        const promises = files
+          .filter(file => path.extname(file) === '.zip')  // Only process .zip files
+          .map(file => processFile(file));
         const data = await Promise.all(promises);
         resolve(data.filter(item => item !== null));
       } catch (err) {
         reject(err);
       }
+
     });
   });
 }
