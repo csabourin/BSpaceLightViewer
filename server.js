@@ -23,6 +23,12 @@ const sessionPath = `${serverFiles}/session-data`;
 if (!fs.existsSync(sessionPath)) {
   fs.mkdirSync(sessionPath, { recursive: true });
 }
+
+// Throw an error and stop the server if SECRET is not defined
+if (!process.env.SECRET) {
+  throw new Error('SECRET environment variable is not defined. The server cannot start without it.');
+}
+
 app.use(
   session({
     store: new FileStore({
@@ -30,10 +36,10 @@ app.use(
       ttl: 2592000, // One month in seconds
       retries: 5,
       fileExtension: '.json',
-      secret: process.env.SECRET || "GetTheCheeseToSickBay",
+      secret: process.env.SECRET,
       encrypt: false,
     }),
-    secret: process.env.SECRET || "GetTheCheeseToSickBay",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: true, httpOnly: true, sameSite: true }, // added security flags
