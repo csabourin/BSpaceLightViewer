@@ -1,11 +1,14 @@
 const express = require("express");
 const session = require("express-session");
+const FileStore = require('session-file-store')(session);
 const rateLimit = require("express-rate-limit");
 
 // const helmet = require('helmet');
 const ejs = require("ejs"); // required for templates
 //Todo: require("matomo-tracker")
+const os = require('os');
 const path = require("path");
+const fs = require("fs");
 const {
   getPackages,
   displayPI,
@@ -14,8 +17,21 @@ const resourceRoutes = require('./routes/resource');
 const pageRoutes = require('./routes/page');
 const d2lRoutes = require('./routes/d2l');
 const app = express();
+const sessionPath = `${os.tmpdir()}/session-data`;
+
+if (!fs.existsSync(sessionPath)) {
+  fs.mkdirSync(sessionPath, { recursive: true });
+}
 app.use(
   session({
+    store: new FileStore({
+        path: sessionPath,
+        ttl: 2592000, // One month in seconds
+        retries: 5,
+        fileExtension: '.json',
+        secret: process.env.SECRET || "GetTheCheeseToSickBay",
+        encrypt: false,
+    }),
     secret: process.env.SECRET || "GetTheCheeseToSickBay",
     resave: false,
     saveUninitialized: false,
