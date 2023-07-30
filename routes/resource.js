@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const os = require("os");
 const path = require("path");
 const {  flattenItems } = require("../utils.js");
 const checkSession = require("../middleware/checkSession");
@@ -109,7 +108,7 @@ function serveResource(req, res, id, lang) {
     return;
   }
 
-  let basePath = path.join(os.tmpdir(), path.basename(filename, ".zip"));
+  let basePath = path.join("../server-files/", path.basename(filename, ".zip"));
   req.session.currentBasePath = basePath;
   express.static(basePath)(req, res, () => {
     res.render("resource", {
