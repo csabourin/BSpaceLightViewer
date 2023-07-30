@@ -108,7 +108,7 @@ function getPackages() {
 const processFile = async (file, retryCount = 0) => {
   const absoluteZipPath = path.join(__dirname, './packages', file);
   const fileWithoutExt = path.basename(file, '.zip');
-  const dirPath = path.join(tempDir,'thumbnails', fileWithoutExt);
+  const dirPath = path.join(tempDir, 'thumbnails', fileWithoutExt);
 
   // Check if the directory exists
   if (!fs.existsSync(dirPath)) {

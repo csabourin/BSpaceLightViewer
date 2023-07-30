@@ -17,7 +17,7 @@ const resourceRoutes = require('./routes/resource');
 const pageRoutes = require('./routes/page');
 const d2lRoutes = require('./routes/d2l');
 const app = express();
-const serverFiles="./server-files/"
+const serverFiles = "./server-files/"
 const sessionPath = `${serverFiles}/session-data`;
 
 if (!fs.existsSync(sessionPath)) {
@@ -26,12 +26,12 @@ if (!fs.existsSync(sessionPath)) {
 app.use(
   session({
     store: new FileStore({
-        path: sessionPath,
-        ttl: 2592000, // One month in seconds
-        retries: 5,
-        fileExtension: '.json',
-        secret: process.env.SECRET || "GetTheCheeseToSickBay",
-        encrypt: false,
+      path: sessionPath,
+      ttl: 2592000, // One month in seconds
+      retries: 5,
+      fileExtension: '.json',
+      secret: process.env.SECRET || "GetTheCheeseToSickBay",
+      encrypt: false,
     }),
     secret: process.env.SECRET || "GetTheCheeseToSickBay",
     resave: false,
