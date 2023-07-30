@@ -17,7 +17,8 @@ const resourceRoutes = require('./routes/resource');
 const pageRoutes = require('./routes/page');
 const d2lRoutes = require('./routes/d2l');
 const app = express();
-const sessionPath = `${os.tmpdir()}/session-data`;
+const serverFiles="./server-files/"
+const sessionPath = `${serverFiles}/session-data`;
 
 if (!fs.existsSync(sessionPath)) {
   fs.mkdirSync(sessionPath, { recursive: true });
@@ -104,7 +105,7 @@ app.get('/getLanguage', function(req, res) {
 app.use("/load", require("./routes/load.js")); // Route that serves the zip package and creates the session
 app.use("/shared", express.static("shared")); // Path for D2L shared files
 app.use("/public", express.static("public")); // General shared path for the app
-app.use('/thumbnails', express.static(path.join(__dirname, 'tmp')));
+app.use('/thumbnails', express.static(path.join(serverFiles, 'thumbnails')));
 app.get("/content/enforced/*/*", (req, res) => {
   // The wildcard '*' in the route path will match any string
   // The 'req.params[0]' will return the first matched string (course code in this case)
