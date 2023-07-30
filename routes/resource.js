@@ -5,9 +5,8 @@ const path = require("path");
 const {  flattenItems } = require("../utils.js");
 const checkSession = require("../middleware/checkSession");
 
-router.get("/:id", checkSession, (req, res) => {
-  const manifestLanguage = req.query.lang;
-  const id = req.params.id;
+function serveResource(req, res, id, lang) {
+  const manifestLanguage = lang;
   let resource = null;
   let filename = null;
   let isModule = null;
@@ -125,6 +124,12 @@ router.get("/:id", checkSession, (req, res) => {
       courseTitle,
     });
   });
+};
+
+router.get("/:id", checkSession, (req, res) => {
+  serveResource(req, res, req.params.id, req.query.lang);
 });
 
-module.exports = router;
+module.exports = router; // Export only the router object
+
+router.serveResource = serveResource; // Attach the serveResource function to the router object

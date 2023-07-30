@@ -5,6 +5,7 @@ const sanitize = require("sanitize-filename");
 const fs = require("fs");
 const path = require("path");
 const { readPackage } = require("../utils.js");
+const { serveResource } = require("./resource.js");
 
 // Load a package from a given filename
 router.get("/:filename", async (req, res) => {
@@ -32,7 +33,7 @@ router.get("/:filename", async (req, res) => {
 
     // Redirect to the resource page
     const manifestLanguage = req.query.lang;
-    res.redirect(`/resource/${encodeURIComponent(firstResourceId)}?lang=${manifestLanguage}`);
+    serveResource(req, res, firstResourceId, manifestLanguage);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error processing the package");
