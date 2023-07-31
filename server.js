@@ -36,7 +36,7 @@ app.use(
       ttl: 2592000, // One month in seconds
       retries: 5,
       fileExtension: '.json',
-      secret: process.env.SECRET,
+      // secret: process.env.SECRET,
       encrypt: false,
     }),
     secret: process.env.SECRET,

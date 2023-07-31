@@ -42,7 +42,7 @@ module.exports = function(app) {
   app.post("/rename", checkIP, authMiddleware, async (req, res) => {
     const oldName = path.join("./packages", sanitize(req.body.old));
     const newName = path.join("./packages", sanitize(req.body.new));
-    const oldTempDir = path.join("./tmp", sanitize(path.basename(req.body.old, '.zip'))); // Temporary directory corresponding to the oldName
+    const oldTempDir = path.join("./server-files", sanitize(path.basename(req.body.old, '.zip'))); // Temporary directory corresponding to the oldName
 
     // Check if new file already exists
     fs.access(newName, fs.constants.F_OK, (err) => {
@@ -125,7 +125,7 @@ module.exports = function(app) {
       const sanitizedTags = tags.map((tag) => tag.toString()); // ensuring each tag is a string
 
       const zipFilePath = path.join("./packages", sanitize(zipFileName));
-      let tmpFolderPath = path.join(__dirname, '../tmp', path.basename(zipFileName, '.zip'), 'imsdescription.json'); // 
+      let tmpFolderPath = path.join('./server-files/thumbnails', path.basename(zipFileName, '.zip'), 'imsdescription.json'); // 
 
       // Check if zip file exists
       fs.access(zipFilePath, fs.constants.F_OK, (err) => {
@@ -178,9 +178,9 @@ module.exports = function(app) {
       return res.status(400).send('No file was uploaded or file upload was rejected');
     }
     const imageName = req.file.originalname;
-    const imagePath = path.join(__dirname, '../tmp', imageName);
+    const imagePath = path.join('./server-files/thumbnails', imageName);
     const zipName = req.body.zipFileName;
-    const zipPath = path.join(__dirname, '../packages', zipName);
+    const zipPath = path.join( './packages', zipName);
     const newFileName = 'imsmanifest_image' + path.extname(imageName);
 
     // Check if zip file exists
@@ -204,8 +204,8 @@ module.exports = function(app) {
           if (exists) {
             zip.addLocalFile(imagePath, '', newFileName); // add the newFileName as the second parameter to rename the file inside the zip
             zip.writeZip(zipPath, () => {
-              // The zip file has been modified, so we delete the corresponding directory in ./tmp
-              let tmpFolderPath = path.join(__dirname, '../tmp', path.basename(zipName, '.zip'), newFileName); // Removes the image from the temp directory
+              // The zip file has been modified, so we delete the corresponding directory in ./server-files
+              let tmpFolderPath = path.join( './server-files/thumbnails', path.basename(zipName, '.zip'), newFileName); // Removes the image from the temp directory
               fs.remove(tmpFolderPath, (err) => {
                 if (err) {
                   console.log('Failed to delete the temporary directory:', err);
@@ -233,7 +233,7 @@ module.exports = function(app) {
   app.post('/replacePackage', checkIP, authMiddleware, upload.single('replacementPackage'), async (req, res) => {
     try {
       const originalPackageName = req.body.originalPackageName;
-      const tmpFolder = path.join(__dirname, '../tmp', path.basename(originalPackageName, '.zip'));
+      const tmpFolder = path.join('./server-files/thumbnails', path.basename(originalPackageName, '.zip'));
       const replacementPackage = sanitize(path.basename(req.file.originalname));
 
       console.log("replacement package: ", replacementPackage);
