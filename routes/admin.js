@@ -232,7 +232,7 @@ module.exports = function(app) {
 
   app.post('/replacePackage', checkIP, authMiddleware, upload.single('replacementPackage'), async (req, res) => {
     try {
-      const originalPackageName = req.body.originalPackageName;
+      const originalPackageName = sanitize(req.body.originalPackageName);
       const tmpFolder = path.join('./server-files/thumbnails', path.basename(originalPackageName, '.zip'));
       const replacementPackage = sanitize(path.basename(req.file.originalname));
 
@@ -260,13 +260,13 @@ module.exports = function(app) {
       }
 
       // Write the updated zip to the packages folder
-      newZip.writeZip(path.join(__dirname, '../packages', replacementPackage), function(err) {
+      newZip.writeZip(path.join('./packages', replacementPackage), function(err) {
         if (err) {
           console.error("Error writing zip: ", err);
           res.status(500).send("Error writing zip file");
         } else {
           // Only if no error during writing zip, delete the original package
-          fs.unlink(path.join(__dirname, '../packages', originalPackageName), function(err) {
+          fs.unlink(path.join( './packages', originalPackageName), function(err) {
             if (err) {
               console.error("Error deleting original package: ", err);
               res.status(500).send("Error deleting original package");
