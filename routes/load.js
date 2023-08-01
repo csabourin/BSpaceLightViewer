@@ -8,7 +8,7 @@ const { readPackage } = require("../utils.js");
 const { serveResource } = require("./resource.js");
 
 // Load a package from a given filename
-router.get("/:filename", async (req, res) => {
+router.get("/:filename", async (req, res, next) => {
   try {
     // Sanitize filename before use
     const filename = sanitize(req.params.filename);
@@ -16,8 +16,8 @@ router.get("/:filename", async (req, res) => {
     // Check if the file exists in the package folder
     const filePath = path.join('./packages', filename);
     if (!fs.existsSync(filePath)) {
-      // If file does not exist, return a 404 status code
-      res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
+      // If file does not exist, pass an error to the error handling middleware
+      return next({code: 'ENOENT', message: "File not found"});
     }
 
     // Read the package and load resources
@@ -35,8 +35,8 @@ router.get("/:filename", async (req, res) => {
     const manifestLanguage = req.query.lang;
     serveResource(req, res, firstResourceId, manifestLanguage);
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error processing the package");
+    // Pass the error to your error handling middleware
+    next(error);
   }
 });
 

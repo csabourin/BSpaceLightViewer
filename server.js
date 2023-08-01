@@ -36,7 +36,7 @@ app.use(
       ttl: 2592000, // One month in seconds
       retries: 5,
       fileExtension: '.json',
-      // secret: process.env.SECRET,
+      secret: process.env.SECRET,
       encrypt: false,
     }),
     secret: process.env.SECRET,
@@ -123,10 +123,51 @@ app.use("/d2l", d2lRoutes); // Is used to catch D2L internal links
 app.use('/resource', resourceRoutes); // Main course navigation engine
 app.use("/page", pageRoutes); // Display course pages and/or files
 
+app.use(function(err, req, res, next) {
+  // Log the error as this middleware catches errors
+  console.error(err);
+
+  if (err.code === 'ENOENT') {
+    // File not found
+    // check if the path for the requested package is found, if not, end session.
+    if (req.session.currentBasePath && !fs.existsSync(req.session.currentBasePath)) {
+      req.session.destroy(function(err) {
+        // Handle error if there is one
+        if (err) {
+          console.error("Failed to destroy session:", err);
+        }
+        res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
+      });
+    }
+  } else {
+    // General server error
+    const sessionLanguage = req.session.language || 'en-ca'; // Default to 'en-ca' if no language is set in the session
+    let title;
+    let message;
+    let homeLinkText;
+
+    if (sessionLanguage === 'fr-ca') {
+      title = 'Erreur du Serveur';
+      message = 'Une erreur s\'est produite sur le serveur. Veuillez réessayer plus tard.';
+      homeLinkText = 'Retour à la page d\'accueil';
+    } else {
+      title = 'Server Error';
+      message = 'A server error has occurred. Please try again later.';
+      homeLinkText = 'Return to homepage';
+    }
+    res.status(500).render('server-error', {
+      title,
+      message,
+      homeLinkText
+    });
+  }
+});
+
 // Catch-all middleware for any invalid URL
 app.use(function(req, res) {
   res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
 });
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   const options = { timeZone: "America/New_York", hour12: false };
