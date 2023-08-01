@@ -2,7 +2,6 @@ const express = require("express");
 const session = require("express-session");
 const FileStore = require('session-file-store')(session);
 const rateLimit = require("express-rate-limit");
-
 // const helmet = require('helmet');
 const ejs = require("ejs"); // required for templates
 //Todo: require("matomo-tracker")
@@ -64,19 +63,21 @@ app.get('*.(jpg|jpeg|png|gif)', function(req, res, next) {
   res.setHeader('Cache-Control', 'public, max-age=31536000'); // one month
   next(); // pass control to the next handler
 });
-// Disabled Helmet because the content policy was too strict.
 // app.use(helmet.contentSecurityPolicy({
 //   directives: {
-//     defaultSrc: ["'self'"],
-//     scriptSrc: ["'self'", "'unsafe-inline'","https://video.csps-efpc.gc.ca"],
-//     styleSrc: ["'self'", "'unsafe-inline'","https://fonts.googleapis.com"],
-//     imgSrc: ["'self'", "data:"],
-//     childSrc: ["'self'"],
-//     formAction: ["'self'"],
-//     connectSrc: ["'none'"],
-//     fontSrc: ["'self'","https://fonts.gstatic.com"],
+//     defaultSrc: ["'self'", "*"],
+//     scriptSrc: ["'self'", "'unsafe-inline'", "*"],
+//     scriptSrcElem: ["'self'", "'unsafe-inline'", "*"], // New line here
+//     scriptSrcAttr: ["'self'", "'unsafe-inline'", "*"], // New line here
+//     styleSrc: ["'self'", "'unsafe-inline'", "*"],
+//     imgSrc: ["'self'", "data:", "*"],
+//     childSrc: ["'self'", "*"],
+//     formAction: ["'self'", "*"],
+//     connectSrc: ["'self'", "*"], // Modified line here
+//     fontSrc: ["'self'", "*"],
 //   }
 // }));
+
 app.use(limiter);
 require("./routes/admin.js")(app);
 app.get("/", async (req, res) => {
