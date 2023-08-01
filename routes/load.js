@@ -33,7 +33,7 @@ router.get("/:filename", async (req, res, next) => {
 
     // Redirect to the resource page
     const manifestLanguage = req.query.lang;
-    serveResource(req, res, firstResourceId, manifestLanguage);
+    serveResource(req, res, next, firstResourceId, manifestLanguage);
   } catch (error) {
     // Pass the error to your error handling middleware
     next(error);

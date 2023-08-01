@@ -4,7 +4,7 @@ const path = require("path");
 const { flattenItems } = require("../utils.js");
 const checkSession = require("../middleware/checkSession");
 
-function serveResource(req, res, id, lang) {
+function serveResource(req, res, next, id, lang) {
   const manifestLanguage = lang;
   let resource = null;
   let filename = null;
@@ -85,7 +85,7 @@ function serveResource(req, res, id, lang) {
   }
 
   if (!resource) {
-    res.redirect("/");
+    next(new Error("Resource not found"));
     return;
   }
 
@@ -93,18 +93,18 @@ function serveResource(req, res, id, lang) {
   const courseTitle = req.session.courseTitles[filename];
 
   if (!manifest) {
-    res.status(500).send("Manifest not found in session");
+    next(new Error("Manifest not found in session"));
     return;
   }
 
   if (!isModule) {
-    res.status(404).send("Module not found");
+    next(new Error("Module not found"));
     return;
   }
 
   const resourceIndex = allItems.findIndex((item) => item.identifier === id);
   if (!resource) {
-    res.status(404).send("Resource not found");
+    next(new Error("Resource not found"));
     return;
   }
 
@@ -125,8 +125,8 @@ function serveResource(req, res, id, lang) {
   });
 };
 
-router.get("/:id", checkSession, (req, res) => {
-  serveResource(req, res, req.params.id, req.query.lang);
+router.get("/:id", checkSession, (req, res, next) => {
+  serveResource(req, res, next, req.params.id, req.query.lang);
 });
 
 module.exports = router; // Export only the router object

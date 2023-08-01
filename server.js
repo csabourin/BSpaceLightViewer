@@ -139,6 +139,7 @@ app.use(function(err, req, res, next) {
         res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
       });
     }
+        res.status(404).render("404", { title: "Page Not Found - Page introuvable" });
   } else {
     // General server error
     const sessionLanguage = req.session.language || 'en-ca'; // Default to 'en-ca' if no language is set in the session

@@ -6,7 +6,9 @@ const path = require('path');
 const checkSession = require("../middleware/checkSession");
 
 router.get("/*", checkSession, (req, res, next) => {
-  const requestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path, change backslashes to forward slashes.
+  const unsafeRequestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path, change backslashes to forward slashes.
+  const requestedPath = unsafeRequestedPath;
+
   const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
 
   // Check if the requested resource corresponds to a content module resource
@@ -34,8 +36,13 @@ router.get("/*", checkSession, (req, res, next) => {
     fs.stat(filePath, (err, stats) => {
       if (err) {
         // Either file/directory doesn't exist or some other error occurred.
-        // Pass the error to your error-handling middleware
-        next(err);
+        if (err.code === 'ENOENT') {
+          // File not found, send 404
+          res.status(404).send('File not found - fichier introuvable');
+        } else {
+          // Some other error, pass it to next middleware
+          next(err);
+        }
       } else if (stats.isDirectory()) {
         // Don't handle directories
         next(new Error('Cannot handle directories'));
@@ -56,6 +63,5 @@ router.get("/*", checkSession, (req, res, next) => {
     });
   }
 });
-
 
 module.exports = router;
