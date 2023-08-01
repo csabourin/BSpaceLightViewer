@@ -55,7 +55,8 @@ const limiter = rateLimit({
 });
 
 app.set("view engine", "ejs");
-app.set("trust proxy", true);
+app.set('trust proxy', 3); // replit.app is behind 3 proxies. Adjust for specific hosting
+// app.get('/ip', (request, response) => response.send(request.ip)) // used for troubleshooting proxy
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('*.(jpg|jpeg|png|gif)', function(req, res, next) {
