@@ -1,95 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const path = require("path");
-const { flattenItems } = require("../utils.js");
 const checkSession = require("../middleware/checkSession");
-
+const { flattenItems } = require("../utils.js");
+let statics = {};
 function serveResource(req, res, next, id, lang) {
   const manifestLanguage = lang;
-  let resource = null;
-  let filename = null;
   let isModule = null;
-  let allItems = [];
 
-  for (let key in req.session.manifests) {
-    let manifest = req.session.manifests[key];
-    let localAllItems = []; // Items for the current manifest only
-
-    manifest.forEach((isModule) => {
-      localAllItems = localAllItems.concat(flattenItems(isModule.items));
-    });
-
-    let found = searchModules(manifest, id);
-    if (found) {
-      resource = found.item;
-      filename = key;
-
-      // If we found the resource, calculate prevResource and nextResource based on the current manifest only
-      const resourceIndex = localAllItems.findIndex(
-        (item) => item.identifier === id
-      );
-      const prevResource =
-        resourceIndex > 0 ? localAllItems[resourceIndex - 1] : false;
-      const nextResource = localAllItems[resourceIndex + 1];
-
-      // Set in session or elsewhere for use in rendering
-      req.session.prevResource = prevResource;
-      req.session.nextResource = nextResource;
-
-      break;
-    }
-  }
-
-  function searchItems(items, identifier) {
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].identifier === identifier) {
-        return { item: items[i], index: i };
-      } else if (items[i].type === "contentmodule") {
-        let found = searchItems(items[i].items, identifier);
-        if (found) {
-          return found;
-        }
-      }
-    }
-    return null;
-  }
-
-  function searchModules(modules, identifier) {
-    for (let m of modules) {
-      let found = searchItems(m.items, identifier);
-      if (found) {
-        isModule = m;
-        return found;
-      }
-    }
-    return null;
-  }
-
-  function getHrefByResourceCode(array, resourceCode) {
-    for (let i = 0; i < array.length; i++) {
-      if (array[i].resourceCode === resourceCode) {
-        return array[i].href;
-      }
-    }
-    return null;
-  }
-
-  for (let key in req.session.manifests) {
-    let manifest = req.session.manifests[key];
-    let found = searchModules(manifest, id);
-    if (found) {
-      resource = found.item;
-      filename = key;
-      break;
-    }
-  }
-
-  if (!resource) {
+  // Use the resource map to find the resource and its filename
+  const mapEntry = req.session.resourceMap[id];
+  if (!mapEntry) {
     next(new Error("Resource not found"));
     return;
   }
 
+  const resource = mapEntry.resource;
+  const filename = mapEntry.filename;
+  const description = mapEntry.description;
   const manifest = req.session.manifests[filename];
+
+  const allItems = flattenItems(manifest);
+
+  const resourceIndex = allItems.findIndex((item) => item.identifier === id);
+  const prevResource = resourceIndex > 0 ? allItems[resourceIndex - 1] : false;
+  const nextResource = allItems[resourceIndex + 1];
+
+  req.session.prevResource = prevResource;
+  req.session.nextResource = nextResource;
+
   const courseTitle = req.session.courseTitles[filename];
 
   if (!manifest) {
@@ -97,26 +36,22 @@ function serveResource(req, res, next, id, lang) {
     return;
   }
 
-  if (!isModule) {
-    next(new Error("Module not found"));
-    return;
+   let basePath = path.join("./server-files/", path.basename(filename, ".zip"));
+
+  // Check if express.static for this basePath already exists
+  if (!statics[basePath]) {
+    statics[basePath] = express.static(basePath); // If not, create and cache it
   }
 
-  const resourceIndex = allItems.findIndex((item) => item.identifier === id);
-  if (!resource) {
-    next(new Error("Resource not found"));
-    return;
-  }
-
-  let basePath = path.join("./server-files/", path.basename(filename, ".zip"));
   req.session.currentBasePath = basePath;
-  express.static(basePath)(req, res, () => {
+
+  statics[basePath](req, res, () => {
     res.render("resource", {
       resource,
       prevResource: req.session.prevResource,
       nextResource: req.session.nextResource,
       manifest, // pass the manifest to the view
-      description: isModule.description,
+      description,
       currentPage: id,
       req,
       manifestLanguage,
@@ -129,6 +64,7 @@ router.get("/:id", checkSession, (req, res, next) => {
   serveResource(req, res, next, req.params.id, req.query.lang);
 });
 
-module.exports = router; // Export only the router object
-
-router.serveResource = serveResource; // Attach the serveResource function to the router object
+module.exports = {
+  router,
+  serveResource
+};

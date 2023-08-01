@@ -13,7 +13,7 @@ const {
   getPackages,
   displayPI,
 } = require("./utils.js");
-const resourceRoutes = require('./routes/resource');
+const { router: resourceRoutes } = require('./routes/resource');
 const pageRoutes = require('./routes/page');
 const d2lRoutes = require('./routes/d2l');
 const app = express();
@@ -36,7 +36,7 @@ app.use(
       ttl: 2592000, // One month in seconds
       retries: 5,
       fileExtension: '.json',
-      secret: process.env.SECRET,
+      // secret: process.env.SECRET,
       encrypt: false,
     }),
     secret: process.env.SECRET,

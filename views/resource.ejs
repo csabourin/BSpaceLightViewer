@@ -100,7 +100,17 @@
     <hr class="endcourse" />
   </nav>
   <main id="main" role="main">
+<% if (resource && resource.href) { %>
     <iframe title="<%= manifestLanguage=='en-ca'?'Page content':'Contenu de la page' %>" src="/page/<%= resource.href.replace(/ /g, "%20").replace(/#/g, "%23") %>"></iframe>
+<% } else if(description){ %>
+   <h1><%= moduleTitle %></h1>
+  
+  <% if (description) { %>
+  <div class="description">
+    <%- description %>
+  </div>
+  <% } %>
+  <% } %>
     <div class="nav-buttons">
         <% if (prevResource) { %>
             <a data-direction='prev'

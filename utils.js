@@ -332,7 +332,7 @@ function flattenItems(items) {
 
   function _flattenItems(items) {
     items.forEach((item) => {
-      if (item.type !== "contentmodule") {
+      if (item.type === "content") {
         flat.push(item);
       }
       if (item.items) {
@@ -427,53 +427,90 @@ const readPackage = (packagePath, session) => {
     // Ensure the extraction directory exists
     fs.mkdirSync(extractionPath, { recursive: true });
 
-    fs.createReadStream(imsPackagePath)
-      .pipe(unzipper.Extract({ path: extractionPath }))
-      .on('close', () => {
-        fs.readFile(
-          path.join(extractionPath, "imsmanifest.xml"),
-          "utf8",
-          function(err, data) {
-            if (err) {
-              console.error(err);
-              reject(err);
-              return;
-            }
+    const manifestFilePath = path.join(extractionPath, "imsmanifest.xml");
 
-            parser.parseString(data, function(err, result) {
-              if (err) {
-                console.error(err);
-                reject(err);
-                return;
-              }
+    // Check if manifest file exists
+    fs.access(manifestFilePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        // Manifest file doesn't exist, need to extract the zip
+        fs.createReadStream(imsPackagePath)
+          .pipe(unzipper.Extract({ path: extractionPath }))
+          .on('close', () => parseManifestFile(manifestFilePath, packagePath, session, resolve, reject))
+          .on('error', (err) => {
+            console.error(err);
+            reject(err);
+          });
+      } else {
+        // Manifest file already exists, just read it
+        parseManifestFile(manifestFilePath, packagePath, session, resolve, reject);
+      }
+    });
+  });
+};
 
-              const manifestItems =
-                result.manifest.organizations[0].organization[0].item;
-              const resources = result.manifest.resources[0].resource;
-              const titleData =
-                result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
-              const courseTitle = titleData._;
-
-              // Check if session.manifests is defined. If not, initialize it
-              session.manifests = session.manifests || {};
-              session.courseTitles = session.courseTitles || {};
-              session.courseTitles[packagePath] = courseTitle;
-
-              // Store the manifest in session.manifests with the package filename as the key
-              session.manifests[packagePath] = manifestItems.map((item) =>
-                processItems(item, resources)
-              );
-
-              resolve(session.manifests[packagePath]);
-            });
-          }
-        );
-      })
-      .on('error', (err) => {
+const parseManifestFile = (filePath, packagePath, session, resolve, reject) => {
+  fs.readFile(
+    filePath,
+    "utf8",
+    function(err, data) {
+      if (err) {
         console.error(err);
         reject(err);
+        return;
+      }
+
+      parser.parseString(data, function(err, result) {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+
+        const manifestItems = result.manifest.organizations[0].organization[0].item;
+        const resources = result.manifest.resources[0].resource;
+        const titleData = result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
+        const courseTitle = titleData._;
+
+        // Check if session.manifests is defined. If not, initialize it
+        session.manifests = session.manifests || {};
+        session.courseTitles = session.courseTitles || {};
+        session.courseTitles[packagePath] = courseTitle;
+
+
+
+        // Store the manifest in session.manifests with the package filename as the key
+        const processedItems = manifestItems.map((item) =>
+          processItems(item, resources)
+        );
+        session.manifests[packagePath] = processedItems;
+        session.flattenedManifests = session.flattenedManifests || {}; // Initialize flattenedManifests if not already done
+        session.flattenedManifests[packagePath] = flattenItems(processedItems); // Store flattened items
+
+        // Construct the resource mapping
+        const buildResourceMap = (items, filename, description) => {
+          session.resourceMap = session.resourceMap || {};
+          items.forEach(item => {
+            // Assuming that each item has an unique identifier across all manifests
+            if (item.type === "content") {
+              session.resourceMap[item.identifier] = {
+                resource: item,
+                filename,
+                description
+              };
+            }
+            // If the item has sub-items (is a module), recurse, passing item.description as description
+            if (item.items) {
+              buildResourceMap(item.items, filename, item.description);
+            }
+          });
+        };
+
+        buildResourceMap(processedItems, packagePath, null);
+
+        resolve(processedItems);
       });
-  });
+    }
+  );
 };
 
 

@@ -5,7 +5,7 @@ const sanitize = require("sanitize-filename");
 const fs = require("fs");
 const path = require("path");
 const { readPackage } = require("../utils.js");
-const { serveResource } = require("./resource.js");
+const resourceRouter = require("./resource.js");
 
 // Load a package from a given filename
 router.get("/:filename", async (req, res, next) => {
@@ -33,7 +33,7 @@ router.get("/:filename", async (req, res, next) => {
 
     // Redirect to the resource page
     const manifestLanguage = req.query.lang;
-    serveResource(req, res, next, firstResourceId, manifestLanguage);
+    resourceRouter.serveResource(req, res, next, firstResourceId, manifestLanguage);
   } catch (error) {
     // Pass the error to your error handling middleware
     next(error);
