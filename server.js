@@ -50,7 +50,7 @@ const limiter = rateLimit({
   max: 2400, // limit each IP to 2400 requests per windowMs
   message: "<h1>Too many requests from this IP, please try again after 2 minutes.</h1> <hr> <h1>Trop de requêtes venant de cette adresse IP, veuillez essayer de nouveau dans 2 minutes.</h1>",
   keyGenerator: (req) => {
-    return req.app.get('trust proxy') ? req.headers['x-forwarded-for'] || req.ip : req.connection.remoteAddress;
+    return req.ip;
   },
 });
 

@@ -13,11 +13,13 @@ module.exports = function(app) {
   const loginLimiter = rateLimit({
     windowMs: 5 * 60 * 1000, // 5 minutes
     max: 5, // limit each IP to 5 requests per windowMs
-    message: 'Too many login attempts from this IP, please try again later.'
+    message: 'Too many login attempts from this IP, please try again later.',
+      keyGenerator: (req) => {
+    return req.ip;
+  },
   });
-
   const adminPassword = process.env.ADMPASS || 'I have been and always shall be your friend'; // The admin password is a placeholder, please set ADMPASS in environment variables!
-  app.post('/login', checkIP, loginLimiter, (req, res) => {
+  app.post('/login',loginLimiter, checkIP, (req, res) => {
     const { username, password } = req.body;
 
     if (username === 'admin' && password === adminPassword) {

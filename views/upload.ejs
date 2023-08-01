@@ -24,6 +24,7 @@
 
     <% for(let i=0; i<packageFiles.length; i++) { %>
       <div class="renamer">
+        <h2><%= packageFiles[i].title %></h2>
         <div class="renamer__header">
           <% if(packageFiles[i].imageUrl){ %>
             <img class="renamer__image" src="<%= packageFiles[i].imageUrl %>">
