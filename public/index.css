@@ -92,12 +92,12 @@ body {
   text-decoration: none;
   color:transparent;
   transition: all 1s;
-  -webkit-text-stroke: 1px -webkit-text-stroke: .5px rgba(255,255,255,.5);;
+  /* -webkit-text-stroke: .5px rgba(0,0,0,1); */
 }
 
 .adminConsole a:hover {
   text-shadow: 0 0 3px #555555;
-  -webkit-text-stroke: .5px rgba(255,255,255,.8);
+  /* -webkit-text-stroke: .5px rgba(255,255,255,.8); */
 }
 
 h1 {

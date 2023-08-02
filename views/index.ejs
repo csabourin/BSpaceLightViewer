@@ -4,19 +4,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="lbJ7GBq3xoy-Yhf3nYQ0bSFws8OvLK7GH2tM__TVH04" />
+  <meta name="google-site-verification" content="lbJ7GBq3xoy-Yhf3nYQ0bSFws8OvLK7GH2tM__TVH04" >
   <link rel="manifest" href="/public/manifest.json">
   <meta property="og:title"
-    content="<%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %>" />
-  <meta property="og:type" content="website" />
+    content="<%= sessionLanguage === 'en-ca' ? 'CSPS Open Learning' : 'Apprentissage ouvert de l\'ÉFPC' %>" >
+  <meta property="og:type" content="website" >
   <meta name="description"
-    content="Explore comprehensive, barrier-free online learning with the Canada School of Public Service. Dive into a diverse range of topics from digital transformation and leadership to indigenous learning and workplace inclusivity. Craft your skills to shape an agile, connected, and collaborative public service sector." />
-  <meta property="og:url" content="https://bspaceviewer.replit.app/" />
-  <meta property="og:image" content="https://bspaceviewer.replit.app/public/OpenContentViewer.png" />
+    content="Explore comprehensive, barrier-free online learning with the Canada School of Public Service. Dive into a diverse range of topics from digital transformation and leadership to indigenous learning and workplace inclusivity. Craft your skills to shape an agile, connected, and collaborative public service sector." >
+  <meta property="og:url" content="https://bspaceviewer.replit.app/" >
+  <meta property="og:image" content="https://bspaceviewer.replit.app/public/OpenContentViewer.png" >
   <meta property="og:description"
-    content="<%= sessionLanguage === 'en-ca' ? 'Your home for barrier-free, online learning from the federal public service of Canada' : 'Votre source d\'apprentissage en ligne sans barrières de la fonction publique fédérale du Canada' %>" />
-  <meta property="og:site_name" content="Open Content Viewer" />
-  <link rel="canonical" href="https://bspaceviewer.replit.app/"/>
+    content="<%= sessionLanguage === 'en-ca' ? 'Your home for barrier-free, online learning from the federal public service of Canada' : 'Votre source d\'apprentissage en ligne sans barrières de la fonction publique fédérale du Canada' %>" >
+  <meta property="og:site_name" content="Open Content Viewer" >
+  <link rel="canonical" href="https://bspaceviewer.replit.app/">
   <link rel="icon" href="/public/favicon-mobile.ico">
   <link rel="stylesheet" href="/public/index.css">
   <!-- Clarity tracking code for https://bspaceviewer.replit.app/ --><script>    (function(c,l,a,r,i,t,y){        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);    })(window, document, "clarity", "script", "i903q2797r");</script>
@@ -55,7 +55,7 @@
       placeholder="<%= sessionLanguage === 'en-ca' ? 'Search by title, tag or language.' : 'Rechercher par titre, mot-clé ou langue.' %>">
     <p id="srUpdate" tabindex="-1" aria-live="polite"></p>
   </div>
-  <main class="container" role="main">
+  <main class="container">
 
 
     <% for(let i=0; i<packageFiles.length; i++) { %>
@@ -66,7 +66,7 @@
         <a
           href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>">
           <% if(packageFiles[i].imageUrl){ %>
-            <img role="presentation" width="320" height="118" src="<%= packageFiles[i].imageUrl %>" alt="">
+            <img width="320" height="118" src="<%= encodeURIComponent(packageFiles[i].imageUrl) %>" alt="">
             <% } %>
               <span class="textLink" lang="<%= packageFiles[i].lang %>">
                 <%= packageFiles[i].title %>
