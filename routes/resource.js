@@ -79,7 +79,7 @@ async function serveResource(req, res, next, filename, id, lang) {
   });
 };
 
-router.get("/:filename/:id", checkSession, (req, res, next) => {
+router.get("/:filename/:id", (req, res, next) => {
   serveResource(req, res, next, req.params.filename, req.params.id, req.query.lang);
 });
 
