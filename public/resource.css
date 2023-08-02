@@ -64,6 +64,20 @@ font-size:1em;
   border: none;
 }
 
+.closebtn{ 
+    right: 0;
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    font-size: 48px;
+    color: #555;
+    cursor:pointer;
+}
+
+.closebtn:hover{
+  background: var(--d2l-color-gypsum);
+}
+
 .sidebar a {
   padding: 8px 8px 8px 32px;
   text-decoration: none;

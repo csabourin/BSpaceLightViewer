@@ -33,7 +33,7 @@
       <div class="nav-buttons">
         <% if (prevResource) { %>
             <a data-direction='prev'
-            href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
+            href="/resource/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
             title="<%= manifestLanguage=="en-ca"?"Previous":"Précédent" %>"> <svg alt="<%= manifestLanguage=='en-ca'?'Previous':'Précédent' %>" xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></a>
@@ -53,7 +53,7 @@
               </svg>
               <% if (nextResource) { %>
                 <a data-direction='next'
-                  href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
+                  href="/resource/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
                   title="<%= manifestLanguage=="en-ca"?"Next":"Suivant" %>" ><svg alt="<%= manifestLanguage=='en-ca'?'Next':'Suivant' %>"xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>
     </svg></a>
@@ -68,8 +68,8 @@
 
   <nav id="mySidebar" class="sidebar" role="navigation"
     aria-label="<%= manifestLanguage=='en-ca'?'Site navigation':'Navigation du site' %>">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
-      aria-label="<%= manifestLanguage=='en-ca'?'Close navigation':'Fermer la navigation' %>">×</a>
+    <button class="closebtn" onclick="closeNav()"
+      aria-label="<%= manifestLanguage=='en-ca'?'Close navigation':'Fermer la navigation' %>">×</button>
     <div class="sideContainer">
       <h2>
         <%= manifestLanguage=="en-ca" ?"Table of Contents":"Table des matières" %>
@@ -88,7 +88,7 @@
                 <% renderItems(item.items); %>
                   <% } %>
                     <% } else { %>
-                      <a href="/resource/<%= encodeURIComponent(item.identifier) %>?lang=<%= manifestLanguage %>">
+                      <a href="/resource/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(item.identifier) %>?lang=<%= manifestLanguage %>">
                         <%= item.title %>
                       </a>
                       <% } %>
@@ -114,7 +114,7 @@
     <div class="nav-buttons">
         <% if (prevResource) { %>
             <a data-direction='prev'
-            href="/resource/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
+            href="/resource/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(prevResource.identifier) %>?lang=<%= manifestLanguage %>"
             title="<%= manifestLanguage=='en-ca'?'Previous':'Précédent' %>"> <svg alt="<%= manifestLanguage=='en-ca'?'Previous':'Précédent' %>"xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#prev"></use>
     </svg></a>
@@ -134,7 +134,7 @@
               </svg>
               <% if (nextResource) { %>
                 <a data-direction='next'
-                  href="/resource/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
+                  href="/resource/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(nextResource.identifier) %>?lang=<%= manifestLanguage %>"
                   title="<%= manifestLanguage=='en-ca'?'Next':'Suivant' %>" ><svg alt="<%= manifestLanguage=='en-ca'?'Next':'Suivant' %>" 
  xmlns="http://www.w3.org/2000/svg" mirror-in-rtl="true" preserveAspectRatio="xMidYMid meet" focusable="false">
       <use xlink:href="#next"></use>

@@ -1,12 +1,37 @@
 const express = require('express');
 const router = express.Router();
 const path = require("path");
+const fs = require('fs');
 const checkSession = require("../middleware/checkSession");
-const { flattenItems } = require("../utils.js");
+const { flattenItems, readPackage } = require("../utils.js");
+const sanitize = require("sanitize-filename");
 let statics = {};
-function serveResource(req, res, next, id, lang) {
+
+async function serveResource(req, res, next, filename, id, lang) {
+  // Sanitize filename before use
+  filename = sanitize(filename);
+
+  // Read the manifest from the session or load it from the package
+  let manifest = req.session.manifests[filename];
+  if (!manifest) {
+    // Check if the file exists in the package folder
+    const filePath = path.join('./packages', filename);
+    if (!fs.existsSync(filePath)) {
+      // If file does not exist, pass an error to the error handling middleware
+      return next({code: 'ENOENT', message: "File not found"});
+    }
+    
+    // Read the package and load resources
+    manifest = await readPackage(filename, req.session);
+    
+    // Ensure the manifest is loaded and the first module has items
+    if (!manifest || !manifest[0] || !manifest[0].items || !manifest[0].items[0]) {
+      throw new Error("Invalid manifest");
+    }
+  }
+
+  // Now continue with your existing code
   const manifestLanguage = lang;
-  let isModule = null;
 
   // Use the resource map to find the resource and its filename
   const mapEntry = req.session.resourceMap[id];
@@ -16,9 +41,7 @@ function serveResource(req, res, next, id, lang) {
   }
 
   const resource = mapEntry.resource;
-  const filename = mapEntry.filename;
   const description = mapEntry.description;
-  const manifest = req.session.manifests[filename];
 
   const allItems = flattenItems(manifest);
 
@@ -31,12 +54,7 @@ function serveResource(req, res, next, id, lang) {
 
   const courseTitle = req.session.courseTitles[filename];
 
-  if (!manifest) {
-    next(new Error("Manifest not found in session"));
-    return;
-  }
-
-   let basePath = path.join("./server-files/", path.basename(filename, ".zip"));
+  let basePath = path.join("./server-files/", path.basename(filename, ".zip"));
 
   // Check if express.static for this basePath already exists
   if (!statics[basePath]) {
@@ -53,6 +71,7 @@ function serveResource(req, res, next, id, lang) {
       manifest, // pass the manifest to the view
       description,
       currentPage: id,
+      filename,
       req,
       manifestLanguage,
       courseTitle,
@@ -60,8 +79,8 @@ function serveResource(req, res, next, id, lang) {
   });
 };
 
-router.get("/:id", checkSession, (req, res, next) => {
-  serveResource(req, res, next, req.params.id, req.query.lang);
+router.get("/:filename/:id", checkSession, (req, res, next) => {
+  serveResource(req, res, next, req.params.filename, req.params.id, req.query.lang);
 });
 
 module.exports = {
