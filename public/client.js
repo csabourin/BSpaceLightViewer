@@ -15,7 +15,8 @@ document.getElementById('login-form').addEventListener('submit', function(event)
       if (response.ok) {
         location.href = '/adminconsole';
       } else {
-        alert('Invalid credentials');
+        document.getElementById('error-message').innerText = 'Invalid credentials';
+        document.getElementById('error-message').style.display = 'block';
       }
     })
     .catch(err => {

@@ -12,18 +12,18 @@ async function serveResource(req, res, next, filename, id, lang) {
   filename = sanitize(filename);
 
   // Read the manifest from the session or load it from the package
-  let manifest = req.session.manifests[filename];
+  let manifest = req.session?.manifests?.[filename];
   if (!manifest) {
     // Check if the file exists in the package folder
     const filePath = path.join('./packages', filename);
     if (!fs.existsSync(filePath)) {
       // If file does not exist, pass an error to the error handling middleware
-      return next({code: 'ENOENT', message: "File not found"});
+      return next({ code: 'ENOENT', message: "File not found" });
     }
-    
+
     // Read the package and load resources
     manifest = await readPackage(filename, req.session);
-    
+
     // Ensure the manifest is loaded and the first module has items
     if (!manifest || !manifest[0] || !manifest[0].items || !manifest[0].items[0]) {
       throw new Error("Invalid manifest");
