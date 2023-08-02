@@ -44,7 +44,7 @@
             <input id="file_<%= i %>" class="fileName" value="<%= packageFiles[i].file.replace(/\.[^/.]+$/, "") %>">
             <button onclick="renameFile('<%= packageFiles[i].file%>', 'file_<%= i %>')">Rename</button>
           </div>
-          <form id="descForm_<%= i %>" class="renamer__form">
+          <form id="descForm_<%= i %>" onsubmit="submitDescription(event, 'descForm_<%= i %>')" class="renamer__form">
             <div class="renamer__form__group">
               <h3>Add description</h3>
               <textarea lang="<%= packageFiles[i].lang %>" id="desc_<%= i %>" rows=5 placeholder="Description" name="description"
@@ -55,7 +55,7 @@
               <h4>Add tags</h4>
               <input type="text" value="<%= packageFiles[i].tags %>" name="tags" placeholder="Tags (separate by space)">
               <input type="hidden" name="zipFileName" value="<%= packageFiles[i].file %>">
-              <input type="submit" value="Set Description and tags" onclick="submitDescription('descForm_<%= i %>')">
+              <input type="submit" value="Set Description and tags">
             </div>
           </form>
 <div class="renamer__form__group">
@@ -96,41 +96,44 @@
           });
 
 
-          function submitDescription(formId) {
-            const maxLength = 215;
-            let form = document.getElementById(formId);
-            let formData = new FormData(form);
-            let description = formData.get('description');
-            if (description.length > maxLength) {
-              alert('Description is too long, it should be less than 215 characters');
-              return;
-            }
+function submitDescription(event, formId) {
+    event.preventDefault();
 
-            let data = {
-              description: formData.get('description'),
-              tags: formData.get('tags')
-                .split(/[\s,]+/)
-                .map(tag => tag.trim())
-                .filter(Boolean),
-              zipFileName: formData.get('zipFileName'),
-            };
+    const maxLength = 215;
+    let form = document.getElementById(formId);
+    let formData = new FormData(form);
+    let description = formData.get('description');
+    if (description.length > maxLength) {
+      alert('Description is too long, it should be less than 215 characters');
+      return;
+    }
 
-            // send a post request to the server with the description and tags
-            fetch('/addDescription', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-            }).then((response) => {
-              if (response.ok) {
-                alert('Description added successfully');
-                location.reload(true);
-              } else {
-                alert('Error adding description');
-              }
-            });
-          }
+    let data = {
+      description: formData.get('description'),
+      tags: formData.get('tags')
+            .split(/[\s,]+/)
+            .map(tag => tag.trim())
+            .filter(Boolean),
+      zipFileName: formData.get('zipFileName'),
+    };
+
+    // send a post request to the server with the description and tags
+    fetch('/addDescription', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then((response) => {
+      if (response.ok) {
+        alert('Description added successfully');
+        location.reload(true);
+      } else {
+        alert('Error adding description');
+      }
+    });
+}
+
 
           function updateCharCount(textareaId, maxLength) {
             let textarea = document.getElementById(textareaId);
