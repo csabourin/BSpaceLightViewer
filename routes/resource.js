@@ -10,30 +10,52 @@ async function serveResource(req, res, next, filename, id) {
   // Sanitize filename before use
   filename = sanitize(filename);
 
-  // Read the manifest from the session or load it from the package
-  let manifest = req.session?.manifests?.[filename];
-  if (!manifest) {
-    // Check if the file exists in the package folder
+// Read the manifest from the session or load it from the package
+let manifest = req.session?.manifests?.[filename];
+if (!manifest) {
+
+  // Read the package and load resources
+  manifest = await readPackage(filename, req.session);
+
+  // Ensure the manifest is loaded and the first module has items
+  if (!manifest || !manifest[0] || !manifest[0].items || !manifest[0].items[0]) {
+    throw new Error("Invalid manifest");
+  }
+
+  // Check if the file exists in the package folder, but only for types that should have a file
+  const mapEntry = req.session.resourceMap[id];
+  if (mapEntry.resource.type !== 'contentmodule') {
     const filePath = path.join('./packages', filename);
     if (!fs.existsSync(filePath)) {
       // If file does not exist, pass an error to the error handling middleware
       return next({ code: 'ENOENT', message: "File not found" });
     }
-
-    // Read the package and load resources
-    manifest = await readPackage(filename, req.session);
-
-    // Ensure the manifest is loaded and the first module has items
-    if (!manifest || !manifest[0] || !manifest[0].items || !manifest[0].items[0]) {
-      throw new Error("Invalid manifest");
-    }
   }
 
+
+  // Read the package and load resources
+  manifest = await readPackage(filename, req.session);
+
+  // Ensure the manifest is loaded and the first module has items
+  if (!manifest || !manifest[0] || !manifest[0].items || !manifest[0].items[0]) {
+    throw new Error("Invalid manifest");
+  }
+}
+
+    if (!req.session.resourceMap) {
+    console.error('session.resourceMap is undefined');
+    return res.status(500).send('An internal server error occurred');
+  }
+
+  
   const manifestLanguage = req.session.courseLanguages[filename];
 
   // Use the resource map to find the resource and its filename
+  // console.log(req.session.resourceMap);
   const mapEntry = req.session.resourceMap[id];
   if (!mapEntry) {
+    console.log(req.session.resourceMap);
+    console.log(id);
     next(new Error("Resource not found"));
     return;
   }
@@ -78,6 +100,20 @@ async function serveResource(req, res, next, filename, id) {
     });
   });
 };
+
+// This middleware function will intercept requests with images in it
+// and redirect them to the /page endpoint instead of /resource
+router.use('/:package/:filename', (req, res, next) => {
+  // Check if the filename ends with any of the common image extensions
+  if (/\.(jpg|jpeg|png|gif|svg)$/.test(req.params.filename)) {
+    // If it is an image, redirect the request to /page instead of /resource
+    res.redirect(`/page/${req.params.filename}`);
+  } else {
+    // If it's not an image, just continue to the next middleware
+    next();
+  }
+});
+
 
 router.get("/:filename/:id", (req, res, next) => {
   serveResource(req, res, next, req.params.filename, req.params.id);

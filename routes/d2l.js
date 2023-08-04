@@ -60,7 +60,7 @@ router.use("/common/dialogs/quickLink/quickLink.d2l", function(req, res) {
 if (result.type === 'contentmodule') {
   let identifier = findIdentifierByResourceCode(flattenItems(manifest), resourceCode);
   const lang= req.session.courseLanguages[file];
-  const redirectUrl = `/resource/${file}/${identifier}?lang=${lang}`;
+  const redirectUrl = `/resource/${file}/${identifier}`;
   res.send(`
     <html>
       <body>
