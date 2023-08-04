@@ -98,7 +98,7 @@
               <% if (item.items) { %>
                 <% renderItems(item.items); %>
                   <% } %>
-                    <% } else { %>
+                    <% } else if (item.type==="content" ){ %>
                       <a href="/resource/<%= encodeURIComponent(filename) %>/<%= encodeURIComponent(item.identifier) %>">
                         <%= item.title %>
                       </a>
