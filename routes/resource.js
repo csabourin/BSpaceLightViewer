@@ -54,7 +54,6 @@ if (!manifest) {
   // console.log(req.session.resourceMap);
   const mapEntry = req.session.resourceMap[id];
   if (!mapEntry) {
-    console.log(req.session.resourceMap);
     console.log(id);
     next(new Error("Resource not found"));
     return;

@@ -250,4 +250,6 @@ iframe, .moduleFrame {
   flex-direction: column;
   justify-content: center; /* aligns children horizontally */
   align-items: center; /* aligns children vertically */
-  text-align: center;}
+  text-align: center;
+  overflow-y:auto;
+}
