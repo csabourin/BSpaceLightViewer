@@ -73,7 +73,7 @@
         data-lang="<%= packageFiles[i].lang =='en-ca'?'English anglais':'French français' %>">
 
         <a
-          href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}` : 'javascript:' %>">
+          href="<%= packageFiles[i].file ? `/load/${encodeURIComponent(packageFiles[i].file)}?lang=${packageFiles[i].lang}` : 'javascript:' %>">
           <% if(packageFiles[i].imageUrl){ %>
             <img width="320" height="118" src="<%= encodeURIComponent(packageFiles[i].imageUrl) %>" alt="">
             <% } %>
