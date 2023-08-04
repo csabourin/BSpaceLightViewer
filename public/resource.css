@@ -186,7 +186,7 @@ font-size:1em;
 
 /* Common CSS for iframe */
 
-iframe {
+iframe, .moduleFrame {
   display: block;
   margin: auto;
   height: calc(
@@ -199,7 +199,7 @@ iframe {
 
 /* Media Query for devices with width less than or equal to 768px */
 @media (max-width: 767px) {
-  body, .navbar, iframe {
+  body, .navbar, iframe, .moduleFrame {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -207,7 +207,7 @@ iframe {
   #main{
     padding:0 1em;
   }
-  iframe {
+  iframe, .moduleFrame {
       margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -220,7 +220,7 @@ iframe {
 
 /* Media Query for devices with width greater than 768px */
 @media (min-width: 768px) {
-  iframe {
+  iframe, .moduleFrame {
     width: 100%; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
       100vh - 8rem;
@@ -228,7 +228,7 @@ iframe {
   }
 }
 @media (min-width: 900px) {
-iframe {
+iframe, .moduleFrame {
     width: 860px; /* Adjust as necessary, 250px is the width of the sidebar */
     height: calc(
       100vh - 8rem;
@@ -243,23 +243,11 @@ iframe {
     display: none;
   }
 
-  /* .nav-buttons a::before,
-  .nav-buttons button::before {
-    content: "";
-  }
-
-  .nav-buttons a,
-  .nav-buttons button {
-    font-size: 0;
-  } */
-
-  /* .nav-buttons a[data-direction="prev"]::before,.nav-buttons button[data-direction="prev"]::before {
-    content: "<";
-    font-size: 1rem;
-  }
-
-  .nav-buttons a[data-direction="next"]::before, .nav-buttons button[data-direction="next"]::before{
-    content: ">";
-    font-size: 1rem;
-  } */
 }
+
+.moduleFrame{
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* aligns children horizontally */
+  align-items: center; /* aligns children vertically */
+  text-align: center;}

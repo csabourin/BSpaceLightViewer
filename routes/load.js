@@ -32,8 +32,7 @@ router.get("/:filename", async (req, res, next) => {
     const firstResourceId = manifest[0].items[0].identifier;
 
     // Redirect to the resource page
-    const manifestLanguage = req.query.lang;
-    resourceRouter.serveResource(req, res, next, filename, firstResourceId, manifestLanguage);
+    resourceRouter.serveResource(req, res, next, filename, firstResourceId);
   } catch (error) {
     // Pass the error to your error handling middleware
     next(error);

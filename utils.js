@@ -332,7 +332,7 @@ function flattenItems(items) {
 
   function _flattenItems(items) {
     items.forEach((item) => {
-      if (item.type === "content") {
+      if (item.type === "content" || item.type === "contentmodule") {
         flat.push(item);
       }
       if (item.items) {
@@ -345,6 +345,7 @@ function flattenItems(items) {
 
   return flat;
 }
+
 
 function processItems(item, resources) {
   let description = item.$.description || null;
@@ -362,12 +363,21 @@ function processItems(item, resources) {
     items.push(...processSubItems(item.item, resources));
   }
 
+  const itemResource = resources.find(
+    (r) => r.$.identifier === item.$.identifierref
+  );
+
+  const type = itemResource?.$["d2l_2p0:material_type"];
+  
   return {
     identifier,
     moduleTitle,
     title: item.title[0],
     description,
+    type: type,
     items: items,
+    resourceCode: item.$["d2l_2p0:resource_code"] || null,
+    href: itemResource?.$.href || null,
   };
 }
 
@@ -379,44 +389,30 @@ function processSubItems(subItems, resources) {
       (r) => r.$.identifier === i.$.identifierref
     );
 
-    if (
-      itemResource &&
-      itemResource.$["d2l_2p0:material_type"] === "contentmodule"
-    ) {
-      const title = i.title[0];
-      const description = i.$.description
-        ? entities.decode(i.$.description)
-        : null;
+    const type = itemResource?.$["d2l_2p0:material_type"];
+    const title = i.title[0];
+    const description = i.$.description ? entities.decode(i.$.description) : null;
 
-      const newItem = {
-        type: "contentmodule",
-        identifier: i.$.identifier,
-        title: title,
-        description: description,
-        items: [],
-      };
+    const newItem = {
+      type,
+      identifier: i.$.identifier,
+      resourceCode: i.$["d2l_2p0:resource_code"] || null,
+      title: title,
+      description: description,
+      items: [],
+      href: itemResource?.$.href || null,
+    };
 
-      if (i.item) {
-        newItem.items.push(...processSubItems(i.item, resources));
-      }
-
-      items.push(newItem);
-    } else if (
-      itemResource &&
-      itemResource.$["d2l_2p0:material_type"] === "content"
-    ) {
-      items.push({
-        type: "content",
-        resourceCode: i.$["d2l_2p0:resource_code"] || null,
-        identifier: i.$.identifier,
-        title: i.title[0],
-        href: `${itemResource.$.href}`,
-      });
+    if (i.item) {
+      newItem.items.push(...processSubItems(i.item, resources));
     }
+
+    items.push(newItem);
   });
 
   return items;
 }
+
 
 const readPackage = (packagePath, session) => {
   return new Promise((resolve, reject) => {
@@ -471,12 +467,18 @@ const parseManifestFile = (filePath, packagePath, session, resolve, reject) => {
         const titleData = result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:title"][0]["imsmd:langstring"][0];
         const courseTitle = titleData._;
 
+        // Get the language
+        const languageData = result.manifest.metadata[0]["imsmd:lom"][0]["imsmd:general"][0]["imsmd:language"];
+        const courseLanguage = languageData[0] || 'unknown';
+
         // Check if session.manifests is defined. If not, initialize it
         session.manifests = session.manifests || {};
         session.courseTitles = session.courseTitles || {};
+
+        // Store the course title and language in the session
         session.courseTitles[packagePath] = courseTitle;
-
-
+        session.courseLanguages = session.courseLanguages || {};
+        session.courseLanguages[packagePath] = courseLanguage;
 
         // Store the manifest in session.manifests with the package filename as the key
         const processedItems = manifestItems.map((item) =>
@@ -491,7 +493,7 @@ const parseManifestFile = (filePath, packagePath, session, resolve, reject) => {
           session.resourceMap = session.resourceMap || {};
           items.forEach(item => {
             // Assuming that each item has an unique identifier across all manifests
-            if (item.type === "content") {
+            if (item.type === "content" || item.type === "contentmodule") {
               session.resourceMap[item.identifier] = {
                 resource: item,
                 filename,

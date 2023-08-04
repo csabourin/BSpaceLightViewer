@@ -30,6 +30,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
+window.addEventListener('message', function(event) {
+
+  // Verify the structure of the event data
+  if (typeof event.data === 'object' && event.data.type === 'changeUrl' && typeof event.data.url === 'string') {
+    // If the message is what you expect, change the URL
+    window.location.href = event.data.url;
+  }
+});
+
+
 
                   // Check the saved sidebar status and open the sidebar if it was previously open
         // var sidebarStatus = localStorage.getItem('sidebarStatus');

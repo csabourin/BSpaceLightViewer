@@ -2,12 +2,11 @@ const express = require('express');
 const router = express.Router();
 const path = require("path");
 const fs = require('fs');
-const checkSession = require("../middleware/checkSession");
 const { flattenItems, readPackage } = require("../utils.js");
 const sanitize = require("sanitize-filename");
 let statics = {};
 
-async function serveResource(req, res, next, filename, id, lang) {
+async function serveResource(req, res, next, filename, id) {
   // Sanitize filename before use
   filename = sanitize(filename);
 
@@ -30,8 +29,7 @@ async function serveResource(req, res, next, filename, id, lang) {
     }
   }
 
-  // Now continue with your existing code
-  const manifestLanguage = lang;
+  const manifestLanguage = req.session.courseLanguages[filename];
 
   // Use the resource map to find the resource and its filename
   const mapEntry = req.session.resourceMap[id];
@@ -41,7 +39,8 @@ async function serveResource(req, res, next, filename, id, lang) {
   }
 
   const resource = mapEntry.resource;
-  const description = mapEntry.description;
+  const description = resource.description;
+  const title = resource.title;
 
   const allItems = flattenItems(manifest);
 
@@ -70,6 +69,7 @@ async function serveResource(req, res, next, filename, id, lang) {
       nextResource: req.session.nextResource,
       manifest, // pass the manifest to the view
       description,
+      title,
       currentPage: id,
       filename,
       req,
@@ -80,7 +80,7 @@ async function serveResource(req, res, next, filename, id, lang) {
 };
 
 router.get("/:filename/:id", (req, res, next) => {
-  serveResource(req, res, next, req.params.filename, req.params.id, req.query.lang);
+  serveResource(req, res, next, req.params.filename, req.params.id);
 });
 
 module.exports = {
