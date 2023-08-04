@@ -103,11 +103,12 @@ if (!manifest) {
 
 // This middleware function will intercept requests with images in it
 // and redirect them to the /page endpoint instead of /resource
-router.use('/:package/:filename', (req, res, next) => {
+router.use('/:package/*', (req, res, next) => {
+   const pathAfterPackage = req.params[0];
   // Check if the filename ends with any of the common image extensions
-  if (/\.(jpg|jpeg|png|gif|svg)$/.test(req.params.filename)) {
+  if (/\.(jpg|jpeg|png|gif|svg)$/.test(pathAfterPackage)) {
     // If it is an image, redirect the request to /page instead of /resource
-    res.redirect(`/page/${req.params.filename}`);
+    res.redirect(`/page/${pathAfterPackage}`);
   } else {
     // If it's not an image, just continue to the next middleware
     next();
