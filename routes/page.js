@@ -2,14 +2,16 @@ const express = require("express");
 const router = express.Router();
 const fs = require('fs-extra');
 const mime = require('mime-types');
+const sanitize = require("sanitize-filename");
 const path = require('path');
 const checkSession = require("../middleware/checkSession");
 
-router.get("/*", checkSession, (req, res, next) => {
+router.get("/:filename/*", checkSession, (req, res, next) => {
+  const filename = sanitize(req.params.filename);
   const unsafeRequestedPath = req.params[0].replace(/\\/g, "/"); // Get the requested path, change backslashes to forward slashes.
   const requestedPath = unsafeRequestedPath;
-
-  const filePath = path.join(req.session.currentBasePath, requestedPath); // Get the base path from the session
+  const basePath = path.join("./server-files/", path.basename(filename, ".zip"));
+  const filePath = path.join(basePath, requestedPath); // Get the base path from the session
 
   // Check if the requested resource corresponds to a content module resource
   let contentModuleResource = null;

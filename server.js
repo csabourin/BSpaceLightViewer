@@ -118,7 +118,7 @@ app.get("/content/enforced/*/*", (req, res) => {
   // The wildcard '*' in the route path will match any string
   // The 'req.params[0]' will return the first matched string (course code in this case)
   // The 'req.params[1]' will return the second matched string (file-or-path in this case)
-  const redirectedPath = `/page/${req.params[1]}`;
+  const redirectedPath = `/page/${req.session.currentPage}/${req.params[1]}`;
   res.redirect(redirectedPath);
 });
 app.use("/d2l", d2lRoutes); // Is used to catch D2L internal links

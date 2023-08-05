@@ -104,10 +104,11 @@ if (!manifest) {
 // and redirect them to the /page endpoint instead of /resource
 router.use('/:package/*', (req, res, next) => {
    const pathAfterPackage = req.params[0];
+  const file=req.params.package;
   // Check if the filename ends with any of the common image extensions
   if (/\.(jpg|jpeg|png|gif|svg)$/.test(pathAfterPackage)) {
     // If it is an image, redirect the request to /page instead of /resource
-    res.redirect(`/page/${pathAfterPackage}`);
+    res.redirect(`/page/${file}/${pathAfterPackage}`);
   } else {
     // If it's not an image, just continue to the next middleware
     next();
@@ -116,6 +117,7 @@ router.use('/:package/*', (req, res, next) => {
 
 
 router.get("/:filename/:id", (req, res, next) => {
+  req.session.currentPage=req.params.filename;
   serveResource(req, res, next, req.params.filename, req.params.id);
 });
 

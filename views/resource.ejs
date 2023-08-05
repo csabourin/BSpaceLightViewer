@@ -110,7 +110,7 @@
     </div>
     <hr class="endcourse" >
   </nav>
-  <main id="main" ><% if (resource && resource.href) { %><iframe title="<%= manifestLanguage=='en-ca'?'Page content':'Contenu de la page' %>" src="/page/<%= resource.href.replace(/ /g, "%20").replace(/#/g, "%23") %>"></iframe><% } else if(title){ %><div class="moduleFrame">
+  <main id="main" ><% if (resource && resource.href) { %><iframe title="<%= manifestLanguage=='en-ca'?'Page content':'Contenu de la page' %>" src="/page/<%= filename %>/<%= resource.href.replace(/ /g, "%20").replace(/#/g, "%23") %>"></iframe><% } else if(title){ %><div class="moduleFrame">
    <h1><%= title %></h1>
   
   <% if (description) { %>
